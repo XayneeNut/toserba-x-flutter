@@ -69,9 +69,46 @@ class BarangController {
     }
   }
 
-  Future<http.Response> getId(int id) async{
+  Future<http.Response> getId(int id) async {
     final url = Uri.parse('http://10.0.2.2:8127/api/v1/barang/get/$id');
     final response = await http.get(url);
     return response;
+  }
+
+  Future<void> updateBarang(BarangModels barang) async {
+    final url = Uri.parse("http://10.0.2.2:8127/api/v1/barang/update");
+
+    final body = json.encode({
+      "idBarang": barang.idBarang,
+      "namaBarang": barang.namaBarang,
+      "hargaBarang": barang.hargaBarang,
+      "kodeBarang": barang.kodeBarang,
+      "stokBarang": barang.stokBarang,
+    });
+
+    try {
+      final response = await http.put(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        // Berhasil mengupdate data barang
+        print("Data barang berhasil diupdate");
+      } else {
+        throw Exception("Gagal mengupdate data barang");
+      }
+    } catch (e) {
+      throw Exception("Gagal terhubung ke server");
+    }
+  }
+
+  Future<http.Response> deleteBarang(BarangModels barangModels) {
+    final url = Uri.parse(
+        'http://10.0.2.2:8127/api/v1/barang/delete/${barangModels.idBarang}');
+
+    final deleteById = http.delete(url);
+    return deleteById;
   }
 }

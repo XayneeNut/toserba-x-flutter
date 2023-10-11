@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:toserba/widget/size_config.dart';
 
-// ignore: must_be_immutable
+
 class NamaKodeWidget extends StatelessWidget {
   const NamaKodeWidget(
       {super.key,
       required this.onSaved,
       required this.textStyle,
-      required this.labelText});
+      required this.labelText,
+      required this.initialValue});
 
   final void Function(String value) onSaved;
   final TextStyle textStyle;
   final String labelText;
+  final String initialValue;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +34,18 @@ class NamaKodeWidget extends StatelessWidget {
                   top: SizeConfig.blockSizeVertical! * 2,
                   left: SizeConfig.blockSizeHorizontal! * 8),
               child: TextFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value) {
+                  if (value == null ||
+                      value.isEmpty ||
+                      value.trim() == '' ||
+                      value.trim().length <= 1 ||
+                      value.trim().length > 50) {
+                    return 'Must be between 1 and 50 characters';
+                  }
+                  return null;
+                },
+                initialValue: initialValue,
                 maxLength: 50,
                 minLines: 1,
                 maxLines: 3,

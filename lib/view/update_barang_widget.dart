@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,16 +8,20 @@ import 'package:toserba/widget/nama_kode_widget.dart';
 import 'package:toserba/widget/size_config.dart';
 import 'package:toserba/widget/stok_harga_widget.dart';
 
-class CreateBarangView extends StatefulWidget {
-  const CreateBarangView({super.key, required this.newBarangController});
+class UpdateBarangWidget extends StatefulWidget {
+  const UpdateBarangWidget(
+      {super.key,
+      required this.newBarangController,
+      required this.newBarangModels});
 
   final BarangController newBarangController;
+  final BarangModels newBarangModels;
 
   @override
-  State<CreateBarangView> createState() => _CreateBarangViewState();
+  State<UpdateBarangWidget> createState() => _UpdateBarangWidgetState();
 }
 
-class _CreateBarangViewState extends State<CreateBarangView> {
+class _UpdateBarangWidgetState extends State<UpdateBarangWidget> {
   final _formKey = GlobalKey<FormState>();
   var _enteredName = '';
   var _enteredHarga = 0;
@@ -28,37 +30,22 @@ class _CreateBarangViewState extends State<CreateBarangView> {
   final _labelTextStyle =
       GoogleFonts.poppins(color: Colors.black, fontSize: 18);
 
-  Future<void> _saveBarang() async {
+  void updateBarang() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      await widget.newBarangController.saveBarang(
+
+      final updateBarang = BarangModels(
+          idBarang: widget.newBarangModels.idBarang,
           namaBarang: _enteredName,
-          hargaBarang: _enteredHarga,
           kodeBarang: _enteredCode,
+          hargaBarang: _enteredHarga,
           stokBarang: _enteredStok);
 
-      final allBarang = await widget.newBarangController.loadBarang();
-      setState(() {
-        widget.newBarangController.barangModels = allBarang;
-      });
-
-      final getIdBarang =
-          await widget.newBarangController.getId(allBarang.first.idBarang);
-      final jsonData = json.decode(getIdBarang.body);
-
-      final idBarang = jsonData['idBarang'];
+      await widget.newBarangController.updateBarang(updateBarang);
 
       if (!context.mounted) return;
 
-      Navigator.pop(
-        context,
-        BarangModels(
-            idBarang: idBarang,
-            namaBarang: _enteredName,
-            kodeBarang: _enteredCode,
-            hargaBarang: _enteredHarga,
-            stokBarang: _enteredStok),
-      );
+      Navigator.pop(context, updateBarang);
     }
   }
 
@@ -80,20 +67,20 @@ class _CreateBarangViewState extends State<CreateBarangView> {
                     bottom: SizeConfig.blockSizeVertical! * 2,
                   ),
                   child: Text(
-                    'Add New Item',
+                    'Update Item',
                     style: GoogleFonts.poppins(fontSize: 35),
                   ),
                 ),
               ),
               NamaKodeWidget(
-                  initialValue: '',
+                  initialValue: widget.newBarangModels.namaBarang,
                   onSaved: (val) {
                     _enteredName = val;
                   },
                   textStyle: _labelTextStyle,
                   labelText: "Nama Barang"),
               NamaKodeWidget(
-                  initialValue: '',
+                  initialValue: widget.newBarangModels.kodeBarang,
                   onSaved: (val) {
                     _enteredCode = val;
                   },
@@ -109,7 +96,7 @@ class _CreateBarangViewState extends State<CreateBarangView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     StokHargaWidget(
-                        initialValue: 0,
+                        initialValue: widget.newBarangModels.stokBarang,
                         onSaved: (value) {
                           _enteredStok = value;
                         },
@@ -119,7 +106,7 @@ class _CreateBarangViewState extends State<CreateBarangView> {
                       width: 20,
                     ),
                     StokHargaWidget(
-                        initialValue: 0,
+                        initialValue: widget.newBarangModels.hargaBarang,
                         onSaved: (value) {
                           _enteredHarga = value;
                         },
@@ -138,7 +125,7 @@ class _CreateBarangViewState extends State<CreateBarangView> {
                   child: Column(
                     children: [
                       AddClearWidget(
-                          onPressed: _saveBarang,
+                          onPressed: updateBarang,
                           backgroundColor: MaterialStateProperty.all(
                               const Color(0xFFFFAD22)),
                           labelText: 'Add'),

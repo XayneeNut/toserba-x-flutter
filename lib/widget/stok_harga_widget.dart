@@ -6,11 +6,13 @@ class StokHargaWidget extends StatelessWidget {
       {super.key,
       required this.onSaved,
       required this.textStyle,
-      required this.labelText});
+      required this.labelText,
+      required this.initialValue});
 
   final void Function(int value) onSaved;
   final String labelText;
   final TextStyle textStyle;
+  final int initialValue;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +27,7 @@ class StokHargaWidget extends StatelessWidget {
               top: SizeConfig.blockSizeVertical! * 0.1,
               left: SizeConfig.blockSizeHorizontal! * 7),
           child: TextFormField(
+            initialValue: initialValue.toString(),
             maxLength: 50,
             minLines: 1,
             maxLines: 3,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:toserba/widget/size_config.dart';
+import 'package:intl/intl.dart';
 
 class BarangTextWidget extends StatelessWidget {
   const BarangTextWidget(
@@ -12,6 +13,7 @@ class BarangTextWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final formatter = NumberFormat.simpleCurrency(locale: 'id_ID');
     SizeConfig().init(context);
     return Stack(
       children: [
@@ -34,7 +36,7 @@ class BarangTextWidget extends StatelessWidget {
           top: SizeConfig.blockSizeVertical! * 5,
           left: SizeConfig.blockSizeHorizontal! * 4.9,
           child: Text(
-            "Rp.${barangModels[index].hargaBarang.toString()}",
+            formatter.format(barangModels[index].hargaBarang),
             style: const TextStyle(
               decoration: TextDecoration.none,
               color: Colors.black,
@@ -48,7 +50,7 @@ class BarangTextWidget extends StatelessWidget {
         Positioned(
           top: SizeConfig.blockSizeVertical! * 8,
           left: SizeConfig.blockSizeHorizontal! * 4.9,
-          child: Text(barangModels[index].stokBarang.toString(),
+          child: Text('jumlah stok ${barangModels[index].stokBarang}',
               style: GoogleFonts.poppins(
                 decoration: TextDecoration.none,
                 color: Colors.black,
