@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:toserba/controller/barang_controller.dart';
+import 'package:toserba/controller/barang_api_controller.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/view/list_barang_view.dart';
 
@@ -12,7 +12,7 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   final List<BarangModels> barangModels = [];
-  final BarangController barangController = BarangController();
+  final BarangApiController barangController = BarangApiController();
 
   @override
   void initState() {

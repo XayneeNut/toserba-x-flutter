@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:toserba/widget/size_config.dart';
-
 
 class NamaKodeWidget extends StatelessWidget {
   const NamaKodeWidget(
@@ -50,12 +50,14 @@ class NamaKodeWidget extends StatelessWidget {
                 minLines: 1,
                 maxLines: 3,
                 decoration: InputDecoration(
-                    contentPadding:
-                        EdgeInsets.all(SizeConfig.blockSizeHorizontal! * 2),
-                    border: InputBorder.none,
-                    labelText: labelText,
-                    counterText: '',
-                    labelStyle: textStyle),
+                  contentPadding:
+                      EdgeInsets.all(SizeConfig.blockSizeHorizontal! * 2),
+                  border: InputBorder.none,
+                  labelText: labelText,
+                  counterText: '',
+                  errorStyle: GoogleFonts.poppins(color: Colors.red),
+                  labelStyle: textStyle,
+                ),
                 onSaved: (newValue) {
                   onSaved(newValue!);
                 },

@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:toserba/controller/barang_controller.dart';
+import 'package:toserba/controller/barang_api_controller.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/widget/add_clear_widget.dart';
 import 'package:toserba/widget/nama_kode_widget.dart';
 import 'package:toserba/widget/size_config.dart';
 import 'package:toserba/widget/stok_harga_widget.dart';
 
-class UpdateBarangWidget extends StatefulWidget {
-  const UpdateBarangWidget(
+class UpdateBarangView extends StatefulWidget {
+  const UpdateBarangView(
       {super.key,
       required this.newBarangController,
       required this.newBarangModels});
 
-  final BarangController newBarangController;
+  final BarangApiController newBarangController;
   final BarangModels newBarangModels;
 
   @override
-  State<UpdateBarangWidget> createState() => _UpdateBarangWidgetState();
+  State<UpdateBarangView> createState() => _UpdateBarangViewState();
 }
 
-class _UpdateBarangWidgetState extends State<UpdateBarangWidget> {
+class _UpdateBarangViewState extends State<UpdateBarangView> {
   final _formKey = GlobalKey<FormState>();
   var _enteredName = '';
   var _enteredHarga = 0;
@@ -45,7 +45,10 @@ class _UpdateBarangWidgetState extends State<UpdateBarangWidget> {
 
       if (!context.mounted) return;
 
-      Navigator.pop(context, updateBarang);
+      Navigator.pop(
+        context,
+        updateBarang,
+      );
     }
   }
 
@@ -53,25 +56,17 @@ class _UpdateBarangWidgetState extends State<UpdateBarangWidget> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Update Item',
+          style: GoogleFonts.poppins(fontSize: 25),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  margin: EdgeInsets.only(
-                    top: SizeConfig.blockSizeVertical! * 10,
-                    left: SizeConfig.blockSizeHorizontal! * 5,
-                    bottom: SizeConfig.blockSizeVertical! * 2,
-                  ),
-                  child: Text(
-                    'Update Item',
-                    style: GoogleFonts.poppins(fontSize: 35),
-                  ),
-                ),
-              ),
               NamaKodeWidget(
                   initialValue: widget.newBarangModels.namaBarang,
                   onSaved: (val) {
@@ -141,8 +136,8 @@ class _UpdateBarangWidgetState extends State<UpdateBarangWidget> {
                 ),
               ),
               SizedBox(
-                width: SizeConfig.blockSizeHorizontal! * 10,
-                height: SizeConfig.blockSizeHorizontal! * 10,
+                width: SizeConfig.blockSizeHorizontal! * 100,
+                height: SizeConfig.blockSizeHorizontal! * 100,
                 child: SvgPicture.asset(
                   'assets/gambar.svg',
                 ),

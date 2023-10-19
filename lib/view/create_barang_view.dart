@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:toserba/controller/barang_controller.dart';
+import 'package:toserba/controller/barang_api_controller.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/widget/add_clear_widget.dart';
 import 'package:toserba/widget/nama_kode_widget.dart';
@@ -11,9 +11,9 @@ import 'package:toserba/widget/size_config.dart';
 import 'package:toserba/widget/stok_harga_widget.dart';
 
 class CreateBarangView extends StatefulWidget {
-  const CreateBarangView({super.key, required this.newBarangController});
+  const CreateBarangView({super.key, required this.barangApiController});
 
-  final BarangController newBarangController;
+  final BarangApiController barangApiController;
 
   @override
   State<CreateBarangView> createState() => _CreateBarangViewState();
@@ -31,19 +31,19 @@ class _CreateBarangViewState extends State<CreateBarangView> {
   Future<void> _saveBarang() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      await widget.newBarangController.saveBarang(
+      await widget.barangApiController.saveBarang(
           namaBarang: _enteredName,
           hargaBarang: _enteredHarga,
           kodeBarang: _enteredCode,
           stokBarang: _enteredStok);
 
-      final allBarang = await widget.newBarangController.loadBarang();
+      final allBarang = await widget.barangApiController.loadBarang();
       setState(() {
-        widget.newBarangController.barangModels = allBarang;
+        widget.barangApiController.barangModels = allBarang;
       });
 
       final getIdBarang =
-          await widget.newBarangController.getId(allBarang.first.idBarang);
+          await widget.barangApiController.getId(allBarang.first.idBarang);
       final jsonData = json.decode(getIdBarang.body);
 
       final idBarang = jsonData['idBarang'];
@@ -66,25 +66,17 @@ class _CreateBarangViewState extends State<CreateBarangView> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Add New Item',
+          style: GoogleFonts.poppins(fontSize: 25),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  margin: EdgeInsets.only(
-                    top: SizeConfig.blockSizeVertical! * 10,
-                    left: SizeConfig.blockSizeHorizontal! * 5,
-                    bottom: SizeConfig.blockSizeVertical! * 2,
-                  ),
-                  child: Text(
-                    'Add New Item',
-                    style: GoogleFonts.poppins(fontSize: 35),
-                  ),
-                ),
-              ),
               NamaKodeWidget(
                   initialValue: '',
                   onSaved: (val) {
@@ -154,8 +146,8 @@ class _CreateBarangViewState extends State<CreateBarangView> {
                 ),
               ),
               SizedBox(
-                width: SizeConfig.blockSizeHorizontal! * 10,
-                height: SizeConfig.blockSizeHorizontal! * 10,
+                width: SizeConfig.blockSizeHorizontal! * 100,
+                height: SizeConfig.blockSizeHorizontal! * 100,
                 child: SvgPicture.asset(
                   'assets/gambar.svg',
                 ),

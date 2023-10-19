@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:toserba/widget/size_config.dart';
 
 class StokHargaWidget extends StatelessWidget {
@@ -31,6 +32,15 @@ class StokHargaWidget extends StatelessWidget {
             maxLength: 50,
             minLines: 1,
             maxLines: 3,
+            validator: (value) {
+              if (value == null ||
+                  value.trim().length == 1 ||
+                  value.trim().length > 50 ||
+                  value.trim().isEmpty) {
+                return 'cannot be empty';
+              }
+              return null;
+            },
             decoration: InputDecoration(
               contentPadding:
                   EdgeInsets.all(SizeConfig.blockSizeHorizontal! * 1),
@@ -38,6 +48,7 @@ class StokHargaWidget extends StatelessWidget {
               labelText: labelText,
               counterText: '',
               labelStyle: textStyle,
+              errorStyle: GoogleFonts.poppins(color: Colors.red),
             ),
             onSaved: (newValue) {
               onSaved(int.parse(newValue!));

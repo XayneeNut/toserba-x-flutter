@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:toserba/models/barang_models.dart';
 
-class BarangController {
+class BarangApiController {
   List<BarangModels> barangModels = [];
 
   Future<http.Response> getAllBarang() async {

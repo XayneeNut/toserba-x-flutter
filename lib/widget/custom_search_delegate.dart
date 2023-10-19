@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:toserba/controller/barang_api_controller.dart';
+import 'package:toserba/controller/list_barang_controller.dart';
 import 'package:toserba/models/barang_models.dart';
+import 'package:toserba/view/detail_barang_view.dart';
+import 'package:toserba/view/update_barang_view.dart';
 
 class CustomSearchDelegate extends SearchDelegate<String> {
   final List<BarangModels> barangModels;
+  final ListBarangController listBarangController;
+  final BarangApiController barangApiController;
 
-  CustomSearchDelegate(this.barangModels);
+  final Function setState;
+  final BuildContext
+      parentContext; // Add this variable to hold the parent context
+
+  CustomSearchDelegate(this.barangModels, this.listBarangController,
+      this.barangApiController, this.setState, this.parentContext);
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -30,7 +41,6 @@ class CustomSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    // Build the actual search results based on the query
     List<BarangModels> searchResults = barangModels.where((barang) {
       return barang.namaBarang.toLowerCase().contains(query.toLowerCase());
     }).toList();
@@ -40,7 +50,6 @@ class CustomSearchDelegate extends SearchDelegate<String> {
       itemBuilder: (context, index) {
         return ListTile(
           title: Text(searchResults[index].namaBarang),
-          // Add other information as needed
         );
       },
     );
@@ -48,11 +57,12 @@ class CustomSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    // Show suggestions as the user types (optional)
     List<BarangModels> suggestionList = query.isEmpty
         ? []
         : barangModels.where((barang) {
-            return barang.namaBarang.toLowerCase().contains(query.toLowerCase());
+            return barang.namaBarang
+                .toLowerCase()
+                .contains(query.toLowerCase());
           }).toList();
 
     return ListView.builder(
@@ -61,8 +71,14 @@ class CustomSearchDelegate extends SearchDelegate<String> {
         return ListTile(
           title: Text(suggestionList[index].namaBarang),
           onTap: () {
-            query = suggestionList[index].namaBarang;
-            showResults(context);
+            Navigator.push(
+                parentContext,
+                MaterialPageRoute(
+                  builder: (context) => DetailBarangView(
+                    newBarangController: barangApiController,
+                    newBarangModels: suggestionList[index],
+                  ),
+                ));
           },
         );
       },
