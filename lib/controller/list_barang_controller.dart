@@ -14,8 +14,10 @@ class ListBarangController {
     final newBarang = await Navigator.push<BarangModels>(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            CreateBarangView(barangApiController: barangApiController),
+        builder: (context) => CreateBarangView(
+          barangApiController: barangApiController,
+          toCreateBarang: (p0, p1, p2, p3) {},
+        ),
       ),
     );
 

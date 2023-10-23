@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,9 +9,14 @@ import 'package:toserba/widget/size_config.dart';
 import 'package:toserba/widget/stok_harga_widget.dart';
 
 class CreateBarangView extends StatefulWidget {
-  const CreateBarangView({super.key, required this.barangApiController});
+  const CreateBarangView(
+      {super.key,
+      required this.barangApiController,
+      required this.toCreateBarang});
 
   final BarangApiController barangApiController;
+  final void Function(BuildContext, BarangApiController, List<BarangModels>,
+      void Function(VoidCallback)) toCreateBarang;
 
   @override
   State<CreateBarangView> createState() => _CreateBarangViewState();
@@ -41,119 +44,96 @@ class _CreateBarangViewState extends State<CreateBarangView> {
       setState(() {
         widget.barangApiController.barangModels = allBarang;
       });
-
-      final getIdBarang =
-          await widget.barangApiController.getId(allBarang.first.idBarang);
-      final jsonData = json.decode(getIdBarang.body);
-
-      final idBarang = jsonData['idBarang'];
-
       if (!context.mounted) return;
 
-      Navigator.pop(
-        context,
-        BarangModels(
-            idBarang: idBarang,
-            namaBarang: _enteredName,
-            kodeBarang: _enteredCode,
-            hargaBarang: _enteredHarga,
-            stokBarang: _enteredStok),
-      );
+      Navigator.pushNamed(context, '/');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Add New Item',
-          style: GoogleFonts.poppins(fontSize: 25),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              NamaKodeWidget(
-                  initialValue: '',
-                  onSaved: (val) {
-                    _enteredName = val;
-                  },
-                  textStyle: _labelTextStyle,
-                  labelText: "Nama Barang"),
-              NamaKodeWidget(
-                  initialValue: '',
-                  onSaved: (val) {
-                    _enteredCode = val;
-                  },
-                  textStyle: _labelTextStyle,
-                  labelText: "Kode Barang"),
-              Container(
-                margin: const EdgeInsets.only(top: 10),
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.blockSizeHorizontal! * 5,
-                  vertical: SizeConfig.blockSizeVertical! * 2,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return SingleChildScrollView(
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            NamaKodeWidget(
+                initialValue: '',
+                onSaved: (val) {
+                  _enteredName = val;
+                },
+                textStyle: _labelTextStyle,
+                labelText: "Nama Barang"),
+            NamaKodeWidget(
+                initialValue: '',
+                onSaved: (val) {
+                  _enteredCode = val;
+                },
+                textStyle: _labelTextStyle,
+                labelText: "Kode Barang"),
+            Container(
+              margin: const EdgeInsets.only(top: 10),
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.blockSizeHorizontal! * 5,
+                vertical: SizeConfig.blockSizeVertical! * 2,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  StokHargaWidget(
+                      initialValue: 0,
+                      onSaved: (value) {
+                        _enteredStok = value;
+                      },
+                      textStyle: _labelTextStyle,
+                      labelText: "stok"),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  StokHargaWidget(
+                      initialValue: 0,
+                      onSaved: (value) {
+                        _enteredHarga = value;
+                      },
+                      textStyle: _labelTextStyle,
+                      labelText: "harga"),
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(
+                right: SizeConfig.blockSizeHorizontal! * 5,
+                top: SizeConfig.blockSizeVertical! * 5,
+              ),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Column(
                   children: [
-                    StokHargaWidget(
-                        initialValue: 0,
-                        onSaved: (value) {
-                          _enteredStok = value;
+                    AddClearWidget(
+                        onPressed: _saveBarang,
+                        backgroundColor:
+                            MaterialStateProperty.all(const Color(0xFFFFAD22)),
+                        labelText: 'Add'),
+                    AddClearWidget(
+                        onPressed: () {
+                          _formKey.currentState!.reset();
                         },
-                        textStyle: _labelTextStyle,
-                        labelText: "stok"),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    StokHargaWidget(
-                        initialValue: 0,
-                        onSaved: (value) {
-                          _enteredHarga = value;
-                        },
-                        textStyle: _labelTextStyle,
-                        labelText: "harga"),
+                        backgroundColor:
+                            MaterialStateProperty.all(const Color(0xFF8B97FF)),
+                        labelText: 'Clear')
                   ],
                 ),
               ),
-              Container(
-                margin: EdgeInsets.only(
-                  right: SizeConfig.blockSizeHorizontal! * 5,
-                  top: SizeConfig.blockSizeVertical! * 5,
-                ),
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Column(
-                    children: [
-                      AddClearWidget(
-                          onPressed: _saveBarang,
-                          backgroundColor: MaterialStateProperty.all(
-                              const Color(0xFFFFAD22)),
-                          labelText: 'Add'),
-                      AddClearWidget(
-                          onPressed: () {
-                            _formKey.currentState!.reset();
-                          },
-                          backgroundColor: MaterialStateProperty.all(
-                              const Color(0xFF8B97FF)),
-                          labelText: 'Clear')
-                    ],
-                  ),
-                ),
+            ),
+            SizedBox(
+              width: SizeConfig.blockSizeHorizontal! * 100,
+              height: SizeConfig.blockSizeHorizontal! * 100,
+              child: SvgPicture.asset(
+                'assets/gambar.svg',
               ),
-              SizedBox(
-                width: SizeConfig.blockSizeHorizontal! * 100,
-                height: SizeConfig.blockSizeHorizontal! * 100,
-                child: SvgPicture.asset(
-                  'assets/gambar.svg',
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );

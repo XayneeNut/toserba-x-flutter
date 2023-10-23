@@ -14,7 +14,7 @@ class CreateBarangController {
       int enteredStok,
       Function setState,
       BuildContext context) async {
-        formKey = GlobalKey<FormState>();
+    formKey = GlobalKey<FormState>();
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
       await barangApiController.saveBarang(
@@ -22,11 +22,6 @@ class CreateBarangController {
           hargaBarang: enteredHarga,
           kodeBarang: enteredCode,
           stokBarang: enteredStok);
-      print(enteredName);
-      print(enteredHarga);
-      print(enteredCode);
-      print(enteredStok);
-
       final allBarang = await barangApiController.loadBarang();
       setState(() {
         barangApiController.barangModels = allBarang;

@@ -25,7 +25,7 @@ class BarangTextWidget extends StatelessWidget {
             style: GoogleFonts.ubuntu(
               decoration: TextDecoration.none,
               color: Colors.black,
-              fontSize: 35,
+              fontSize: 28,
               fontWeight: FontWeight.w400,
               height: 0,
             ),
@@ -48,10 +48,11 @@ class BarangTextWidget extends StatelessWidget {
         Align(
           alignment: Alignment.centerRight,
           child: Container(
-            margin: EdgeInsets.only(right: 20),
+            margin: const EdgeInsets.only(right: 20),
             width: 55,
             height: 55,
             decoration: const BoxDecoration(
+              boxShadow: [BoxShadow(color: Colors.black, blurRadius: 12.0)],
               shape: BoxShape.circle,
               color: Color.fromRGBO(54, 54, 52, 1),
             ),
