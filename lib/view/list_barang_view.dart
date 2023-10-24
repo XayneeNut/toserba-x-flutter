@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:toserba/controller/barang_api_controller.dart';
 import 'package:toserba/controller/list_barang_controller.dart';
@@ -24,7 +26,6 @@ class _ListBarangViewState extends State<ListBarangView>
   final ListBarangController listBarangController = ListBarangController();
   int _selectedPageIndex = 0;
   AnimationController? _controller;
-  Animation<Offset>? _offsetAnimation;
 
   void _onSelectedPage(int index) {
     setState(() {
@@ -35,19 +36,6 @@ class _ListBarangViewState extends State<ListBarangView>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 100),
-    );
-    _offsetAnimation = Tween<Offset>(
-      begin: Offset(1.0, 0.0),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller!,
-      curve: Curves.easeInOut,
-    ));
-    listBarangController.loadItem(
-        barangApiController, setState, widget.barangModels);
   }
 
   @override
@@ -92,26 +80,7 @@ class _ListBarangViewState extends State<ListBarangView>
               BottomNavigationBarItem(icon: Icon(Icons.create), label: 'create')
             ],
             backgroundColor: const Color.fromRGBO(241, 243, 236, 1)),
-        backgroundColor: const Color.fromRGBO(253, 255, 250, 1),
-        appBar: AppBar(
-          backgroundColor: const Color.fromRGBO(143, 194, 13, 1),
-          title: Text(selectedPageTitle),
-          actions: [
-            IconButton(
-              onPressed: () {
-                showSearch(
-                    context: context,
-                    delegate: CustomSearchDelegate(
-                        widget.barangModels,
-                        listBarangController,
-                        barangApiController,
-                        setState,
-                        context));
-              },
-              icon: const Icon(Icons.search),
-            )
-          ],
-        ),
+        backgroundColor: const Color.fromRGBO(251, 251,251, 1),
         body: activePage);
   }
 }
