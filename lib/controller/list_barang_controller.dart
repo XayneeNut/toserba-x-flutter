@@ -15,6 +15,7 @@ class ListBarangController {
       context,
       MaterialPageRoute(
         builder: (context) => CreateBarangView(
+          barangModels: barangModels,
           barangApiController: barangApiController,
           toCreateBarang: (p0, p1, p2, p3) {},
         ),

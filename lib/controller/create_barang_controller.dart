@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:toserba/controller/barang_api_controller.dart';
@@ -12,8 +13,9 @@ class CreateBarangController {
       int enteredHarga,
       String enteredCode,
       int enteredStok,
+      String enteredImage,
       Function setState,
-      BuildContext context) async {
+      BuildContext context,) async {
     formKey = GlobalKey<FormState>();
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
@@ -21,7 +23,8 @@ class CreateBarangController {
           namaBarang: enteredName,
           hargaBarang: enteredHarga,
           kodeBarang: enteredCode,
-          stokBarang: enteredStok);
+          stokBarang: enteredStok,
+          imageBarang: enteredImage);
       final allBarang = await barangApiController.loadBarang();
       setState(() {
         barangApiController.barangModels = allBarang;
@@ -42,7 +45,8 @@ class CreateBarangController {
             namaBarang: enteredName,
             kodeBarang: enteredCode,
             hargaBarang: enteredHarga,
-            stokBarang: enteredStok),
+            stokBarang: enteredStok,
+            imageBarang:File(enteredImage)),
       );
     }
   }

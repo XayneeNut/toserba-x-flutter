@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:toserba/models/barang_models.dart';
@@ -25,13 +26,15 @@ class BarangApiController {
       final kodeBarang = allData['kodeBarang'];
       final hargaBarang = allData['hargaBarang'];
       final stokBarang = allData['stokBarang'];
+      final imageBarang = allData['imageBarang'];
 
       final barang = BarangModels(
           idBarang: idBarang,
           namaBarang: namaBarang,
           kodeBarang: kodeBarang,
           hargaBarang: hargaBarang,
-          stokBarang: stokBarang);
+          stokBarang: stokBarang,
+          imageBarang:File(imageBarang as String));
 
       barangModels.add(barang);
     }
@@ -43,7 +46,8 @@ class BarangApiController {
       {required String namaBarang,
       required int hargaBarang,
       required String kodeBarang,
-      required int stokBarang}) async {
+      required int stokBarang,
+      required String imageBarang}) async {
     final url = Uri.parse("http://10.0.2.2:8127/api/v1/barang/create");
 
     final body = json.encode({
@@ -51,6 +55,7 @@ class BarangApiController {
       "hargaBarang": hargaBarang,
       "kodeBarang": kodeBarang,
       "stokBarang": stokBarang,
+      "imageBarang": imageBarang,
     });
 
     try {
@@ -84,6 +89,7 @@ class BarangApiController {
       "hargaBarang": barang.hargaBarang,
       "kodeBarang": barang.kodeBarang,
       "stokBarang": barang.stokBarang,
+      "imageBarang" : barang.imageBarang,
     });
 
     try {

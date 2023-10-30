@@ -1,20 +1,23 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:toserba/controller/barang_api_controller.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/widget/add_clear_widget.dart';
+import 'package:toserba/widget/custom_app_bar_widget.dart';
+import 'package:toserba/widget/image_picker_widget.dart';
 import 'package:toserba/widget/nama_kode_widget.dart';
 import 'package:toserba/widget/size_config.dart';
 import 'package:toserba/widget/stok_harga_widget.dart';
-
 class CreateBarangView extends StatefulWidget {
   const CreateBarangView(
       {super.key,
       required this.barangApiController,
-      required this.toCreateBarang});
+      required this.toCreateBarang,
+      required this.barangModels});
 
   final BarangApiController barangApiController;
+  final List<BarangModels> barangModels;
   final void Function(BuildContext, BarangApiController, List<BarangModels>,
       void Function(VoidCallback)) toCreateBarang;
 
@@ -28,6 +31,7 @@ class _CreateBarangViewState extends State<CreateBarangView> {
   var _enteredHarga = 0;
   var _enteredStok = 0;
   var _enteredCode = '';
+  File? _enteredImage;
   final _labelTextStyle =
       GoogleFonts.poppins(color: Colors.black, fontSize: 18);
 
@@ -38,7 +42,8 @@ class _CreateBarangViewState extends State<CreateBarangView> {
           namaBarang: _enteredName,
           hargaBarang: _enteredHarga,
           kodeBarang: _enteredCode,
-          stokBarang: _enteredStok);
+          stokBarang: _enteredStok,
+          imageBarang: _enteredImage!.path);
 
       final allBarang = await widget.barangApiController.loadBarang();
       setState(() {
@@ -53,87 +58,92 @@ class _CreateBarangViewState extends State<CreateBarangView> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return SingleChildScrollView(
-      child: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            NamaKodeWidget(
-                initialValue: '',
-                onSaved: (val) {
-                  _enteredName = val;
+    return Scaffold(
+      appBar: CustomAppBarWidget(
+          barangModels: widget.barangModels, isListBarang: false),
+      body: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              SizedBox(
+                height: SizeConfig.blockSizeVertical! * 3,
+              ),
+              ImagePickerWidget(
+                pickedImage: (image) {
+                  _enteredImage = image;
                 },
-                textStyle: _labelTextStyle,
-                labelText: "Nama Barang"),
-            NamaKodeWidget(
-                initialValue: '',
-                onSaved: (val) {
-                  _enteredCode = val;
-                },
-                textStyle: _labelTextStyle,
-                labelText: "Kode Barang"),
-            Container(
-              margin: const EdgeInsets.only(top: 10),
-              padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.blockSizeHorizontal! * 5,
-                vertical: SizeConfig.blockSizeVertical! * 2,
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  StokHargaWidget(
-                      initialValue: 0,
-                      onSaved: (value) {
-                        _enteredStok = value;
-                      },
-                      textStyle: _labelTextStyle,
-                      labelText: "stok"),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  StokHargaWidget(
-                      initialValue: 0,
-                      onSaved: (value) {
-                        _enteredHarga = value;
-                      },
-                      textStyle: _labelTextStyle,
-                      labelText: "harga"),
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(
-                right: SizeConfig.blockSizeHorizontal! * 5,
-                top: SizeConfig.blockSizeVertical! * 5,
-              ),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Column(
+              NamaKodeWidget(
+                  initialValue: '',
+                  onSaved: (val) {
+                    _enteredName = val;
+                  },
+                  textStyle: _labelTextStyle,
+                  labelText: "Nama Barang"),
+              NamaKodeWidget(
+                  initialValue: '',
+                  onSaved: (val) {
+                    _enteredCode = val;
+                  },
+                  textStyle: _labelTextStyle,
+                  labelText: "Kode Barang"),
+              Container(
+                margin: const EdgeInsets.only(top: 10),
+                padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.blockSizeHorizontal! * 5,
+                  vertical: SizeConfig.blockSizeVertical! * 2,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    AddClearWidget(
-                        onPressed: _saveBarang,
-                        backgroundColor:
-                            MaterialStateProperty.all(const Color(0xFFFFAD22)),
-                        labelText: 'Add'),
-                    AddClearWidget(
-                        onPressed: () {
-                          _formKey.currentState!.reset();
+                    StokHargaWidget(
+                        initialValue: 0,
+                        onSaved: (value) {
+                          _enteredStok = value;
                         },
-                        backgroundColor:
-                            MaterialStateProperty.all(const Color(0xFF8B97FF)),
-                        labelText: 'Clear')
+                        textStyle: _labelTextStyle,
+                        labelText: "stok"),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    StokHargaWidget(
+                        initialValue: 0,
+                        onSaved: (value) {
+                          _enteredHarga = value;
+                        },
+                        textStyle: _labelTextStyle,
+                        labelText: "harga"),
                   ],
                 ),
               ),
-            ),
-            SizedBox(
-              width: SizeConfig.blockSizeHorizontal! * 100,
-              height: SizeConfig.blockSizeHorizontal! * 100,
-              child: SvgPicture.asset(
-                'assets/gambar.svg',
+              Container(
+                margin: EdgeInsets.only(
+                  right: SizeConfig.blockSizeHorizontal! * 5,
+                  top: SizeConfig.blockSizeVertical! * 5,
+                ),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Column(
+                    children: [
+                      AddClearWidget(
+                          onPressed: _saveBarang,
+                          backgroundColor: MaterialStateProperty.all(
+                              const Color(0xFFFFAD22)),
+                          labelText: 'Add'),
+                      AddClearWidget(
+                          onPressed: () {
+                            _formKey.currentState!.reset();
+                          },
+                          backgroundColor: MaterialStateProperty.all(
+                              const Color(0xFF8B97FF)),
+                          labelText: 'Clear')
+                    ],
+                  ),
+                ),
               ),
-            )
-          ],
+            ],
+          ),
         ),
       ),
     );

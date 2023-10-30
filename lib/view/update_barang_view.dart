@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,6 +29,7 @@ class _UpdateBarangViewState extends State<UpdateBarangView> {
   var _enteredHarga = 0;
   var _enteredStok = 0;
   var _enteredCode = '';
+  var _enteredImage = '';
   final _labelTextStyle =
       GoogleFonts.poppins(color: Colors.black, fontSize: 18);
 
@@ -39,7 +42,8 @@ class _UpdateBarangViewState extends State<UpdateBarangView> {
           namaBarang: _enteredName,
           kodeBarang: _enteredCode,
           hargaBarang: _enteredHarga,
-          stokBarang: _enteredStok);
+          stokBarang: _enteredStok,
+          imageBarang: File(_enteredImage));
 
       await widget.newBarangController.updateBarang(updateBarang);
 

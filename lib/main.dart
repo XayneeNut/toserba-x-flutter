@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:toserba/view/home_view.dart';
 
 void main() {
   runApp(
-    const MyApp(),
+    const ProviderScope(child: MyApp()),
   );
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Color.fromRGBO(251, 251, 251, 1),
+      statusBarBrightness: Brightness.light,
       statusBarIconBrightness: Brightness.light));
 }
 
