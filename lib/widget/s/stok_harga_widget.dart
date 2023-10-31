@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:toserba/widget/size_config.dart';
+import 'package:toserba/widget/s/size_config.dart';
 
 class StokHargaWidget extends StatelessWidget {
   const StokHargaWidget(

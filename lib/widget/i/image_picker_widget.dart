@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:toserba/widget/size_config.dart';
+import 'package:toserba/widget/s/size_config.dart';
 
 class ImagePickerWidget extends StatefulWidget {
   const ImagePickerWidget({super.key, required this.pickedImage});

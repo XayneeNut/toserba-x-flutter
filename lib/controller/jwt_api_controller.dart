@@ -10,6 +10,8 @@ class JwtApiController {
     const storage = FlutterSecureStorage();
 
     await storage.write(key: 'token', value: response.body);
+    var token = await storage.read(key: 'token');
+    print("ini token $token");
     return response;
   }
 }

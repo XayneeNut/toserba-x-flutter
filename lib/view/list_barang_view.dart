@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:toserba/controller/admin_api_controller.dart';
 import 'package:toserba/controller/barang_api_controller.dart';
+import 'package:toserba/controller/jwt_api_controller.dart';
 import 'package:toserba/controller/list_barang_controller.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/view/create_barang_view.dart';
-import 'package:toserba/widget/active_page_widget.dart';
-import 'package:toserba/widget/custom_bottom_nav_bar_widget.dart';
-import 'package:toserba/widget/size_config.dart';
+import 'package:toserba/widget/a/active_page_widget.dart';
+import 'package:toserba/widget/c/custom_bottom_nav_bar_widget.dart';
+import 'package:toserba/widget/d/drawer_main_widget.dart';
+import 'package:toserba/widget/s/size_config.dart';
 
 class ListBarangView extends StatefulWidget {
-  const ListBarangView({super.key, required this.barangModels, required this.barangModel});
+  const ListBarangView(
+      {super.key, required this.barangModels, required this.barangModel});
 
   final List<BarangModels> barangModels;
   final BarangModels barangModel;
@@ -22,11 +27,16 @@ class _ListBarangViewState extends State<ListBarangView>
   TextEditingController searchController = TextEditingController();
   List<BarangModels> filteredBarangModels = [];
   final BarangApiController barangApiController = BarangApiController();
+  final JwtApiController jwtApiController = JwtApiController();
+  final AdminApiController adminApiController = AdminApiController();
   final ListBarangController listBarangController = ListBarangController();
   int _selectedPageIndex = 0;
   AnimationController? _controller;
-  var bottomIconColor = Color.fromARGB(255, 143, 143, 143);
+  var bottomIconColor = const Color.fromARGB(255, 143, 143, 143);
   var pressedButtonColor = Colors.white;
+  final FlutterSecureStorage flutterSecureStorage =
+      const FlutterSecureStorage();
+
   void _onSelectedPage(int index) {
     setState(() {
       _selectedPageIndex = index;
@@ -55,6 +65,8 @@ class _ListBarangViewState extends State<ListBarangView>
     response;
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -73,6 +85,7 @@ class _ListBarangViewState extends State<ListBarangView>
       );
     }
     return Scaffold(
+        drawer: DrawerMain(),
         bottomNavigationBar: CustomBottomNavBarWidget(
           bottomIconColor: bottomIconColor,
           pressedIconColor: pressedButtonColor,

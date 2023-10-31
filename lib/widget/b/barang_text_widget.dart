@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/providers/favorites_barang_providers.dart';
-import 'package:toserba/widget/size_config.dart';
+import 'package:toserba/widget/s/size_config.dart';
 import 'package:intl/intl.dart';
 
 class BarangTextWidget extends ConsumerWidget {

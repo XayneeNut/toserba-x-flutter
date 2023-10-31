@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:toserba/widget/size_config.dart';
+import 'package:toserba/widget/s/size_config.dart';
 
 // ignore: must_be_immutable
 class CustomBottomNavBarWidget extends StatefulWidget {

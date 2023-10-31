@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:toserba/controller/barang_api_controller.dart';
 import 'package:toserba/models/barang_models.dart';
-import 'package:toserba/widget/add_clear_widget.dart';
-import 'package:toserba/widget/custom_app_bar_widget.dart';
-import 'package:toserba/widget/image_picker_widget.dart';
-import 'package:toserba/widget/nama_kode_widget.dart';
-import 'package:toserba/widget/size_config.dart';
-import 'package:toserba/widget/stok_harga_widget.dart';
+import 'package:toserba/widget/a/add_clear_widget.dart';
+import 'package:toserba/widget/c/custom_app_bar_widget.dart';
+import 'package:toserba/widget/i/image_picker_widget.dart';
+import 'package:toserba/widget/n/nama_kode_widget.dart';
+import 'package:toserba/widget/s/size_config.dart';
+import 'package:toserba/widget/s/stok_harga_widget.dart';
 class CreateBarangView extends StatefulWidget {
   const CreateBarangView(
       {super.key,
@@ -51,7 +51,7 @@ class _CreateBarangViewState extends State<CreateBarangView> {
       });
       if (!context.mounted) return;
 
-      Navigator.pushNamed(context, '/');
+      Navigator.pushNamed(context, '/homeview');
     }
   }
 

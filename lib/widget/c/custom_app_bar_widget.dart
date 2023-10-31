@@ -3,8 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:toserba/controller/barang_api_controller.dart';
 import 'package:toserba/controller/list_barang_controller.dart';
 import 'package:toserba/models/barang_models.dart';
-import 'package:toserba/widget/custom_search_delegate.dart';
-import 'package:toserba/widget/size_config.dart';
+import 'package:toserba/widget/c/custom_search_delegate.dart';
+import 'package:toserba/widget/s/size_config.dart';
 
 // ignore: must_be_immutable
 class CustomAppBarWidget extends StatefulWidget implements PreferredSizeWidget {
@@ -37,7 +37,7 @@ class _CustomAppBarWidgetState extends State<CustomAppBarWidget> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.menu)),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.logout)),
           Text(
             'add new barang',
             style:
