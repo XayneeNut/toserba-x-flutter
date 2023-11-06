@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:toserba/controller/barang_api_controller.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/widget/a/add_clear_widget.dart';
+import 'package:toserba/widget/custom%20app%20bar/update_app_bar_widget.dart';
 import 'package:toserba/widget/n/nama_kode_widget.dart';
 import 'package:toserba/widget/s/size_config.dart';
 import 'package:toserba/widget/s/stok_harga_widget.dart';
@@ -36,6 +38,9 @@ class _UpdateBarangViewState extends State<UpdateBarangView> {
   void updateBarang() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      FlutterSecureStorage flutterSecureStorage = const FlutterSecureStorage();
+      final currentAccountId =
+          await flutterSecureStorage.read(key: 'admin_account_id');
 
       final updateBarang = BarangModels(
           idBarang: widget.newBarangModels.idBarang,
@@ -43,7 +48,8 @@ class _UpdateBarangViewState extends State<UpdateBarangView> {
           kodeBarang: _enteredCode,
           hargaBarang: _enteredHarga,
           stokBarang: _enteredStok,
-          imageBarang: File(_enteredImage));
+          imageBarang: File(_enteredImage),
+          accountId: int.parse(currentAccountId!));
 
       await widget.newBarangController.updateBarang(updateBarang);
 
@@ -60,12 +66,7 @@ class _UpdateBarangViewState extends State<UpdateBarangView> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Update Item',
-          style: GoogleFonts.poppins(fontSize: 25),
-        ),
-      ),
+      appBar: UpdateAppBarWidget(),
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,

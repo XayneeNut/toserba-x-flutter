@@ -2,29 +2,35 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:toserba/controller/barang_api_controller.dart';
 import 'package:toserba/models/barang_models.dart';
 
 class CreateBarangController {
+  FlutterSecureStorage flutterSecureStorage = const FlutterSecureStorage();
   Future<void> saveBarang(
-      GlobalKey<FormState> formKey,
-      BarangApiController barangApiController,
-      String enteredName,
-      int enteredHarga,
-      String enteredCode,
-      int enteredStok,
-      String enteredImage,
-      Function setState,
-      BuildContext context,) async {
+    GlobalKey<FormState> formKey,
+    BarangApiController barangApiController,
+    String enteredName,
+    int enteredHarga,
+    String enteredCode,
+    int enteredStok,
+    String enteredImage,
+    Function setState,
+    BuildContext context,
+  ) async {
     formKey = GlobalKey<FormState>();
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
+      final currentAccountId =
+          await flutterSecureStorage.read(key: 'admin_account_id');
       await barangApiController.saveBarang(
-          namaBarang: enteredName,
-          hargaBarang: enteredHarga,
-          kodeBarang: enteredCode,
-          stokBarang: enteredStok,
-          imageBarang: enteredImage);
+        namaBarang: enteredName,
+        hargaBarang: enteredHarga,
+        kodeBarang: enteredCode,
+        stokBarang: enteredStok,
+        imageBarang: enteredImage,
+      );
       final allBarang = await barangApiController.loadBarang();
       setState(() {
         barangApiController.barangModels = allBarang;
@@ -46,7 +52,8 @@ class CreateBarangController {
             kodeBarang: enteredCode,
             hargaBarang: enteredHarga,
             stokBarang: enteredStok,
-            imageBarang:File(enteredImage)),
+            imageBarang: File(enteredImage),
+            accountId: int.parse(currentAccountId!)),
       );
     }
   }

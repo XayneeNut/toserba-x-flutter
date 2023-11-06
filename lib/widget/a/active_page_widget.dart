@@ -9,12 +9,11 @@ import 'package:toserba/widget/c/custom_app_bar_widget.dart';
 import 'package:toserba/widget/s/size_config.dart';
 
 class ActivePageWidget extends StatefulWidget {
-  const ActivePageWidget({
-    super.key,
-    required this.barangModels,
-    required this.deleteData,
-    required this.barangModel
-  });
+  const ActivePageWidget(
+      {super.key,
+      required this.barangModels,
+      required this.deleteData,
+      required this.barangModel});
 
   final List<BarangModels> barangModels;
   final BarangModels barangModel;
@@ -55,7 +54,8 @@ class _ActivePageWidgetState extends State<ActivePageWidget> {
                     child: Center(
                       child: Text(
                         'Find',
-                        style: groceryTextStyle.copyWith(fontSize: 50),
+                        style: groceryTextStyle.copyWith(
+                            fontSize: SizeConfig.blockSizeVertical! * 7),
                       ),
                     ),
                   ),
@@ -65,14 +65,16 @@ class _ActivePageWidgetState extends State<ActivePageWidget> {
                   Text(
                     'Your Daily',
                     style: groceryTextStyle.copyWith(
-                        fontSize: 20, fontWeight: FontWeight.w400),
+                        fontSize: SizeConfig.blockSizeVertical! * 2.5,
+                        fontWeight: FontWeight.w400),
                   ),
                   const SizedBox(
                     width: 10,
                   ),
                   Text(
                     'Grocery',
-                    style: groceryTextStyle.copyWith(fontSize: 32),
+                    style: groceryTextStyle.copyWith(
+                        fontSize: SizeConfig.blockSizeVertical! * 3.8),
                   ),
                 ],
               ),
@@ -123,25 +125,10 @@ class _ActivePageWidgetState extends State<ActivePageWidget> {
                         );
                       },
                       child: Container(
-                        width: SizeConfig.blockSizeVertical! * 13,
-                        height: SizeConfig.blockSizeVertical! * 13,
-                        margin: const EdgeInsets.all(10),
+                        margin:
+                            EdgeInsets.all(SizeConfig.blockSizeVertical! * 1),
                         child: Stack(
                           children: [
-                            Container(
-                              decoration: ShapeDecoration(
-                                color: Colors.white,
-                                shadows: const [
-                                  BoxShadow(
-                                    blurRadius: 10,
-                                    color: Color.fromARGB(255, 201, 201, 201),
-                                  ),
-                                ],
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18),
-                                ),
-                              ),
-                            ),
                             BarangTextWidget(
                                 index: index,
                                 barangModels: widget.barangModels,

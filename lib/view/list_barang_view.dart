@@ -8,7 +8,7 @@ import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/view/create_barang_view.dart';
 import 'package:toserba/widget/a/active_page_widget.dart';
 import 'package:toserba/widget/c/custom_bottom_nav_bar_widget.dart';
-import 'package:toserba/widget/d/drawer_main_widget.dart';
+import 'package:toserba/widget/custom%20drawer%20widget/drawer_main_widget.dart';
 import 'package:toserba/widget/s/size_config.dart';
 
 class ListBarangView extends StatefulWidget {
@@ -37,10 +37,11 @@ class _ListBarangViewState extends State<ListBarangView>
   final FlutterSecureStorage flutterSecureStorage =
       const FlutterSecureStorage();
 
-  void _onSelectedPage(int index) {
+  void _onSelectedPage(int index) async {
     setState(() {
       _selectedPageIndex = index;
     });
+    
   }
 
   @override
@@ -65,8 +66,6 @@ class _ListBarangViewState extends State<ListBarangView>
     response;
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -85,7 +84,7 @@ class _ListBarangViewState extends State<ListBarangView>
       );
     }
     return Scaffold(
-        drawer: DrawerMain(),
+        drawer: DrawerMain(adminAccountModel: []),
         bottomNavigationBar: CustomBottomNavBarWidget(
           bottomIconColor: bottomIconColor,
           pressedIconColor: pressedButtonColor,

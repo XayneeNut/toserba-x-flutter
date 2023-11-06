@@ -9,6 +9,7 @@ import 'package:toserba/widget/i/image_picker_widget.dart';
 import 'package:toserba/widget/n/nama_kode_widget.dart';
 import 'package:toserba/widget/s/size_config.dart';
 import 'package:toserba/widget/s/stok_harga_widget.dart';
+
 class CreateBarangView extends StatefulWidget {
   const CreateBarangView(
       {super.key,
@@ -79,14 +80,16 @@ class _CreateBarangViewState extends State<CreateBarangView> {
                   onSaved: (val) {
                     _enteredName = val;
                   },
-                  textStyle: _labelTextStyle,
+                  textStyle: _labelTextStyle.copyWith(
+                      color: const Color.fromARGB(255, 116, 116, 116)),
                   labelText: "Nama Barang"),
               NamaKodeWidget(
                   initialValue: '',
                   onSaved: (val) {
                     _enteredCode = val;
                   },
-                  textStyle: _labelTextStyle,
+                  textStyle: _labelTextStyle.copyWith(
+                      color: const Color.fromARGB(255, 116, 116, 116)),
                   labelText: "Kode Barang"),
               Container(
                 margin: const EdgeInsets.only(top: 10),

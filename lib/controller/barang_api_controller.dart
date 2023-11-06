@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:toserba/models/barang_models.dart';
 
 class BarangApiController {
   List<BarangModels> barangModels = [];
+  FlutterSecureStorage flutterSecureStorage = const FlutterSecureStorage();
 
   Future<http.Response> getAllBarang() async {
     final url = Uri.parse("http://10.0.2.2:8127/api/v1/barang/get-all");
@@ -17,6 +19,8 @@ class BarangApiController {
   Future<List<BarangModels>> loadBarang() async {
     final response = await getAllBarang();
     final jsonData = json.decode(response.body);
+    final currentAccountId =
+        await flutterSecureStorage.read(key: 'admin_account_id');
 
     List<BarangModels> barangModels = [];
 
@@ -27,6 +31,7 @@ class BarangApiController {
       final hargaBarang = allData['hargaBarang'];
       final stokBarang = allData['stokBarang'];
       final imageBarang = allData['imageBarang'];
+      final accountId = allData['adminAccountEntity']['accountId'];
 
       final barang = BarangModels(
           idBarang: idBarang,
@@ -34,9 +39,12 @@ class BarangApiController {
           kodeBarang: kodeBarang,
           hargaBarang: hargaBarang,
           stokBarang: stokBarang,
-          imageBarang:File(imageBarang as String));
+          imageBarang: File(imageBarang as String),
+          accountId: accountId);
 
-      barangModels.add(barang);
+      if (accountId == int.parse(currentAccountId!)) {
+        barangModels.add(barang);
+      }
     }
     print(jsonData);
     return barangModels;
@@ -47,8 +55,10 @@ class BarangApiController {
       required int hargaBarang,
       required String kodeBarang,
       required int stokBarang,
-      required String imageBarang}) async {
+      required String imageBarang,}) async {
     final url = Uri.parse("http://10.0.2.2:8127/api/v1/barang/create");
+     final currentAccountId =
+        await flutterSecureStorage.read(key: 'admin_account_id');
 
     final body = json.encode({
       "namaBarang": namaBarang,
@@ -56,6 +66,7 @@ class BarangApiController {
       "kodeBarang": kodeBarang,
       "stokBarang": stokBarang,
       "imageBarang": imageBarang,
+      "adminAccountEntity" : int.parse(currentAccountId!)
     });
 
     try {
@@ -89,7 +100,7 @@ class BarangApiController {
       "hargaBarang": barang.hargaBarang,
       "kodeBarang": barang.kodeBarang,
       "stokBarang": barang.stokBarang,
-      "imageBarang" : barang.imageBarang,
+      "imageBarang": barang.imageBarang,
     });
 
     try {

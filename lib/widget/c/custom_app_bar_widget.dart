@@ -39,7 +39,7 @@ class _CustomAppBarWidgetState extends State<CustomAppBarWidget> {
         children: [
           IconButton(onPressed: () {}, icon: const Icon(Icons.logout)),
           Text(
-            'add new barang',
+            'Tambah Barang',
             style:
                 GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 20),
           ),

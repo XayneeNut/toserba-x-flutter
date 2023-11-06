@@ -51,6 +51,8 @@ class AdminApiController {
 
     final adminId = responseData['accountId'];
     await storage.write(key: 'admin_account_id', value: adminId.toString());
+    final adminAccount = await storage.read(key: 'admin_account_id');
+    print(adminAccount);
     return response;
   }
 
@@ -81,6 +83,12 @@ class AdminApiController {
     } catch (e) {
       //handling error message
     }
+    return response;
+  }
+
+  Future<http.Response> getEmailById(int id) async {
+    final url = Uri.parse('http://10.0.2.2:8127/api/v1/admin-account/get-id/$id');
+    final response = await http.get(url);
     return response;
   }
 }
