@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:toserba/widget/s/size_config.dart';
 
 class NamaKodeWidget extends StatelessWidget {
   const NamaKodeWidget(
@@ -46,7 +45,8 @@ class NamaKodeWidget extends StatelessWidget {
             onSaved: (newValue) {
               onSaved(newValue!);
             },
-            style: textStyle.copyWith(color: Colors.grey),
+            style:
+                textStyle.copyWith(color: const Color.fromARGB(255, 0, 0, 0)),
           ),
         ),
       ],

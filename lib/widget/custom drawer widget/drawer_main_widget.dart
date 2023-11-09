@@ -124,7 +124,7 @@ class _DrawerMainState extends State<DrawerMain> {
             decoration: BoxDecoration(boxShadow: [
               BoxShadow(
                 color: const Color.fromARGB(255, 212, 212, 212),
-                blurRadius: SizeConfig.blockSizeVertical! * 2,
+                blurRadius: SizeConfig.blockSizeVertical! * 1.8,
               )
             ], color: Colors.white),
             child: Column(

@@ -8,11 +8,13 @@ class StokHargaWidget extends StatelessWidget {
     required this.onSaved,
     required this.textStyle,
     required this.labelText,
+    required this.initialValue,
   });
 
   final void Function(int value) onSaved;
   final String labelText;
   final TextStyle textStyle;
+  final int initialValue;
 
   @override
   Widget build(BuildContext context) {

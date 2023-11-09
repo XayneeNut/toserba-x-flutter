@@ -74,8 +74,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
                 parentContext,
                 MaterialPageRoute(
                   builder: (context) => DetailBarangView(
-                    newBarangController: barangApiController,
-                    newBarangModels: suggestionList[index],
+                    barangModels: suggestionList[index],
                   ),
                 ));
           },

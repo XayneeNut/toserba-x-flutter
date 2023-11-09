@@ -24,14 +24,31 @@ class UserAccountHeader extends StatelessWidget {
           SizeConfig.blockSizeVertical! * 8,
           SizeConfig.blockSizeVertical! * 8,
         ),
-        currentAccountPicture: const CircleAvatar(
-          backgroundColor: Colors.black,
+        currentAccountPicture: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                blurRadius: SizeConfig.blockSizeVertical! * 1.2,
+                color: Color.fromARGB(255, 255, 255, 255),
+              )
+            ],
+          ),
+          child: const CircleAvatar(
+            backgroundColor: Colors.white,
+          ),
         ),
-        otherAccountsPictures: const [Icon(Icons.more_horiz)],
+        otherAccountsPictures: const [
+          Icon(
+            Icons.more_horiz,
+            color: Colors.white,
+          )
+        ],
         accountName: Text(
           adminUsername,
           style: GoogleFonts.poppins(
-            color: Colors.black,
+            color: Colors.white,
             fontWeight: FontWeight.w600,
             fontSize: SizeConfig.blockSizeVertical! * 3,
           ),
@@ -42,7 +59,7 @@ class UserAccountHeader extends StatelessWidget {
             Text(
               adminAccountId,
               style: GoogleFonts.poppins(
-                color: Colors.black,
+                color: Colors.white,
                 fontWeight: FontWeight.w500,
                 fontSize: SizeConfig.blockSizeVertical! * 1.4,
               ),
@@ -53,7 +70,7 @@ class UserAccountHeader extends StatelessWidget {
             Text(
               adminEmail,
               style: GoogleFonts.poppins(
-                color: Colors.black,
+                color: Colors.white,
                 fontWeight: FontWeight.w500,
                 fontSize: SizeConfig.blockSizeVertical! * 1.55,
               ),
@@ -63,14 +80,14 @@ class UserAccountHeader extends StatelessWidget {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              blurRadius: SizeConfig.blockSizeVertical! * 2,
-              color: Colors.grey,
+              blurRadius: SizeConfig.blockSizeVertical! * 1.8,
+              color: Color.fromARGB(255, 143, 75, 252),
             ),
           ],
           borderRadius: BorderRadius.all(
             Radius.circular(SizeConfig.blockSizeVertical! * 3),
           ),
-          color: Color.fromARGB(255, 234, 233, 233),
+          color: Color.fromARGB(255, 27, 11, 135),
         ),
       ),
     );

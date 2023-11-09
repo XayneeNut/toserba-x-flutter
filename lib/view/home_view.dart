@@ -21,7 +21,9 @@ class _HomeViewState extends State<HomeView> {
       hargaBarang: 0,
       stokBarang: 0,
       imageBarang: File(''),
-      accountId: 0);
+      accountId: 0,
+      hargaJual: 0,
+      unit: '');
   final BarangApiController barangController = BarangApiController();
 
   @override

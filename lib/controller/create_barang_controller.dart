@@ -18,6 +18,8 @@ class CreateBarangController {
     String enteredImage,
     Function setState,
     BuildContext context,
+    int enteredHargaJual, 
+    String enteredUnit,
   ) async {
     formKey = GlobalKey<FormState>();
     if (formKey.currentState!.validate()) {
@@ -30,6 +32,8 @@ class CreateBarangController {
         kodeBarang: enteredCode,
         stokBarang: enteredStok,
         imageBarang: enteredImage,
+        hargaJual: enteredHargaJual,
+        unit: enteredUnit
       );
       final allBarang = await barangApiController.loadBarang();
       setState(() {
@@ -53,7 +57,9 @@ class CreateBarangController {
             hargaBarang: enteredHarga,
             stokBarang: enteredStok,
             imageBarang: File(enteredImage),
-            accountId: int.parse(currentAccountId!)),
+            accountId: int.parse(currentAccountId!),
+            hargaJual: enteredHargaJual,
+            unit: enteredUnit),
       );
     }
   }

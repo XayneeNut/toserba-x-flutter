@@ -13,8 +13,9 @@ void main() {
     const ProviderScope(child: MyApp()),
   );
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.white,
       statusBarBrightness: Brightness.light,
-      statusBarIconBrightness: Brightness.light));
+      statusBarIconBrightness: Brightness.dark));
 }
 
 class MyApp extends StatefulWidget {

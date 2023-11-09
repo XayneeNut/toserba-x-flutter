@@ -26,53 +26,83 @@ class _CustomAppBarWidgetState extends State<CustomAppBarWidget> {
   final BarangApiController barangApiController = BarangApiController();
   final ListBarangController listBarangController = ListBarangController();
   Widget? buttonRight;
+  var textButtonStyle = GoogleFonts.roboto(
+      color: const Color.fromARGB(255, 33, 68, 243),
+      fontSize: SizeConfig.blockSizeVertical! * 2.5);
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: SizeConfig.blockSizeVertical! * 7,
+      decoration: BoxDecoration(color: Colors.white),
       margin: EdgeInsets.only(
         top: widget.isListBarang == false
-            ? SizeConfig.blockSizeVertical! * 4.83
+            ? SizeConfig.blockSizeVertical! * 3
             : 0,
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: widget.isListBarang == true
+            ? MainAxisAlignment.spaceBetween
+            : MainAxisAlignment.start,
         children: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.logout)),
-          Text(
-            'Tambah Barang',
-            style:
-                GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 20),
-          ),
-          Container(
-            margin: EdgeInsets.only(right: SizeConfig.safeBlockVertical! * 2),
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                    blurRadius: 8, color: Color.fromARGB(255, 217, 217, 217)),
-              ],
+          TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/homeview',);
+              },
+              child: widget.isListBarang == false
+                  ? Text(
+                      'Batal',
+                      style: textButtonStyle,
+                    )
+                  : IconButton(
+                      onPressed: () {
+                        Scaffold.of(context).openDrawer();
+                      },
+                      icon: Icon(
+                        size: SizeConfig.blockSizeVertical! * 4,
+                        Icons.menu_open_rounded,
+                        color: Colors.black,
+                      ))),
+          if (widget.isListBarang == false)
+            SizedBox(
+              width: SizeConfig.blockSizeVertical! * 7,
             ),
-            child: widget.isListBarang == true
-                ? IconButton(
-                    onPressed: () {
-                      showSearch(
-                        context: context,
-                        delegate: CustomSearchDelegate(
-                            widget.barangModels,
-                            listBarangController,
-                            barangApiController,
-                            setState,
-                            context),
-                      );
-                    },
-                    icon: const Icon(Icons.search, size: 36),
-                  )
-                : IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.restore, size: 36),
-                  ),
-          ),
+          widget.isListBarang == true
+              ? Text(
+                  'List Barang',
+                  style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w500, fontSize: 20),
+                )
+              : Text(
+                  'Tambah Barang',
+                  style: GoogleFonts.roboto(
+                      fontWeight: FontWeight.w500, fontSize: 20),
+                ),
+          if (widget.isListBarang == true)
+            Container(
+              margin: EdgeInsets.only(right: SizeConfig.safeBlockVertical! * 2),
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      blurRadius: 8, color: Color.fromARGB(255, 217, 217, 217)),
+                ],
+              ),
+              child: IconButton(
+                onPressed: () {
+                  showSearch(
+                    context: context,
+                    delegate: CustomSearchDelegate(
+                        widget.barangModels,
+                        listBarangController,
+                        barangApiController,
+                        setState,
+                        context),
+                  );
+                },
+                icon: const Icon(Icons.search, size: 36),
+              ),
+            ),
         ],
       ),
     );

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:toserba/controller/barang_api_controller.dart';
 import 'package:toserba/models/barang_models.dart';
@@ -10,7 +9,7 @@ import 'package:toserba/widget/a/add_clear_widget.dart';
 import 'package:toserba/widget/custom%20app%20bar/update_app_bar_widget.dart';
 import 'package:toserba/widget/n/nama_kode_widget.dart';
 import 'package:toserba/widget/s/size_config.dart';
-import 'package:toserba/widget/s/stok_harga_widget.dart';
+import 'package:toserba/widget/i/image_picker_widget.dart';
 
 class UpdateBarangView extends StatefulWidget {
   const UpdateBarangView(
@@ -31,7 +30,9 @@ class _UpdateBarangViewState extends State<UpdateBarangView> {
   var _enteredHarga = 0;
   var _enteredStok = 0;
   var _enteredCode = '';
-  var _enteredImage = '';
+  File? _enteredImage;
+  var _enteredHargaJual = 0;
+  var _enteredUnit = '';
   final _labelTextStyle =
       GoogleFonts.poppins(color: Colors.black, fontSize: 18);
 
@@ -42,22 +43,32 @@ class _UpdateBarangViewState extends State<UpdateBarangView> {
       final currentAccountId =
           await flutterSecureStorage.read(key: 'admin_account_id');
 
-      final updateBarang = BarangModels(
+      final update = BarangModels(
           idBarang: widget.newBarangModels.idBarang,
           namaBarang: _enteredName,
           kodeBarang: _enteredCode,
           hargaBarang: _enteredHarga,
           stokBarang: _enteredStok,
-          imageBarang: File(_enteredImage),
+          hargaJual: _enteredHargaJual,
+          unit: _enteredUnit,
           accountId: int.parse(currentAccountId!));
 
-      await widget.newBarangController.updateBarang(updateBarang);
+      await widget.newBarangController.updateBarang(
+          idBarang: widget.newBarangModels.idBarang,
+          hargaBarang: _enteredHarga,
+          hargaJual: _enteredHargaJual,
+          imageBarang: _enteredImage!.path,
+          kodeBarang: _enteredCode,
+          namaBarang: _enteredName,
+          stokBarang: _enteredStok,
+          unit: _enteredUnit);
+      print(updateBarang);
 
       if (!context.mounted) return;
 
       Navigator.pop(
         context,
-        updateBarang,
+        update,
       );
     }
   }
@@ -66,87 +77,169 @@ class _UpdateBarangViewState extends State<UpdateBarangView> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      appBar: UpdateAppBarWidget(),
+      backgroundColor: const Color.fromARGB(255, 244, 243, 243),
+      appBar: UpdateAppBarWidget(barangModels: [], isUpdateBarang: true),
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-              NamaKodeWidget(
-                  initialValue: widget.newBarangModels.namaBarang,
-                  onSaved: (val) {
-                    _enteredName = val;
-                  },
-                  textStyle: _labelTextStyle,
-                  labelText: "Nama Barang"),
-              NamaKodeWidget(
-                  initialValue: widget.newBarangModels.kodeBarang,
-                  onSaved: (val) {
-                    _enteredCode = val;
-                  },
-                  textStyle: _labelTextStyle,
-                  labelText: "Kode Barang"),
-              Container(
-                margin: const EdgeInsets.only(top: 10),
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.blockSizeHorizontal! * 5,
-                  vertical: SizeConfig.blockSizeVertical! * 2,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    StokHargaWidget(
-                        initialValue: widget.newBarangModels.stokBarang,
-                        onSaved: (value) {
-                          _enteredStok = value;
-                        },
-                        textStyle: _labelTextStyle,
-                        labelText: "stok"),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    StokHargaWidget(
-                        initialValue: widget.newBarangModels.hargaBarang,
-                        onSaved: (value) {
-                          _enteredHarga = value;
-                        },
-                        textStyle: _labelTextStyle,
-                        labelText: "harga"),
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(
-                  right: SizeConfig.blockSizeHorizontal! * 5,
-                  top: SizeConfig.blockSizeVertical! * 5,
-                ),
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Column(
-                    children: [
-                      AddClearWidget(
-                          onPressed: updateBarang,
-                          backgroundColor: MaterialStateProperty.all(
-                              const Color(0xFFFFAD22)),
-                          labelText: 'Add'),
-                      AddClearWidget(
-                          onPressed: () {
-                            _formKey.currentState!.reset();
-                          },
-                          backgroundColor: MaterialStateProperty.all(
-                              const Color(0xFF8B97FF)),
-                          labelText: 'Clear')
-                    ],
-                  ),
-                ),
-              ),
               SizedBox(
-                width: SizeConfig.blockSizeHorizontal! * 100,
-                height: SizeConfig.blockSizeHorizontal! * 100,
-                child: SvgPicture.asset(
-                  'assets/gambar.svg',
+                height: SizeConfig.blockSizeVertical! * 2,
+              ),
+              Container(
+                margin:
+                    EdgeInsets.only(left: SizeConfig.blockSizeVertical! * 0.6),
+                height: SizeConfig.blockSizeVertical! * 53,
+                width: SizeConfig.blockSizeVertical! * 47.7,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(
+                      Radius.circular(SizeConfig.blockSizeVertical! * 4)),
                 ),
-              )
+                child: Column(children: [
+                  SizedBox(height: SizeConfig.blockSizeVertical! * 4),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      margin: EdgeInsets.only(
+                          left: SizeConfig.blockSizeVertical! * 0.3),
+                      width: SizeConfig.blockSizeVertical! * 30,
+                      padding: EdgeInsets.only(
+                          left: SizeConfig.blockSizeVertical! * 1),
+                      child: Text(
+                        "Informasi Item",
+                        style: _labelTextStyle.copyWith(
+                            letterSpacing: 0.50,
+                            fontSize: SizeConfig.blockSizeVertical! * 3,
+                            fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: SizeConfig.blockSizeVertical! * 1.5),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          left: SizeConfig.blockSizeVertical! * 1,
+                          right: SizeConfig.blockSizeVertical! * 1.5),
+                      child: ImagePickerWidget(
+                        initialImage: widget.newBarangModels.imageBarang,
+                        pickedImage: (image) {
+                          _enteredImage = image;
+                        },
+                      ),
+                    ),
+                  ),
+                  NamaKodeWidget(
+                    initialValue: widget.newBarangModels.namaBarang,
+                    onSaved: (val) {
+                      _enteredName = val;
+                    },
+                    textStyle: _labelTextStyle.copyWith(
+                      color: const Color.fromARGB(255, 116, 116, 116),
+                    ),
+                    labelText: "Nama Barang*",
+                  ),
+                  NamaKodeWidget(
+                      initialValue: widget.newBarangModels.unit,
+                      onSaved: (val) {
+                        _enteredUnit = val;
+                      },
+                      textStyle: _labelTextStyle.copyWith(
+                          color: const Color.fromARGB(255, 116, 116, 116)),
+                      labelText: "Unit*"),
+                  NamaKodeWidget(
+                      initialValue:
+                          widget.newBarangModels.stokBarang.toString(),
+                      onSaved: (val) {
+                        _enteredStok = int.parse(val);
+                      },
+                      textStyle: _labelTextStyle.copyWith(
+                          color: const Color.fromARGB(255, 116, 116, 116)),
+                      labelText: "Stok*"),
+                ]),
+              ),
+              SizedBox(height: SizeConfig.blockSizeVertical! * 1),
+              Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(
+                        left: SizeConfig.blockSizeVertical! * 0.6),
+                    width: SizeConfig.blockSizeVertical! * 47.7,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft:
+                            Radius.circular(SizeConfig.blockSizeVertical! * 4),
+                        topRight:
+                            Radius.circular(SizeConfig.blockSizeVertical! * 4),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        SizedBox(height: SizeConfig.blockSizeVertical! * 4),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: SizeConfig.blockSizeVertical! * 1,
+                              right: SizeConfig.blockSizeVertical! * 1.5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Informasi Pembelian",
+                                style: _labelTextStyle.copyWith(
+                                    fontSize: SizeConfig.blockSizeVertical! * 3,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                        ),
+                        NamaKodeWidget(
+                            initialValue: widget.newBarangModels.kodeBarang,
+                            onSaved: (val) {
+                              _enteredCode = val;
+                            },
+                            textStyle: _labelTextStyle.copyWith(
+                                color:
+                                    const Color.fromARGB(255, 116, 116, 116)),
+                            labelText: "SKU*"),
+                        NamaKodeWidget(
+                            initialValue:
+                                widget.newBarangModels.hargaBarang.toString(),
+                            onSaved: (val) {
+                              _enteredHarga = int.parse(val);
+                            },
+                            textStyle: _labelTextStyle.copyWith(
+                                color:
+                                    const Color.fromARGB(255, 116, 116, 116)),
+                            labelText: "Harga Beli*"),
+                        NamaKodeWidget(
+                            initialValue:
+                                widget.newBarangModels.hargaJual.toString(),
+                            onSaved: (val) {
+                              _enteredHargaJual = int.parse(val);
+                            },
+                            textStyle: _labelTextStyle.copyWith(
+                                color:
+                                    const Color.fromARGB(255, 116, 116, 116)),
+                            labelText: "Harga Jual*"),
+                        SizedBox(
+                          height: SizeConfig.blockSizeVertical! * 1.7,
+                        ),
+                        AddClearWidget(
+                            onPressed: updateBarang,
+                            backgroundColor: const MaterialStatePropertyAll(
+                                Color.fromARGB(255, 89, 84, 245)),
+                            labelText: 'Update`'),
+                        SizedBox(
+                          height: SizeConfig.blockSizeVertical! * 2,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

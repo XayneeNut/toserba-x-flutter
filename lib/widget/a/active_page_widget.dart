@@ -53,7 +53,7 @@ class _ActivePageWidgetState extends State<ActivePageWidget> {
                         color: const Color.fromARGB(255, 202, 233, 237)),
                     child: Center(
                       child: Text(
-                        'Find',
+                        'Sell',
                         style: groceryTextStyle.copyWith(
                             fontSize: SizeConfig.blockSizeVertical! * 7),
                       ),
@@ -63,7 +63,7 @@ class _ActivePageWidgetState extends State<ActivePageWidget> {
                     width: 10,
                   ),
                   Text(
-                    'Your Daily',
+                    'Your Best',
                     style: groceryTextStyle.copyWith(
                         fontSize: SizeConfig.blockSizeVertical! * 2.5,
                         fontWeight: FontWeight.w400),
@@ -72,7 +72,7 @@ class _ActivePageWidgetState extends State<ActivePageWidget> {
                     width: 10,
                   ),
                   Text(
-                    'Grocery',
+                    'Product',
                     style: groceryTextStyle.copyWith(
                         fontSize: SizeConfig.blockSizeVertical! * 3.8),
                   ),
@@ -100,40 +100,58 @@ class _ActivePageWidgetState extends State<ActivePageWidget> {
                 )
               : ListView.builder(
                   itemCount: widget.barangModels.length,
-                  itemBuilder: (context, index) => Dismissible(
-                    direction: DismissDirection.endToStart,
-                    onDismissed: (direction) =>
-                        widget.deleteData(widget.barangModels[index]),
-                    key: ValueKey(widget.barangModels[index].idBarang),
-                    child: GestureDetector(
-                      onTap: () => listBarangController.toUpdateBarang(
-                        index,
-                        widget.barangModels,
+                  itemBuilder: (context, index) => GestureDetector(
+                    onTap: () => listBarangController.toUpdateBarang(
+                      index,
+                      widget.barangModels,
+                      context,
+                      barangApiController,
+                      setState,
+                    ),
+                    onDoubleTap: () {
+                      Navigator.push(
                         context,
-                        barangApiController,
-                        setState,
-                      ),
-                      onDoubleTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DetailBarangView(
-                              newBarangController: barangApiController,
-                              newBarangModels: widget.barangModels[index],
-                            ),
+                        MaterialPageRoute(
+                          builder: (context) => DetailBarangView(
+                            barangModels: widget.barangModels[index],
                           ),
-                        );
-                      },
-                      child: Container(
-                        margin:
-                            EdgeInsets.all(SizeConfig.blockSizeVertical! * 1),
-                        child: Stack(
-                          children: [
-                            BarangTextWidget(
-                                index: index,
-                                barangModels: widget.barangModels,
-                                barangModel: widget.barangModel),
-                          ],
+                        ),
+                      );
+                    },
+                    child: Dismissible(
+                      direction: DismissDirection.endToStart,
+                      onDismissed: (direction) =>
+                          widget.deleteData(widget.barangModels[index]),
+                      key: ValueKey(widget.barangModels[index].idBarang),
+                      child: GestureDetector(
+                        onTap: () => listBarangController.toUpdateBarang(
+                          index,
+                          widget.barangModels,
+                          context,
+                          barangApiController,
+                          setState,
+                        ),
+                        onDoubleTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailBarangView(
+                                barangModels: widget.barangModels[index],
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          margin:
+                              EdgeInsets.all(SizeConfig.blockSizeVertical! * 1),
+                          child: Stack(
+                            children: [
+                              BarangTextWidget(
+                                  index: index,
+                                  barangModels: widget.barangModels,
+                                  barangModel: widget.barangModel),
+                            ],
+                          ),
                         ),
                       ),
                     ),

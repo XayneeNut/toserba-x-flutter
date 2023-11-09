@@ -4,21 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:toserba/widget/s/size_config.dart';
 
-class ImagePickerWidget extends StatefulWidget {
-  const ImagePickerWidget({
+class UpdateImageWidget extends StatefulWidget {
+  const UpdateImageWidget({
     Key? key,
     required this.pickedImage,
     required this.initialImage,
   }) : super(key: key);
 
-  final void Function(File image) pickedImage;
+  final void Function(String image) pickedImage;
   final File? initialImage;
 
   @override
-  State<ImagePickerWidget> createState() => _ImagePickerWidgetState();
+  State<UpdateImageWidget> createState() => _UpdateImageWidgetState();
 }
 
-class _ImagePickerWidgetState extends State<ImagePickerWidget> {
+class _UpdateImageWidgetState extends State<UpdateImageWidget> {
   late File? _selectedImage;
 
   @override
@@ -44,21 +44,18 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       _selectedImage = File(image.path);
     });
 
-    widget.pickedImage(_selectedImage!);
+    widget.pickedImage(_selectedImage!.path);
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          height: SizeConfig.blockSizeVertical! * 2,
-        ),
         GestureDetector(
           onTap: _takeImage,
           child: Container(
-            width: SizeConfig.blockSizeVertical! * 13,
-            height: SizeConfig.blockSizeVertical! * 13,
+            width: SizeConfig.blockSizeVertical! * 10,
+            height: SizeConfig.blockSizeVertical! * 10,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
             ),
@@ -75,13 +72,10 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                       : null,
                 ),
                 child: _selectedImage == null
-                    ? CircleAvatar(
-                        backgroundColor: Colors.grey,
-                        child: Icon(
-                          Icons.photo,
-                          size: SizeConfig.blockSizeVertical! * 8.7,
-                          color: Colors.black,
-                        ),
+                    ? const Icon(
+                        Icons.add_a_photo_outlined,
+                        size: 48,
+                        color: Colors.black,
                       )
                     : null,
               ),

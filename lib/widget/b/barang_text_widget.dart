@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/widget/s/size_config.dart';
-import 'package:intl/intl.dart';
 
 class BarangTextWidget extends ConsumerWidget {
   const BarangTextWidget(
@@ -18,8 +17,14 @@ class BarangTextWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final formatter = NumberFormat.simpleCurrency(locale: 'id_ID');
-    final style = GoogleFonts.ubuntu(
+    final style = GoogleFonts.lato(
+      decoration: TextDecoration.none,
+      color: Colors.black,
+      fontSize: SizeConfig.blockSizeVertical! * 2,
+      fontWeight: FontWeight.w400,
+      height: 0,
+    );
+    final titleStyle = GoogleFonts.mukta(
       decoration: TextDecoration.none,
       color: Colors.black,
       fontSize: 26,
@@ -28,7 +33,9 @@ class BarangTextWidget extends ConsumerWidget {
     );
     SizeConfig().init(context);
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: EdgeInsets.only(
+          left: SizeConfig.blockSizeVertical! * 2,
+          right: SizeConfig.blockSizeVertical! * 2),
       child: Column(
         children: [
           Row(
@@ -40,55 +47,71 @@ class BarangTextWidget extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: AspectRatio(
-                  aspectRatio: 1.0, // 1.0 means a square aspect ratio
+                  aspectRatio: 1.0,
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       image: DecorationImage(
                         fit: BoxFit.fill,
-                        image: FileImage(barangModels[index].imageBarang),
+                        image: FileImage(barangModels[index].imageBarang!),
                       ),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(width: 10), // Add spacing between image and text
+              const SizedBox(width: 20),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     barangModels[index].namaBarang,
-                    style: style,
+                    style: titleStyle.copyWith(
+                        fontWeight: FontWeight.w600,
+                        fontSize: SizeConfig.blockSizeVertical! * 2.7),
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 5),
-                  Text(
-                    formatter.format(barangModels[index].hargaBarang),
-                    style: style.copyWith(fontSize: 15),
-                  ),
                   Row(
                     children: [
                       Text(
-                        'stok :',
+                        'SKU : ',
                         style: style.copyWith(
                             fontSize: 17,
-                            color: const Color.fromARGB(255, 125, 125, 125)),
+                            color: const Color.fromARGB(255, 93, 93, 93)),
                       ),
                       Text(
-                        '${barangModels[index].stokBarang}',
+                        barangModels[index].kodeBarang,
                         style: style.copyWith(fontSize: 17),
                       ),
                     ],
                   ),
                 ],
               ),
-              const Spacer(), // Add this to push the IconButton to the right
-              IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.delete_outline,
-                    color: Colors.red,
-                  ))
+              const Spacer(),
+              Container(
+                margin:
+                    EdgeInsets.only(right: SizeConfig.blockSizeVertical! * 2),
+                child: Column(
+                  children: [
+                    Text(
+                      '${barangModels[index].stokBarang}',
+                      style: style.copyWith(
+                        fontSize: SizeConfig.blockSizeVertical! * 2.3,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(height: SizeConfig.blockSizeVertical! * 1),
+                    Text(
+                      barangModels[index].unit,
+                      style: style.copyWith(
+                        fontSize: SizeConfig.blockSizeVertical! * 2.3,
+                        fontWeight: FontWeight.w500,
+                        color: Color.fromARGB(255, 56, 56, 56),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
           const Divider(color: Colors.black38),
