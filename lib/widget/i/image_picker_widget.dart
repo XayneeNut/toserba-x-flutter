@@ -9,10 +9,12 @@ class ImagePickerWidget extends StatefulWidget {
     Key? key,
     required this.pickedImage,
     required this.initialImage,
+    required this.isUser,
   }) : super(key: key);
 
   final void Function(File image) pickedImage;
   final File? initialImage;
+  final bool isUser;
 
   @override
   State<ImagePickerWidget> createState() => _ImagePickerWidgetState();
@@ -76,12 +78,19 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                 ),
                 child: _selectedImage == null
                     ? CircleAvatar(
-                        backgroundColor: Colors.grey,
-                        child: Icon(
-                          Icons.photo,
-                          size: SizeConfig.blockSizeVertical! * 8.7,
-                          color: Colors.black,
-                        ),
+                        backgroundColor:
+                            const Color.fromARGB(255, 188, 188, 188),
+                        child: widget.isUser == false
+                            ? Icon(
+                                Icons.photo,
+                                size: SizeConfig.blockSizeVertical! * 8.7,
+                                color: Colors.black,
+                              )
+                            : Icon(
+                                Icons.person,
+                                size: SizeConfig.blockSizeVertical! * 8.7,
+                                color: Colors.black,
+                              ),
                       )
                     : null,
               ),

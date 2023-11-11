@@ -108,6 +108,7 @@ class _CreateBarangViewState extends State<CreateBarangView> {
                           left: SizeConfig.blockSizeVertical! * 1,
                           right: SizeConfig.blockSizeVertical! * 1.5),
                       child: ImagePickerWidget(
+                        isUser: false,
                         initialImage: null,
                         pickedImage: (image) {
                           _enteredImage = image;

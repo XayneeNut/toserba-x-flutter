@@ -3,8 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:toserba/controller/admin_api_controller.dart';
 import 'package:toserba/controller/jwt_api_controller.dart';
-import 'package:toserba/view/home_view.dart';
-import 'package:toserba/widget/auth/auth_form_widget.dart';
+import 'package:toserba/view/admin/home_view.dart';
+import 'package:toserba/widget/a/auth_form_widget.dart';
 import 'package:toserba/widget/s/size_config.dart';
 
 class AuthView extends ConsumerStatefulWidget {
@@ -23,7 +23,7 @@ class AuthView extends ConsumerStatefulWidget {
 
 class _AuthViewState extends ConsumerState<AuthView> {
   final _formKey = GlobalKey<FormState>();
-    var textButtonStyle = GoogleFonts.nunitoSans(
+  var textButtonStyle = GoogleFonts.nunitoSans(
       color: Colors.black, fontWeight: FontWeight.w500, fontSize: 25);
 
   bool isLogin = false;
@@ -76,7 +76,7 @@ class _AuthViewState extends ConsumerState<AuthView> {
     return Scaffold(
       body: ListView(
         children: [
-             Container(
+          Container(
             height: SizeConfig.blockSizeVertical! * 65,
             width: SizeConfig.blockSizeVertical! * 70,
             decoration: const BoxDecoration(

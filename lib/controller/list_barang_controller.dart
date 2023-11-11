@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:toserba/controller/barang_api_controller.dart';
 import 'package:toserba/models/barang_models.dart';
-import 'package:toserba/view/create_barang_view.dart';
-import 'package:toserba/view/update_barang_view.dart';
+import 'package:toserba/view/admin/create_barang_view.dart';
+import 'package:toserba/view/admin/update_barang_view.dart';
 
 class ListBarangController {
   void toCreateBarang(

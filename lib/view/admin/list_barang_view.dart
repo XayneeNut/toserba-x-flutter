@@ -5,10 +5,10 @@ import 'package:toserba/controller/barang_api_controller.dart';
 import 'package:toserba/controller/jwt_api_controller.dart';
 import 'package:toserba/controller/list_barang_controller.dart';
 import 'package:toserba/models/barang_models.dart';
-import 'package:toserba/view/create_barang_view.dart';
+import 'package:toserba/view/admin/create_barang_view.dart';
 import 'package:toserba/widget/a/active_page_widget.dart';
 import 'package:toserba/widget/c/custom_bottom_nav_bar_widget.dart';
-import 'package:toserba/widget/custom%20drawer%20widget/drawer_main_widget.dart';
+import 'package:toserba/widget/c/custom%20drawer%20widget/drawer_main_widget.dart';
 import 'package:toserba/widget/s/size_config.dart';
 
 class ListBarangView extends StatefulWidget {

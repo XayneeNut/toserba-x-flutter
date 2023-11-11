@@ -1,36 +1,91 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:toserba/controller/barang_api_controller.dart';
 import 'package:toserba/models/barang_models.dart';
-import 'package:toserba/widget/custom%20app%20bar/update_app_bar_widget.dart';
-import 'package:toserba/widget/i/image_picker_widget.dart';
+import 'package:toserba/widget/a/add_clear_widget.dart';
+import 'package:toserba/widget/c/update_app_bar_widget.dart';
 import 'package:toserba/widget/n/nama_kode_widget.dart';
 import 'package:toserba/widget/s/size_config.dart';
+import 'package:toserba/widget/i/image_picker_widget.dart';
 
-class DetailBarangView extends StatefulWidget {
-  const DetailBarangView({super.key, required this.barangModels});
+class UpdateBarangView extends StatefulWidget {
+  const UpdateBarangView(
+      {super.key,
+      required this.newBarangController,
+      required this.newBarangModels});
 
-  final BarangModels barangModels;
+  final BarangApiController newBarangController;
+  final BarangModels newBarangModels;
 
   @override
-  State<DetailBarangView> createState() => _DetailBarangViewState();
+  State<UpdateBarangView> createState() => _UpdateBarangViewState();
 }
 
-class _DetailBarangViewState extends State<DetailBarangView> {
-  final _labelTextStyle = GoogleFonts.inter(
-      color: const Color.fromRGBO(71, 75, 82, 1), fontSize: 18);
+class _UpdateBarangViewState extends State<UpdateBarangView> {
+  final _formKey = GlobalKey<FormState>();
+  var _enteredName = '';
+  var _enteredHarga = 0;
+  var _enteredStok = 0;
+  var _enteredCode = '';
+  File? _enteredImage;
+  var _enteredHargaJual = 0;
+  var _enteredUnit = '';
+  final _labelTextStyle =
+      GoogleFonts.poppins(color: Colors.black, fontSize: 18);
+
+  void updateBarang() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      FlutterSecureStorage flutterSecureStorage = const FlutterSecureStorage();
+      final currentAccountId =
+          await flutterSecureStorage.read(key: 'admin_account_id');
+
+      final update = BarangModels(
+          idBarang: widget.newBarangModels.idBarang,
+          namaBarang: _enteredName,
+          kodeBarang: _enteredCode,
+          hargaBarang: _enteredHarga,
+          stokBarang: _enteredStok,
+          hargaJual: _enteredHargaJual,
+          unit: _enteredUnit,
+          accountId: int.parse(currentAccountId!));
+
+      await widget.newBarangController.updateBarang(
+          idBarang: widget.newBarangModels.idBarang,
+          hargaBarang: _enteredHarga,
+          hargaJual: _enteredHargaJual,
+          imageBarang: _enteredImage!.path,
+          kodeBarang: _enteredCode,
+          namaBarang: _enteredName,
+          stokBarang: _enteredStok,
+          unit: _enteredUnit);
+      print(updateBarang);
+
+      if (!context.mounted) return;
+
+      Navigator.pop(
+        context,
+        update,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 244, 243, 243),
-      appBar: UpdateAppBarWidget(barangModels: [], isUpdateBarang: false),
+      appBar: UpdateAppBarWidget(barangModels: [], isUpdateBarang: true),
       body: SingleChildScrollView(
         child: Form(
+          key: _formKey,
           child: Column(
             children: [
               SizedBox(
-                height: SizeConfig.blockSizeVertical! * 1,
+                height: SizeConfig.blockSizeVertical! * 2,
               ),
               Container(
                 margin:
@@ -61,7 +116,7 @@ class _DetailBarangViewState extends State<DetailBarangView> {
                       ),
                     ),
                   ),
-                  SizedBox(height: SizeConfig.blockSizeVertical! * 2),
+                  SizedBox(height: SizeConfig.blockSizeVertical! * 1.5),
                   Align(
                     alignment: Alignment.topLeft,
                     child: Container(
@@ -69,28 +124,38 @@ class _DetailBarangViewState extends State<DetailBarangView> {
                           left: SizeConfig.blockSizeVertical! * 1,
                           right: SizeConfig.blockSizeVertical! * 1.5),
                       child: ImagePickerWidget(
-                        initialImage: widget.barangModels.imageBarang,
-                        pickedImage: (image) {},
+                        isUser: false,
+                        initialImage: widget.newBarangModels.imageBarang,
+                        pickedImage: (image) {
+                          _enteredImage = image;
+                        },
                       ),
                     ),
                   ),
                   NamaKodeWidget(
-                    initialValue: widget.barangModels.namaBarang,
-                    onSaved: (val) {},
+                    initialValue: widget.newBarangModels.namaBarang,
+                    onSaved: (val) {
+                      _enteredName = val;
+                    },
                     textStyle: _labelTextStyle.copyWith(
                       color: const Color.fromARGB(255, 116, 116, 116),
                     ),
                     labelText: "Nama Barang*",
                   ),
                   NamaKodeWidget(
-                      initialValue: widget.barangModels.unit,
-                      onSaved: (val) {},
+                      initialValue: widget.newBarangModels.unit,
+                      onSaved: (val) {
+                        _enteredUnit = val;
+                      },
                       textStyle: _labelTextStyle.copyWith(
                           color: const Color.fromARGB(255, 116, 116, 116)),
                       labelText: "Unit*"),
                   NamaKodeWidget(
-                      initialValue: widget.barangModels.stokBarang.toString(),
-                      onSaved: (val) {},
+                      initialValue:
+                          widget.newBarangModels.stokBarang.toString(),
+                      onSaved: (val) {
+                        _enteredStok = int.parse(val);
+                      },
                       textStyle: _labelTextStyle.copyWith(
                           color: const Color.fromARGB(255, 116, 116, 116)),
                       labelText: "Stok*"),
@@ -132,30 +197,44 @@ class _DetailBarangViewState extends State<DetailBarangView> {
                           ),
                         ),
                         NamaKodeWidget(
-                            initialValue: widget.barangModels.kodeBarang,
-                            onSaved: (val) {},
+                            initialValue: widget.newBarangModels.kodeBarang,
+                            onSaved: (val) {
+                              _enteredCode = val;
+                            },
                             textStyle: _labelTextStyle.copyWith(
                                 color:
                                     const Color.fromARGB(255, 116, 116, 116)),
                             labelText: "SKU*"),
                         NamaKodeWidget(
                             initialValue:
-                                widget.barangModels.hargaBarang.toString(),
-                            onSaved: (val) {},
+                                widget.newBarangModels.hargaBarang.toString(),
+                            onSaved: (val) {
+                              _enteredHarga = int.parse(val);
+                            },
                             textStyle: _labelTextStyle.copyWith(
                                 color:
                                     const Color.fromARGB(255, 116, 116, 116)),
                             labelText: "Harga Beli*"),
                         NamaKodeWidget(
                             initialValue:
-                                widget.barangModels.hargaJual.toString(),
-                            onSaved: (val) {},
+                                widget.newBarangModels.hargaJual.toString(),
+                            onSaved: (val) {
+                              _enteredHargaJual = int.parse(val);
+                            },
                             textStyle: _labelTextStyle.copyWith(
                                 color:
                                     const Color.fromARGB(255, 116, 116, 116)),
                             labelText: "Harga Jual*"),
                         SizedBox(
                           height: SizeConfig.blockSizeVertical! * 1.7,
+                        ),
+                        AddClearWidget(
+                            onPressed: updateBarang,
+                            backgroundColor: const MaterialStatePropertyAll(
+                                Color.fromARGB(255, 89, 84, 245)),
+                            labelText: 'Update`'),
+                        SizedBox(
+                          height: SizeConfig.blockSizeVertical! * 2,
                         ),
                       ],
                     ),

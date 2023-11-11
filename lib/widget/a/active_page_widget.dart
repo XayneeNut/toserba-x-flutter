@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:toserba/controller/barang_api_controller.dart';
 import 'package:toserba/controller/list_barang_controller.dart';
 import 'package:toserba/models/barang_models.dart';
-import 'package:toserba/view/detail_barang_view.dart';
+import 'package:toserba/view/admin/detail_barang_view.dart';
 import 'package:toserba/widget/b/barang_text_widget.dart';
 import 'package:toserba/widget/c/custom_app_bar_widget.dart';
 import 'package:toserba/widget/s/size_config.dart';

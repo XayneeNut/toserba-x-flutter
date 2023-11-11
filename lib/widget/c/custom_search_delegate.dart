@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:toserba/controller/barang_api_controller.dart';
 import 'package:toserba/controller/list_barang_controller.dart';
 import 'package:toserba/models/barang_models.dart';
-import 'package:toserba/view/detail_barang_view.dart';
+import 'package:toserba/view/admin/detail_barang_view.dart';
 
 class CustomSearchDelegate extends SearchDelegate<String> {
   final List<BarangModels> barangModels;

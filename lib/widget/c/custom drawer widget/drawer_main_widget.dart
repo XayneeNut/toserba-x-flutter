@@ -6,10 +6,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:toserba/controller/admin_api_controller.dart';
 import 'package:toserba/controller/jwt_api_controller.dart';
 import 'package:toserba/models/admin_account_model.dart';
-import 'package:toserba/view/auth_view.dart';
-import 'package:toserba/widget/custom%20drawer%20widget/drawer_action_widget.dart';
+import 'package:toserba/view/admin/auth_view.dart';
+import 'package:toserba/widget/c/custom%20drawer%20widget/drawer_action_widget.dart';
 import 'package:toserba/widget/s/size_config.dart';
-import 'package:toserba/widget/user_account_headers_widget.dart';
+import 'package:toserba/widget/a/admin_account_headers_widget.dart';
 
 class DrawerMain extends StatefulWidget {
   const DrawerMain({super.key, required this.adminAccountModel});
