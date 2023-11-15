@@ -6,10 +6,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:toserba/controller/admin_api_controller.dart';
 import 'package:toserba/controller/jwt_api_controller.dart';
 import 'package:toserba/controller/user_account_api_controller.dart';
-import 'package:toserba/view/admin/auth_view.dart';
-import 'package:toserba/view/admin/home_view.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:toserba/view/user/home_user_view.dart';
 import 'package:toserba/view/user/user_auth_view.dart';
+import 'package:toserba/widget/s/size_config.dart';
 
 void main() {
   runApp(
@@ -31,11 +31,13 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   JwtApiController jwtApiController = JwtApiController();
   AdminApiController adminApiController = AdminApiController();
+  UserAccountApiController userAccountApiController =
+      UserAccountApiController();
   late Stream<dynamic> _token;
   final FlutterSecureStorage storage = const FlutterSecureStorage();
 
   void _validatingToken() async {
-    final token = await storage.read(key: 'token');
+    final token = await storage.read(key: 'user-token');
 
     if (token != null) {
       if (JwtDecoder.isExpired(token)) {
@@ -45,7 +47,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _loadToken() {
-    _token = storage.read(key: 'token').then(
+    _token = storage.read(key: 'user-token').then(
       (token) {
         if (token != null) {
           return Stream.fromIterable([token]);
@@ -65,13 +67,36 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    var jwtApiController = JwtApiController();
-    var userAccountController = UserAccountApiController();
+    SizeConfig().init(context);
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: UserAuthView(
-          jwtApiController: jwtApiController,
-          userAccountApiController: userAccountController),
+      routes: {
+        '/user-auth-view': (context) => UserAuthView(
+            jwtApiController: jwtApiController,
+            userAccountApiController: userAccountApiController),
+        '/user-home-view': (context) => const HomeUserView(),
+      },
+      home: StreamBuilder(
+        stream: _token,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else if (snapshot.hasData) {
+            final token = snapshot.data;
+            if (token == null) {
+              return UserAuthView(
+                  jwtApiController: jwtApiController,
+                  userAccountApiController: userAccountApiController);
+            }
+            return const HomeUserView();
+          }
+          return UserAuthView(
+              jwtApiController: jwtApiController,
+              userAccountApiController: userAccountApiController);
+        },
+      ),
     );
   }
 }

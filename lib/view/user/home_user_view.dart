@@ -1,4 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:toserba/controller/barang_api_controller.dart';
+import 'package:toserba/models/barang_models.dart';
+import 'package:toserba/view/user/user_barang_detail_view.dart';
+import 'package:toserba/widget/c/user_app_bar_widget.dart';
+import 'package:toserba/widget/s/search_bar_widget.dart';
+import 'package:toserba/widget/user_drawer_widget.dart';
 
 class HomeUserView extends StatefulWidget {
   const HomeUserView({super.key});
@@ -8,8 +17,142 @@ class HomeUserView extends StatefulWidget {
 }
 
 class _HomeUserViewState extends State<HomeUserView> {
+  final List<BarangModels> barangModels = [];
+  final BarangApiController barangController = BarangApiController();
+
+  void _loadItem() async {
+    List<BarangModels> barang = await barangController.loadBarang();
+
+    setState(() {
+      barangModels.clear();
+      barangModels.addAll(barang);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadItem();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Text("ini home");
+    final currencyFormatter = NumberFormat.currency(locale: 'ID');
+    var itemTextStyle = GoogleFonts.poppins();
+    return Scaffold(
+      drawer: UserDrawerWidget(adminAccountModel: []),
+      backgroundColor: Colors.white,
+      appBar: UserAppBarWidget(barangModels: const [], isListBarang: true),
+      body: SingleChildScrollView(
+        child: Container(
+          margin:
+              EdgeInsets.only(left: Get.width * 0.06, right: Get.width * 0.06),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SearchBarWidget(),
+              Container(
+                margin: EdgeInsets.only(top: Get.width * 0.06),
+                padding: EdgeInsets.all(Get.width * 0.2),
+                height: Get.width * 0.36,
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 211, 211, 211),
+                  borderRadius: BorderRadius.circular(Get.width * 0.08),
+                ),
+              ),
+              SizedBox(
+                height: Get.width * 0.08,
+              ),
+              Text("Available Product"),
+              GridView.builder(
+                itemCount: barangModels.length,
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(24),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 2.2 / 3,
+                    crossAxisSpacing: 20,
+                    mainAxisSpacing: 20),
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => UserBarangDetailView(
+                              barangModels: barangModels[index]),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: const [
+                            BoxShadow(
+                                blurRadius: 20,
+                                color: Color.fromARGB(255, 212, 212, 212))
+                          ]),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => UserBarangDetailView(
+                                  barangModels: barangModels[index]),
+                            ),
+                          );
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            AspectRatio(
+                              aspectRatio: 1.0,
+                              child: ClipRRect(
+                                child: Container(
+                                  margin: EdgeInsets.all(Get.width * 0.02),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    image: DecorationImage(
+                                      fit: BoxFit.fill,
+                                      image: FileImage(
+                                          barangModels[index].imageBarang!),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(left: Get.width * 0.024),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    barangModels[index].namaBarang,
+                                    style: itemTextStyle,
+                                  ),
+                                  SizedBox(height: Get.width * 0.01),
+                                  Text(
+                                    currencyFormatter.format(
+                                      barangModels[index].hargaJual,
+                                    ),
+                                    style: itemTextStyle,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

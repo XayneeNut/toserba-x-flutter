@@ -10,12 +10,24 @@ class UserAccountApiController {
 
   Future<http.Response> login(
       {required String email, required String password}) async {
-    final url = Uri.parse("http://10.0.2.2:8127/api/v1/user-account/create");
+    final url = Uri.parse(
+        "http://10.0.2.2:8127/api/v1/user-account/get/$email/$password");
+
     final response = await http.get(url);
     final responseData = json.decode(response.body);
     final userAccountId = responseData['userAccountId'];
+    print(response.statusCode);
     await storage.write(
         key: 'user-account-id', value: userAccountId.toString());
+    try {
+      if (response.statusCode == 400) {
+        print(response.body);
+        throw Exception("failed to save item");
+      } else {
+        print(response.body);
+        throw Exception("failed to save item");
+      }
+    } catch (e) {}
     return response;
   }
 

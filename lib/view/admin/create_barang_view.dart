@@ -35,7 +35,7 @@ class _CreateBarangViewState extends State<CreateBarangView> {
   var _enteredUnit = '';
   File? _enteredImage;
   final _labelTextStyle =
-      GoogleFonts.inter(color: Color.fromRGBO(71, 75, 82, 1), fontSize: 18);
+      GoogleFonts.inter(color: const Color.fromRGBO(71, 75, 82, 1), fontSize: 18);
 
   Future<void> _saveBarang() async {
     if (_formKey.currentState!.validate()) {
@@ -211,7 +211,7 @@ class _CreateBarangViewState extends State<CreateBarangView> {
                         ),
                         AddClearWidget(
                             onPressed: _saveBarang,
-                            backgroundColor: MaterialStatePropertyAll(
+                            backgroundColor: const MaterialStatePropertyAll(
                                 Color.fromARGB(255, 89, 84, 245)),
                             labelText: 'Tambah'),
                         SizedBox(

@@ -44,6 +44,16 @@ class _UserAuthViewState extends State<UserAuthView> {
   var imageUrl =
       'https://img.freepik.com/free-vector/user-verification-unauthorized-access-prevention-private-account-authentication-cyber-security-people-entering-login-password-safety-measures_335657-3530.jpg?w=740&t=st=1693831915~exp=1693832515~hmac=13d369ada8acdaf56d24c52bd4c5981cec1f9c9f8d8f7f17af74c817bf47aaaa';
 
+  void _toHomeUserView() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const HomeUserView(),
+      ),
+      (route) => false,
+    );
+  }
+
   Future _isSubmit() async {
     final isValid = _formKey.currentState!.validate();
 
@@ -53,7 +63,7 @@ class _UserAuthViewState extends State<UserAuthView> {
 
     try {
       if (_isLogin && isValid) {
-        await widget.jwtApiController.getTokenJwt();
+        await widget.jwtApiController.getUserTokenJwt();
         _formKey.currentState!.save();
 
         final signUp = await widget.userAccountApiController.signUp(
@@ -64,14 +74,22 @@ class _UserAuthViewState extends State<UserAuthView> {
 
         if (signUp.statusCode == 200) {
           if (!context.mounted) return;
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const HomeUserView(),
-              ));
+          _toHomeUserView();
+        }
+      } else if (!_isLogin && isValid) {
+        await widget.jwtApiController.getUserTokenJwt();
+        _formKey.currentState!.save();
+
+        final login = await widget.userAccountApiController
+            .login(email: _enteredEmail, password: _enteredPassword);
+        if (login.statusCode == 200) {
+          if (!context.mounted) return;
+          _toHomeUserView();
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      //
+    }
   }
 
   @override
