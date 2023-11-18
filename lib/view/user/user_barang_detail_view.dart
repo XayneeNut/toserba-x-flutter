@@ -216,7 +216,7 @@ class _UserBarangDetailViewState extends State<UserBarangDetailView> {
                   ),
                   SizedBox(
                     height: Get.width * 0.14,
-                    width: Get.width * 0.65,
+                    width: Get.width * 0.634,
                     child: ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(

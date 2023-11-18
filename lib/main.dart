@@ -4,12 +4,16 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:toserba/controller/admin_api_controller.dart';
+import 'package:toserba/controller/auth_manager_controller.dart';
 import 'package:toserba/controller/jwt_api_controller.dart';
 import 'package:toserba/controller/user_account_api_controller.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:toserba/view/admin/auth_view.dart';
+import 'package:toserba/view/admin/home_view.dart';
 import 'package:toserba/view/user/home_user_view.dart';
 import 'package:toserba/view/user/user_auth_view.dart';
 import 'package:toserba/widget/s/size_config.dart';
+import 'package:toserba/widget/s/stream_builder_widget.dart';
 
 void main() {
   runApp(
@@ -33,23 +37,26 @@ class _MyAppState extends State<MyApp> {
   AdminApiController adminApiController = AdminApiController();
   UserAccountApiController userAccountApiController =
       UserAccountApiController();
-  late Stream<dynamic> _token;
   final FlutterSecureStorage storage = const FlutterSecureStorage();
-
-  void _validatingToken() async {
-    final token = await storage.read(key: 'user-token');
-
-    if (token != null) {
-      if (JwtDecoder.isExpired(token)) {
-        storage.deleteAll();
-      }
-    }
-  }
+  final AuthManagerController authManagerController = AuthManagerController();
+  late Stream<dynamic> _token;
+  bool isAdmin = false;
 
   void _loadToken() {
-    _token = storage.read(key: 'user-token').then(
+    _token = storage.read(key: 'token').then(
       (token) {
         if (token != null) {
+          final tokenData = JwtDecoder.decode(token);
+          final groups = tokenData['groups'];
+          if (groups.contains('admin')) {
+            setState(() {
+              isAdmin = true;
+            });
+          } else if (groups.contains('user')) {
+            setState(() {
+              isAdmin = false;
+            });
+          }
           return Stream.fromIterable([token]);
         } else if (token == null) {
           return null;
@@ -62,7 +69,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _loadToken();
-    _validatingToken();
+    authManagerController.validatingToken(storage: storage);
   }
 
   @override
@@ -75,28 +82,17 @@ class _MyAppState extends State<MyApp> {
             jwtApiController: jwtApiController,
             userAccountApiController: userAccountApiController),
         '/user-home-view': (context) => const HomeUserView(),
+        '/authview': (context) => AuthView(
+            jwtApiController: jwtApiController,
+            adminApiController: adminApiController),
+        '/homeview': (context) => const HomeView(),
       },
-      home: StreamBuilder(
-        stream: _token,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            CircularProgressIndicator();
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else if (snapshot.hasData) {
-            final token = snapshot.data;
-            if (token == null) {
-              return UserAuthView(
-                  jwtApiController: jwtApiController,
-                  userAccountApiController: userAccountApiController);
-            }
-            return const HomeUserView();
-          }
-          return UserAuthView(
-              jwtApiController: jwtApiController,
-              userAccountApiController: userAccountApiController);
-        },
-      ),
+      home: StreamBuilderWidget(
+          isAdmin: isAdmin,
+          token: _token,
+          jwtApiController: jwtApiController,
+          adminApiController: adminApiController,
+          userAccountApiController: userAccountApiController),
     );
   }
 }

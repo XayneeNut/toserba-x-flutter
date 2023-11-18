@@ -7,7 +7,7 @@ import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/view/user/user_barang_detail_view.dart';
 import 'package:toserba/widget/c/user_app_bar_widget.dart';
 import 'package:toserba/widget/s/search_bar_widget.dart';
-import 'package:toserba/widget/user_drawer_widget.dart';
+import 'package:toserba/widget/c/custom%20drawer%20widget/user_drawer_widget.dart';
 
 class HomeUserView extends StatefulWidget {
   const HomeUserView({super.key});
@@ -21,7 +21,7 @@ class _HomeUserViewState extends State<HomeUserView> {
   final BarangApiController barangController = BarangApiController();
 
   void _loadItem() async {
-    List<BarangModels> barang = await barangController.loadBarang();
+    List<BarangModels> barang = await barangController.loadAllUserBarang();
 
     setState(() {
       barangModels.clear();

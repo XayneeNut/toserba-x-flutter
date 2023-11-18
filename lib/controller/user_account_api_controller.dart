@@ -8,6 +8,13 @@ class UserAccountApiController {
   final jwtApiController = JwtApiController();
   final storage = const FlutterSecureStorage();
 
+  Future<http.Response> getUserEmailById(int id) async {
+    final url =
+        Uri.parse("http://10.0.2.2:8127/api/v1/user-account/get-id/$id");
+    final response = await http.get(url);
+    return response;
+  }
+
   Future<http.Response> login(
       {required String email, required String password}) async {
     final url = Uri.parse(
@@ -19,6 +26,8 @@ class UserAccountApiController {
     print(response.statusCode);
     await storage.write(
         key: 'user-account-id', value: userAccountId.toString());
+    final adminAccount = await storage.read(key: 'user-account-id');
+    print("user id dari controller $adminAccount");
     try {
       if (response.statusCode == 400) {
         print(response.body);

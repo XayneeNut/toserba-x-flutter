@@ -53,6 +53,39 @@ class BarangApiController {
     return barangModels;
   }
 
+  Future<List<BarangModels>> loadAllUserBarang() async {
+    final response = await getAllBarang();
+    final jsonData = json.decode(response.body);
+
+    List<BarangModels> barangModels = [];
+
+    for (var allData in jsonData) {
+      final idBarang = allData['idBarang'];
+      final namaBarang = allData['namaBarang'];
+      final kodeBarang = allData['kodeBarang'];
+      final hargaBarang = allData['hargaBarang'];
+      final stokBarang = allData['stokBarang'];
+      final imageBarang = allData['imageBarang'];
+      final accountId = allData['adminAccountEntity']['accountId'];
+      final unit = allData['unit'];
+      final hargaJual = allData['hargaJual'];
+      final barang = BarangModels(
+          idBarang: idBarang,
+          namaBarang: namaBarang,
+          kodeBarang: kodeBarang,
+          hargaBarang: hargaBarang,
+          stokBarang: stokBarang,
+          imageBarang: File(imageBarang as String),
+          accountId: accountId,
+          hargaJual: hargaJual,
+          unit: unit);
+
+        barangModels.add(barang);
+    }
+    print(jsonData);
+    return barangModels;
+  }
+
   Future<void> saveBarang({
     required String namaBarang,
     required int hargaBarang,
