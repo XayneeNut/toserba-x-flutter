@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:toserba/widget/s/size_config.dart';
 
-class UserAppController {
-  Future<void> userLogoutAllertDialog(
+class AppsController {
+  Future<void> logoutAllertDialog(
       BuildContext context,
       TextStyle titleTextStyle,
       TextStyle contentTextStyle,
@@ -48,11 +48,12 @@ class UserAppController {
     );
   }
 
-  Future<void> loginAsAdminAlertDialog(
+  Future<void> loginAsDiferentAlertDialog(
       BuildContext context,
       TextStyle titleTextStyle,
       TextStyle contentTextStyle,
-      void Function() logout) async {
+      void Function() logout,
+      String account) async {
     return showDialog(
       context: context,
       builder: (context) {
@@ -63,7 +64,7 @@ class UserAppController {
                 fontSize: SizeConfig.blockSizeVertical! * 2.3),
           ),
           content: Text(
-            'Logging out and login as admin temporarily will hide your account activity history, to see it again, please log back into your account',
+            'Logging out and login as $account temporarily will hide your account activity history, to see it again, please log back into your account',
             style: contentTextStyle,
           ),
           actions: [

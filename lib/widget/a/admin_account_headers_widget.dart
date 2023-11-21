@@ -17,7 +17,7 @@ class UserAccountHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Container(
+    return SizedBox(
       height: SizeConfig.blockSizeVertical! * 28,
       child: UserAccountsDrawerHeader(
         currentAccountPictureSize: Size(
@@ -31,7 +31,7 @@ class UserAccountHeader extends StatelessWidget {
             boxShadow: [
               BoxShadow(
                 blurRadius: SizeConfig.blockSizeVertical! * 1.2,
-                color: Color.fromARGB(255, 255, 255, 255),
+                color: const Color.fromARGB(255, 255, 255, 255),
               )
             ],
           ),
@@ -81,13 +81,13 @@ class UserAccountHeader extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               blurRadius: SizeConfig.blockSizeVertical! * 1.8,
-              color: Color.fromARGB(255, 143, 75, 252),
+              color: Color.fromARGB(255, 76, 45, 126),
             ),
           ],
           borderRadius: BorderRadius.all(
             Radius.circular(SizeConfig.blockSizeVertical! * 3),
           ),
-          color: Color.fromARGB(255, 27, 11, 135),
+          color: Color.fromARGB(255, 41, 36, 69),
         ),
       ),
     );

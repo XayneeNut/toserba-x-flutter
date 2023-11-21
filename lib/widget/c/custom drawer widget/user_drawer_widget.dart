@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:toserba/controller/admin_api_controller.dart';
 import 'package:toserba/controller/jwt_api_controller.dart';
 import 'package:toserba/controller/user_account_api_controller.dart';
-import 'package:toserba/controller/user_apps_controller.dart';
+import 'package:toserba/controller/apps_controller.dart';
 import 'package:toserba/models/admin_account_model.dart';
 import 'package:toserba/view/admin/auth_view.dart';
 import 'package:toserba/view/user/user_auth_view.dart';
@@ -26,7 +26,7 @@ class _UserDrawerWidgetState extends State<UserDrawerWidget> {
   final jwtApiController = JwtApiController();
   final adminApiController = AdminApiController();
   final userApiController = UserAccountApiController();
-  final userAppController = UserAppController();
+  final userAppController = AppsController();
   var titleTextStyle = GoogleFonts.notoSansJavanese(
       color: Colors.black,
       fontSize: SizeConfig.blockSizeVertical! * 2.5,
@@ -172,15 +172,15 @@ class _UserDrawerWidgetState extends State<UserDrawerWidget> {
                 ),
               ),
               TextButton(
-                onPressed: () => userAppController.loginAsAdminAlertDialog(
-                    context, titleTextStyle, contentTextStyle, _startSelling),
+                onPressed: () => userAppController.loginAsDiferentAlertDialog(
+                    context, titleTextStyle, contentTextStyle, _startSelling,'admin'),
                 child: Text(
                   'Start selling',
                   style: textButtonStyle,
                 ),
               ),
               TextButton(
-                onPressed: () => userAppController.userLogoutAllertDialog(
+                onPressed: () => userAppController.logoutAllertDialog(
                     context, titleTextStyle, contentTextStyle, _logout),
                 child: Text(
                   'Log out',

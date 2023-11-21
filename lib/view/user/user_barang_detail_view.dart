@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:toserba/models/barang_models.dart';
+import 'package:toserba/view/user/checkout_barang_view.dart';
+import 'package:toserba/widget/a/action_button_row.dart';
 import 'package:toserba/widget/c/user_app_bar_widget.dart';
 
 class UserBarangDetailView extends StatefulWidget {
@@ -22,6 +24,15 @@ class _UserBarangDetailViewState extends State<UserBarangDetailView> {
   var subtitleStyle = GoogleFonts.poppins(fontWeight: FontWeight.w500);
   var selectedSize = "none";
   var defaultButtonColor = const Color.fromARGB(255, 231, 231, 231);
+
+  void toCheckoutBarang() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              CheckoutBarangView(barangModels: widget.barangModels),
+        ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -189,53 +200,13 @@ class _UserBarangDetailViewState extends State<UserBarangDetailView> {
               SizedBox(
                 height: Get.width * 0.07,
               ),
-              Row(
-                children: [
-                  SizedBox(
-                    height: Get.width * 0.14,
-                    width: Get.width * 0.29,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        foregroundColor: Colors.black,
-                        backgroundColor: defaultButtonColor,
-                        textStyle: elevatedButtonStyle,
-                      ),
-                      child: Text(
-                        "Keranjang",
-                        style: elevatedButtonStyle.copyWith(
-                            fontSize: Get.width * 0.04),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: Get.width * 0.02,
-                  ),
-                  SizedBox(
-                    height: Get.width * 0.14,
-                    width: Get.width * 0.634,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.black,
-                        textStyle: elevatedButtonStyle,
-                      ),
-                      child: Text(
-                        "Check Out",
-                        style: elevatedButtonStyle.copyWith(
-                            fontSize: Get.width * 0.05, color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              ActionButtonRowWidget(
+                  defaultButtonColor: defaultButtonColor,
+                  elevatedButtonStyle: elevatedButtonStyle,
+                  onFirstButtonPressed: () {},
+                  onSecondButtonPressed: toCheckoutBarang,
+                  firstButtonTitle: 'keranjang',
+                  secondButtonTitle: 'checkout'),
             ],
           ),
         ),

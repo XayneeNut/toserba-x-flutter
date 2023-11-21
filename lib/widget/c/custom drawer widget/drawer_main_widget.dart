@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:toserba/controller/admin_api_controller.dart';
+import 'package:toserba/controller/apps_controller.dart';
 import 'package:toserba/controller/jwt_api_controller.dart';
+import 'package:toserba/controller/user_account_api_controller.dart';
 import 'package:toserba/models/admin_account_model.dart';
 import 'package:toserba/view/admin/auth_view.dart';
-import 'package:toserba/widget/c/custom%20drawer%20widget/drawer_action_widget.dart';
+import 'package:toserba/view/user/user_auth_view.dart';
+import 'package:toserba/widget/c/custom%20drawer%20widget/user_drawer_action_widget.dart';
 import 'package:toserba/widget/s/size_config.dart';
 import 'package:toserba/widget/a/admin_account_headers_widget.dart';
 
@@ -22,13 +25,20 @@ class _DrawerMainState extends State<DrawerMain> {
   final storage = const FlutterSecureStorage();
   final jwtApiController = JwtApiController();
   final adminApiController = AdminApiController();
+  final userAccountApiController = UserAccountApiController();
+  final appsController = AppsController();
+  var adminEmail = '';
+  var adminUsername = '';
+  var adminAccountId = '';
   var contentTextStyle = GoogleFonts.notoSansJavanese(
       color: Colors.black,
       fontSize: SizeConfig.blockSizeVertical! * 2.5,
       fontWeight: FontWeight.w500);
-  var adminEmail = '';
-  var adminUsername = '';
-  var adminAccountId = '';
+  var titleTextStyle = GoogleFonts.notoSansJavanese(
+      color: Colors.black,
+      fontSize: SizeConfig.blockSizeVertical! * 2.5,
+      fontWeight: FontWeight.bold);
+
   final textButtonStyle = GoogleFonts.lato(
       color: Colors.black,
       fontSize: SizeConfig.blockSizeVertical! * 2,
@@ -63,46 +73,17 @@ class _DrawerMainState extends State<DrawerMain> {
     );
   }
 
-  Future<void> drawer(BuildContext context) async {
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(
-            "Bentar dulu...",
-            style: contentTextStyle.copyWith(
-                fontSize: SizeConfig.blockSizeVertical! * 3.5),
-          ),
-          content: Text(
-            'beneran mau log out nih?',
-            style: contentTextStyle,
-          ),
-          actions: [
-            TextButton(
-              onPressed: _logout,
-              child: Text(
-                'iyah banget',
-                style: contentTextStyle.copyWith(
-                    fontSize: SizeConfig.blockSizeVertical! * 1.8,
-                    color: const Color.fromARGB(255, 255, 17, 0)),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                'gag dulu',
-                style: contentTextStyle.copyWith(
-                  fontSize: SizeConfig.blockSizeVertical! * 1.8,
-                  color: const Color.fromARGB(255, 0, 120, 219),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
+  void _loginAsUser() async {
+    await storage.deleteAll();
+    if (!context.mounted) return;
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => UserAuthView(
+              jwtApiController: jwtApiController,
+              userAccountApiController: userAccountApiController),
+        ),
+        (route) => false);
   }
 
   @override
@@ -120,7 +101,7 @@ class _DrawerMainState extends State<DrawerMain> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: SizeConfig.blockSizeVertical! * 65,
+            height: SizeConfig.blockSizeVertical! * 70,
             decoration: BoxDecoration(boxShadow: [
               BoxShadow(
                 color: const Color.fromARGB(255, 212, 212, 212),
@@ -141,11 +122,11 @@ class _DrawerMainState extends State<DrawerMain> {
                     adminEmail: adminEmail,
                   ),
                 ),
-                DrawerActions(
-                  onLogout: () => drawer(context),
+                UserDrawerActionWidgets(
+                  onLogout: () {},
                   onAdmin: () {},
                   onPesanan: () {},
-                ),
+                )
               ],
             ),
           ),
@@ -163,6 +144,27 @@ class _DrawerMainState extends State<DrawerMain> {
                 onPressed: () {},
                 child: Text(
                   'Help center',
+                  style: textButtonStyle,
+                ),
+              ),
+              TextButton(
+                onPressed: () => appsController.loginAsDiferentAlertDialog(
+                    context, titleTextStyle, contentTextStyle, _loginAsUser, 'user'),
+                child: Text(
+                  'Login as user',
+                  style: textButtonStyle,
+                ),
+              ),
+              TextButton(
+                onPressed: () => appsController.logoutAllertDialog(
+                    context,
+                    titleTextStyle,
+                    contentTextStyle.copyWith(
+                      color: const Color.fromARGB(255, 63, 63, 63),
+                    ),
+                    _logout),
+                child: Text(
+                  'Log out',
                   style: textButtonStyle,
                 ),
               ),
