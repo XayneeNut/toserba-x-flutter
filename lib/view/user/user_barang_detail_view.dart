@@ -39,7 +39,7 @@ class _UserBarangDetailViewState extends State<UserBarangDetailView> {
     final currencyFormatter = NumberFormat.currency(locale: 'ID');
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: UserAppBarWidget(barangModels: [], isListBarang: false),
+      appBar: UserAppBarWidget.home(barangModels: [], isListBarang: false),
       body: SingleChildScrollView(
         child: Container(
           margin: EdgeInsets.only(left: Get.width * 0.03),

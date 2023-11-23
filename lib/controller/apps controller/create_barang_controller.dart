@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:toserba/controller/barang_api_controller.dart';
+import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
 import 'package:toserba/models/barang_models.dart';
 
 class CreateBarangController {

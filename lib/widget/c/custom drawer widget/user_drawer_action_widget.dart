@@ -4,14 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:toserba/widget/s/size_config.dart';
 
 class UserDrawerActionWidgets extends StatelessWidget {
-  final Function() onLogout;
-  final Function() onAdmin;
+  final Function() onHome;
+  final Function() onAccount;
   final Function() onPesanan;
 
   const UserDrawerActionWidgets({
     super.key,
-    required this.onLogout,
-    required this.onAdmin,
+    required this.onHome,
+    required this.onAccount,
     required this.onPesanan,
   });
 
@@ -27,7 +27,7 @@ class UserDrawerActionWidgets extends StatelessWidget {
             height: SizeConfig.blockSizeVertical! * 2,
           ),
           TextButton.icon(
-            onPressed: onLogout,
+            onPressed: onHome,
             icon: Icon(
               CupertinoIcons.home,
               color: const Color.fromARGB(255, 63, 63, 63),
@@ -43,7 +43,7 @@ class UserDrawerActionWidgets extends StatelessWidget {
           ),
           SizedBox(height: SizeConfig.blockSizeVertical! * 1),
           TextButton.icon(
-            onPressed: onAdmin,
+            onPressed: onAccount,
             icon: Icon(
               CupertinoIcons.person_circle,
               color: const Color.fromARGB(255, 63, 63, 63),

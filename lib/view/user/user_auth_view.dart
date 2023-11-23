@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:toserba/controller/jwt_api_controller.dart';
-import 'package:toserba/controller/user_account_api_controller.dart';
+import 'package:toserba/controller/api%20controller/jwt_api_controller.dart';
+import 'package:toserba/controller/api%20controller/user_account_api_controller.dart';
 import 'package:toserba/view/user/home_user_view.dart';
 import 'package:toserba/widget/i/image_picker_widget.dart';
 import 'package:toserba/widget/s/sign_up_text_widget.dart';
@@ -69,8 +69,7 @@ class _UserAuthViewState extends State<UserAuthView> {
         final signUp = await widget.userAccountApiController.signUp(
             email: _enteredEmail,
             username: _enteredUsername,
-            password: _enteredPassword,
-            image: _entereImage!.path);
+            password: _enteredPassword,);
 
         if (signUp.statusCode == 200) {
           if (!context.mounted) return;

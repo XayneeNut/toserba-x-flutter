@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:toserba/controller/barang_api_controller.dart';
+import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
 import 'package:toserba/controller/list_barang_controller.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/widget/c/custom_search_delegate.dart';
@@ -45,23 +45,28 @@ class _CustomAppBarWidgetState extends State<CustomAppBarWidget> {
             : MainAxisAlignment.start,
         children: [
           TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/homeview',);
-              },
-              child: widget.isListBarang == false
-                  ? Text(
-                      'Batal',
-                      style: textButtonStyle,
-                    )
-                  : IconButton(
-                      onPressed: () {
-                        Scaffold.of(context).openDrawer();
-                      },
-                      icon: Icon(
-                        size: SizeConfig.blockSizeVertical! * 4,
-                        Icons.menu_open_rounded,
-                        color: Colors.black,
-                      ))),
+            onPressed: () {
+              Navigator.pushNamed(
+                context,
+                '/homeview',
+              );
+            },
+            child: widget.isListBarang == false
+                ? Text(
+                    'Batal',
+                    style: textButtonStyle,
+                  )
+                : IconButton(
+                    onPressed: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                    icon: Icon(
+                      size: SizeConfig.blockSizeVertical! * 4,
+                      Icons.menu_open_rounded,
+                      color: Colors.black,
+                    ),
+                  ),
+          ),
           if (widget.isListBarang == false)
             SizedBox(
               width: SizeConfig.blockSizeVertical! * 7,

@@ -2,7 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:toserba/controller/jwt_api_controller.dart';
+import 'package:toserba/controller/api%20controller/jwt_api_controller.dart';
+import 'package:toserba/models/user_account_model.dart';
 
 class UserAccountApiController {
   final jwtApiController = JwtApiController();
@@ -13,6 +14,15 @@ class UserAccountApiController {
         Uri.parse("http://10.0.2.2:8127/api/v1/user-account/get-id/$id");
     final response = await http.get(url);
     return response;
+  }
+
+  Future<UserAccountModel> getUserAccountAndUserProfile(int id) async {
+    final url = Uri.parse(
+        "http://10.0.2.2:8127/api/v1/user-account/get-by-profile/$id");
+    final response = await http.get(url);
+    final jsonData = json.decode(response.body);
+    UserAccountModel userAccountModel = UserAccountModel.fromJson(jsonData);
+    return userAccountModel;
   }
 
   Future<http.Response> login(
@@ -40,18 +50,17 @@ class UserAccountApiController {
     return response;
   }
 
-  Future<http.Response> signUp(
-      {required String email,
-      required String username,
-      required String password,
-      required String image}) async {
+  Future<http.Response> signUp({
+    required String email,
+    required String username,
+    required String password,
+  }) async {
     final url = Uri.parse("http://10.0.2.2:8127/api/v1/user-account/create");
 
     final body = json.encode({
       "email": email,
       "password": password,
       "username": username,
-      "image": image,
     });
 
     final response = await http.post(url,

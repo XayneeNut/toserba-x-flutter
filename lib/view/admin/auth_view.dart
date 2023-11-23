@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:toserba/controller/admin_api_controller.dart';
-import 'package:toserba/controller/jwt_api_controller.dart';
+import 'package:toserba/controller/api%20controller/admin_api_controller.dart';
+import 'package:toserba/controller/api%20controller/jwt_api_controller.dart';
 import 'package:toserba/view/admin/home_view.dart';
 import 'package:toserba/widget/a/auth_form_widget.dart';
 import 'package:toserba/widget/s/size_config.dart';

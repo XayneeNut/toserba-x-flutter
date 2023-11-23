@@ -64,7 +64,7 @@ class _CheckoutBarangViewState extends State<CheckoutBarangView> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: UserAppBarWidget(barangModels: [], isListBarang: false),
+      appBar: UserAppBarWidget.home(barangModels: [], isListBarang: false),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

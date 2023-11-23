@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:toserba/controller/admin_api_controller.dart';
-import 'package:toserba/controller/apps_controller.dart';
-import 'package:toserba/controller/jwt_api_controller.dart';
-import 'package:toserba/controller/user_account_api_controller.dart';
+import 'package:toserba/controller/api%20controller/admin_api_controller.dart';
+import 'package:toserba/controller/apps%20controller/apps_controller.dart';
+import 'package:toserba/controller/api%20controller/jwt_api_controller.dart';
+import 'package:toserba/controller/api%20controller/user_account_api_controller.dart';
 import 'package:toserba/models/admin_account_model.dart';
 import 'package:toserba/view/admin/auth_view.dart';
 import 'package:toserba/view/user/user_auth_view.dart';
@@ -123,8 +123,8 @@ class _DrawerMainState extends State<DrawerMain> {
                   ),
                 ),
                 UserDrawerActionWidgets(
-                  onLogout: () {},
-                  onAdmin: () {},
+                  onHome: () {},
+                  onAccount: () {},
                   onPesanan: () {},
                 )
               ],
@@ -149,7 +149,11 @@ class _DrawerMainState extends State<DrawerMain> {
               ),
               TextButton(
                 onPressed: () => appsController.loginAsDiferentAlertDialog(
-                    context, titleTextStyle, contentTextStyle, _loginAsUser, 'user'),
+                    context,
+                    titleTextStyle,
+                    contentTextStyle,
+                    _loginAsUser,
+                    'user'),
                 child: Text(
                   'Login as user',
                   style: textButtonStyle,

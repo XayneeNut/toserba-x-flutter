@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:toserba/controller/apps%20controller/apps_controller.dart';
 import 'package:toserba/widget/s/size_config.dart';
 
 class ImagePickerWidget extends StatefulWidget {
@@ -22,6 +24,7 @@ class ImagePickerWidget extends StatefulWidget {
 
 class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   late File? _selectedImage;
+  AppsController appsController = AppsController();
 
   @override
   void initState() {
@@ -31,19 +34,29 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
   void _takeImage() async {
     final imagePicker = ImagePicker();
+    XFile? image;
 
-    final image = await imagePicker.pickImage(
-      source: ImageSource.camera,
-      imageQuality: 50,
-      maxWidth: 150,
-    );
+    appsController.takeImageAllertDialog(context, GoogleFonts.poppins(),
+        () async {
+      image = await imagePicker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 50,
+        maxWidth: 150,
+      );
+    }, () async {
+      image = await imagePicker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 50,
+        maxWidth: 150,
+      );
+    });
 
     if (image == null) {
       return;
     }
 
     setState(() {
-      _selectedImage = File(image.path);
+      _selectedImage = File(image!.path);
     });
 
     widget.pickedImage(_selectedImage!);
@@ -59,16 +72,16 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
         GestureDetector(
           onTap: _takeImage,
           child: Container(
-            width: SizeConfig.blockSizeVertical! * 13,
-            height: SizeConfig.blockSizeVertical! * 13,
+            width: SizeConfig.blockSizeVertical! * 17,
+            height: SizeConfig.blockSizeVertical! * 17,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(100),
             ),
             child: AspectRatio(
               aspectRatio: 1.0,
               child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(100),
                   image: _selectedImage != null
                       ? DecorationImage(
                           fit: BoxFit.fill,

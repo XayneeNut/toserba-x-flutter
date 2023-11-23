@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:toserba/controller/barang_api_controller.dart';
+import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/view/user/user_barang_detail_view.dart';
 import 'package:toserba/widget/c/user_app_bar_widget.dart';
@@ -40,9 +40,9 @@ class _HomeUserViewState extends State<HomeUserView> {
     final currencyFormatter = NumberFormat.currency(locale: 'ID');
     var itemTextStyle = GoogleFonts.poppins();
     return Scaffold(
-      drawer: UserDrawerWidget(adminAccountModel: []),
+      drawer: const UserDrawerWidget(),
       backgroundColor: Colors.white,
-      appBar: UserAppBarWidget(barangModels: const [], isListBarang: true),
+      appBar: UserAppBarWidget.home(barangModels: const [], isListBarang: true),
       body: SingleChildScrollView(
         child: Container(
           margin:

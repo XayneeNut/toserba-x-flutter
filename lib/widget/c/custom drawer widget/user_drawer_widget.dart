@@ -1,22 +1,25 @@
-import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:toserba/controller/admin_api_controller.dart';
-import 'package:toserba/controller/jwt_api_controller.dart';
-import 'package:toserba/controller/user_account_api_controller.dart';
-import 'package:toserba/controller/apps_controller.dart';
-import 'package:toserba/models/admin_account_model.dart';
+import 'package:toserba/controller/api%20controller/admin_api_controller.dart';
+import 'package:toserba/controller/api%20controller/jwt_api_controller.dart';
+import 'package:toserba/controller/api%20controller/user_account_api_controller.dart';
+import 'package:toserba/controller/apps%20controller/apps_controller.dart';
+import 'package:toserba/models/user_account_model.dart';
+import 'package:toserba/models/user_profile_model.dart';
 import 'package:toserba/view/admin/auth_view.dart';
+import 'package:toserba/view/user/detail_profile_view.dart';
 import 'package:toserba/view/user/user_auth_view.dart';
 import 'package:toserba/widget/c/custom%20drawer%20widget/user_drawer_action_widget.dart';
 import 'package:toserba/widget/s/size_config.dart';
 
 class UserDrawerWidget extends StatefulWidget {
-  const UserDrawerWidget({super.key, required this.adminAccountModel});
-  final List<AdminAccountModel> adminAccountModel;
+  const UserDrawerWidget({
+    super.key,
+  });
   @override
   State<UserDrawerWidget> createState() => _UserDrawerWidgetState();
 }
@@ -27,6 +30,22 @@ class _UserDrawerWidgetState extends State<UserDrawerWidget> {
   final adminApiController = AdminApiController();
   final userApiController = UserAccountApiController();
   final userAppController = AppsController();
+  UserAccountModel userAccountModel = UserAccountModel(
+    userAccountId: 0,
+    email: '',
+    password: '',
+    username: '',
+    createdAt: DateTime(0),
+    updateAt: DateTime(0),
+    userProfileModel: UserProfileModel(
+        userProfileId: 0,
+        patokanAlamat: '',
+        userBirthday: DateTime(0),
+        userPhoto: '',
+        kodePos: '',
+        alamatLengkap: ''),
+  );
+
   var titleTextStyle = GoogleFonts.notoSansJavanese(
       color: Colors.black,
       fontSize: SizeConfig.blockSizeVertical! * 2.5,
@@ -35,9 +54,6 @@ class _UserDrawerWidgetState extends State<UserDrawerWidget> {
       color: const Color.fromARGB(255, 63, 63, 63),
       fontSize: SizeConfig.blockSizeVertical! * 2,
       fontWeight: FontWeight.w500);
-  var userEmail = '';
-  var userUsername = '';
-  var userAccount = '';
   final textButtonStyle = GoogleFonts.lato(
       color: Colors.black,
       fontSize: SizeConfig.blockSizeVertical! * 2,
@@ -45,16 +61,13 @@ class _UserDrawerWidgetState extends State<UserDrawerWidget> {
 
   Future<void> getUserAccountId() async {
     final userAccountId = await storage.read(key: 'user-account-id');
-    print('ini id $userAccountId');
-    var response = await userApiController.getUserEmailById(
+    userAccountModel = await userApiController.getUserAccountAndUserProfile(
       int.parse(userAccountId!),
     );
-    final data = json.decode(response.body);
     setState(() {
-      userEmail = data['email'];
-      userUsername = data['username'];
-      userAccount = userAccountId;
+      userAccountModel;
     });
+    print(userAccountModel.email);
   }
 
   void _startSelling() async {
@@ -85,8 +98,6 @@ class _UserDrawerWidgetState extends State<UserDrawerWidget> {
   void initState() {
     super.initState();
     getUserAccountId();
-    print('dari init state$userUsername');
-    print('dari init state$userEmail');
   }
 
   @override
@@ -112,45 +123,54 @@ class _UserDrawerWidgetState extends State<UserDrawerWidget> {
                   margin: EdgeInsets.only(
                     top: SizeConfig.blockSizeVertical! * 4,
                   ),
-                  child: Container(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Row(
-                            children: [
-                              CircleAvatar(
-                                backgroundColor: Colors.black,
-                                radius: Get.width * 0.06,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              backgroundColor: Colors.black,
+                              backgroundImage: FileImage(
+                                File(userAccountModel
+                                    .userProfileModel!.userPhoto),
                               ),
-                              SizedBox(
-                                width: Get.width * 0.03,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    userUsername,
-                                    style: titleTextStyle,
-                                  ),
-                                  Text(
-                                    userEmail,
-                                    style: titleTextStyle.copyWith(
-                                        fontSize: Get.width * 0.03),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                              radius: Get.width * 0.06,
+                            ),
+                            SizedBox(
+                              width: Get.width * 0.03,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  userAccountModel.username,
+                                  style: titleTextStyle,
+                                ),
+                                Text(
+                                  userAccountModel.email,
+                                  style: titleTextStyle.copyWith(
+                                      fontSize: Get.width * 0.03),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 SizedBox(
                   height: Get.width * 0.04,
                 ),
                 UserDrawerActionWidgets(
-                    onLogout: () {}, onAdmin: () {}, onPesanan: () {})
+                    onHome: () => Navigator.pop(context),
+                    onAccount: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailProfileView(
+                              userAccountModel: userAccountModel),
+                        )),
+                    onPesanan: () {})
               ],
             ),
           ),
@@ -173,7 +193,11 @@ class _UserDrawerWidgetState extends State<UserDrawerWidget> {
               ),
               TextButton(
                 onPressed: () => userAppController.loginAsDiferentAlertDialog(
-                    context, titleTextStyle, contentTextStyle, _startSelling,'admin'),
+                    context,
+                    titleTextStyle,
+                    contentTextStyle,
+                    _startSelling,
+                    'admin'),
                 child: Text(
                   'Start selling',
                   style: textButtonStyle,
