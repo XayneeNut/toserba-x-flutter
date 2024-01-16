@@ -1,9 +1,74 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/widget/s/size_config.dart';
 
 class AppsController {
+  Future<void> response400AlertDialog({
+    required BuildContext context,
+    required String title,
+    required String content,
+  }) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('yahh'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> loginFailedAlertDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          title: const Text('Login Failed'),
+          content: const SingleChildScrollView(
+            child: Column(
+              children: [
+                Text('email atau password kamu salah, coba cek dan login ulang')
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Uint8List decodeImage(String? base64String) {
+    try {
+      if (base64String != null && base64String.isNotEmpty) {
+        return base64Decode(base64String);
+      }
+    } catch (e) {
+      print("Error decoding image: $e");
+    }
+    return Uint8List(0);
+  }
+
+  Image loadImage(BarangModels barangModels) {
+    Uint8List bytes = base64Decode(barangModels.imageBarang!.path);
+    return Image.memory(bytes, fit: BoxFit.fill);
+  }
+
   Future<void> logoutAllertDialog(
       BuildContext context,
       TextStyle titleTextStyle,
@@ -45,6 +110,29 @@ class AppsController {
               ),
             ),
           ],
+        );
+      },
+    );
+  }
+
+  Future<void> loginAllertDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          title: const Text('Please wait'),
+          content: Row(
+            children: [
+              const CircularProgressIndicator(),
+              SizedBox(
+                width: Get.width * 0.03,
+              ),
+              const Text('currently verifying your email')
+            ],
+          ),
         );
       },
     );

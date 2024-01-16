@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:toserba/models/admin_account_model.dart';
 import 'package:toserba/models/json%20converter/file_converter.dart';
 
 part 'generated/barang_models.g.dart';
 
-const fileConverter = FileConverter();
-
+const FileConverter fileConverter = FileConverter();
 File? fromJsonToImageBarang(String? json) => fileConverter.fromJson(json);
 String? fromImageBarangToJson(File? imageBarang) =>
     fileConverter.toJson(imageBarang);
@@ -18,8 +18,8 @@ class BarangModels {
     required this.kodeBarang,
     required this.hargaBarang,
     required this.stokBarang,
-    this.imageBarang,
-    required this.accountId,
+    required this.imageBarang,
+    required this.adminAccountEntity,
     required this.hargaJual,
     required this.unit,
   });
@@ -31,12 +31,25 @@ class BarangModels {
   final int stokBarang;
   @JsonKey(fromJson: fromJsonToImageBarang, toJson: fromImageBarangToJson)
   File? imageBarang;
-  final int accountId;
+  final AdminAccountModel adminAccountEntity;
   final int hargaJual;
   final String unit;
+  
 
   factory BarangModels.fromJson(Map<String, dynamic> json) =>
       _$BarangModelsFromJson(json);
 
-  Map<String, dynamic> toJson() => _$BarangModelsToJson(this);
+  Map<String, dynamic> toJson() {
+    return {
+      'idBarang': idBarang,
+      'namaBarang': namaBarang,
+      'kodeBarang': kodeBarang,
+      'hargaBarang': hargaBarang,
+      'stokBarang': stokBarang,
+      'imageBarang': fromImageBarangToJson(imageBarang),
+      'adminAccountEntity': adminAccountEntity.accountId,
+      'hargaJual': hargaJual,
+      'unit': unit,
+    };
+  }
 }

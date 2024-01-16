@@ -1,7 +1,8 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:toserba/controller/apps%20controller/apps_controller.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/widget/c/checkout%20barang%20widget/jumlah_item_widget.dart';
 
@@ -31,11 +32,14 @@ class ProductDetailWidget extends StatefulWidget {
 
 class _ProductDetailWidgetState extends State<ProductDetailWidget> {
   int localJumlahItem = 0;
+  late Image image;
+  final AppsController appsController = AppsController();
 
   @override
   void initState() {
     super.initState();
     localJumlahItem = widget.jumlahItem;
+    image = appsController.loadImage(widget.barangModels);
   }
 
   @override
@@ -51,7 +55,7 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
                 fit: BoxFit.fill,
-                image: FileImage(widget.barangModels.imageBarang!),
+                image: image.image,
               ),
             ),
           ),

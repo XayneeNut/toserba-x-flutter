@@ -13,7 +13,8 @@ BarangModels _$BarangModelsFromJson(Map<String, dynamic> json) => BarangModels(
       hargaBarang: json['hargaBarang'] as int,
       stokBarang: json['stokBarang'] as int,
       imageBarang: fromJsonToImageBarang(json['imageBarang'] as String?),
-      accountId: json['accountId'] as int,
+      adminAccountEntity: AdminAccountModel.fromJson(
+          json['adminAccountEntity'] as Map<String, dynamic>),
       hargaJual: json['hargaJual'] as int,
       unit: json['unit'] as String,
     );
@@ -26,7 +27,7 @@ Map<String, dynamic> _$BarangModelsToJson(BarangModels instance) =>
       'hargaBarang': instance.hargaBarang,
       'stokBarang': instance.stokBarang,
       'imageBarang': fromImageBarangToJson(instance.imageBarang),
-      'accountId': instance.accountId,
+      'adminAccountEntity': instance.adminAccountEntity.accountId,
       'hargaJual': instance.hargaJual,
       'unit': instance.unit,
     };

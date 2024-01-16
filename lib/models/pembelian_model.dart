@@ -6,15 +6,12 @@ import 'package:toserba/models/user_profile_model.dart';
 
 part 'generated/pembelian_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class PembelianModel {
   final int pembelianId;
   final AdminAccountModel adminAccountEntity;
-  @JsonKey(name: "userAccountEntity")
   final UserAccountModel userAccountEntity;
-  @JsonKey(name: "detailPembelianEntity")
   final DetailPembelianModel detailPembelianEntity;
-  @JsonKey(name: "userProfileEntity")
   final UserProfileModel userProfileEntity;
 
   const PembelianModel(

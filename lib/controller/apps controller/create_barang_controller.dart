@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
+import 'package:toserba/models/admin_account_model.dart';
 import 'package:toserba/models/barang_models.dart';
 
 class CreateBarangController {
@@ -15,10 +16,10 @@ class CreateBarangController {
     int enteredHarga,
     String enteredCode,
     int enteredStok,
-    String enteredImage,
+    File enteredImage,
     Function setState,
     BuildContext context,
-    int enteredHargaJual, 
+    int enteredHargaJual,
     String enteredUnit,
   ) async {
     formKey = GlobalKey<FormState>();
@@ -27,14 +28,13 @@ class CreateBarangController {
       final currentAccountId =
           await flutterSecureStorage.read(key: 'admin_account_id');
       await barangApiController.saveBarang(
-        namaBarang: enteredName,
-        hargaBarang: enteredHarga,
-        kodeBarang: enteredCode,
-        stokBarang: enteredStok,
-        imageBarang: enteredImage,
-        hargaJual: enteredHargaJual,
-        unit: enteredUnit
-      );
+          namaBarang: enteredName,
+          hargaBarang: enteredHarga,
+          kodeBarang: enteredCode,
+          stokBarang: enteredStok,
+          imageBarang: enteredImage,
+          hargaJual: enteredHargaJual,
+          unit: enteredUnit);
       final allBarang = await barangApiController.loadBarang();
       setState(() {
         barangApiController.barangModels = allBarang;
@@ -56,8 +56,10 @@ class CreateBarangController {
             kodeBarang: enteredCode,
             hargaBarang: enteredHarga,
             stokBarang: enteredStok,
-            imageBarang: File(enteredImage),
-            accountId: int.parse(currentAccountId!),
+            imageBarang: enteredImage,
+            adminAccountEntity: AdminAccountModel.second(
+              accountId: int.parse(currentAccountId!),
+            ),
             hargaJual: enteredHargaJual,
             unit: enteredUnit),
       );

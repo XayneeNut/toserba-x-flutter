@@ -1,13 +1,19 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
+import 'package:toserba/controller/api%20controller/user_account_api_controller.dart';
 import 'package:toserba/models/barang_models.dart';
+import 'package:toserba/models/user_account_model.dart';
+import 'package:toserba/models/user_profile_model.dart';
 import 'package:toserba/view/user/user_barang_detail_view.dart';
 import 'package:toserba/widget/c/user_app_bar_widget.dart';
 import 'package:toserba/widget/s/search_bar_widget.dart';
 import 'package:toserba/widget/c/custom%20drawer%20widget/user_drawer_widget.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class HomeUserView extends StatefulWidget {
   const HomeUserView({super.key});
@@ -19,6 +25,34 @@ class HomeUserView extends StatefulWidget {
 class _HomeUserViewState extends State<HomeUserView> {
   final List<BarangModels> barangModels = [];
   final BarangApiController barangController = BarangApiController();
+  final UserAccountApiController userApiController = UserAccountApiController();
+  final FlutterSecureStorage storage = FlutterSecureStorage();
+
+  UserAccountModel userAccountModel = UserAccountModel(
+    userAccountId: 0,
+    email: '',
+    password: '',
+    username: '',
+    createdAt: DateTime(0),
+    updateAt: DateTime(0),
+    userProfileModel: UserProfileModel(
+        userProfileId: 0,
+        patokanAlamat: '',
+        userBirthday: DateTime(0),
+        userPhoto: '',
+        kodePos: '',
+        alamatLengkap: ''),
+  );
+
+  Future<void> _getUserAccountId() async {
+    final userAccountId = await storage.read(key: 'user-account-id');
+    userAccountModel = await userApiController.getUserAccountAndUserProfile(
+      int.parse(userAccountId!),
+    );
+    setState(() {
+      userAccountModel;
+    });
+  }
 
   void _loadItem() async {
     List<BarangModels> barang = await barangController.loadAllUserBarang();
@@ -29,10 +63,13 @@ class _HomeUserViewState extends State<HomeUserView> {
     });
   }
 
+
+
   @override
   void initState() {
     super.initState();
     _loadItem();
+    _getUserAccountId();
   }
 
   @override
@@ -40,7 +77,7 @@ class _HomeUserViewState extends State<HomeUserView> {
     final currencyFormatter = NumberFormat.currency(locale: 'ID');
     var itemTextStyle = GoogleFonts.poppins();
     return Scaffold(
-      drawer: const UserDrawerWidget(),
+      drawer: UserDrawerWidget(userAccountModel: userAccountModel),
       backgroundColor: Colors.white,
       appBar: UserAppBarWidget.home(barangModels: const [], isListBarang: true),
       body: SingleChildScrollView(
@@ -91,7 +128,7 @@ class _HomeUserViewState extends State<HomeUserView> {
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: const [
                             BoxShadow(
-                                blurRadius: 20,
+                                blurRadius: 13,
                                 color: Color.fromARGB(255, 212, 212, 212))
                           ]),
                       child: GestureDetector(
@@ -116,8 +153,8 @@ class _HomeUserViewState extends State<HomeUserView> {
                                     borderRadius: BorderRadius.circular(10),
                                     image: DecorationImage(
                                       fit: BoxFit.fill,
-                                      image: FileImage(
-                                          barangModels[index].imageBarang!),
+                                      image: MemoryImage(base64Decode(
+                                          barangModels[index].imageBarang!.path),),
                                     ),
                                   ),
                                 ),

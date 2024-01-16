@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:toserba/controller/apps%20controller/apps_controller.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/view/user/checkout_barang_view.dart';
 import 'package:toserba/widget/a/action_button_row.dart';
@@ -24,6 +25,8 @@ class _UserBarangDetailViewState extends State<UserBarangDetailView> {
   var subtitleStyle = GoogleFonts.poppins(fontWeight: FontWeight.w500);
   var selectedSize = "none";
   var defaultButtonColor = const Color.fromARGB(255, 231, 231, 231);
+  late Image image;
+  final AppsController appsController = AppsController();
 
   void toCheckoutBarang() {
     Navigator.push(
@@ -32,6 +35,14 @@ class _UserBarangDetailViewState extends State<UserBarangDetailView> {
           builder: (context) =>
               CheckoutBarangView(barangModels: widget.barangModels),
         ));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    image = appsController.loadImage(
+      widget.barangModels,
+    );
   }
 
   @override
@@ -56,10 +67,8 @@ class _UserBarangDetailViewState extends State<UserBarangDetailView> {
                         right: Get.width * 0.03),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      image: DecorationImage(
-                        fit: BoxFit.fill,
-                        image: FileImage(widget.barangModels.imageBarang!),
-                      ),
+                      image:
+                          DecorationImage(fit: BoxFit.fill, image: image.image),
                     ),
                   ),
                 ),

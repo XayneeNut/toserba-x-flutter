@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:toserba/controller/apps%20controller/apps_controller.dart';
 import 'package:toserba/widget/s/size_config.dart';
@@ -34,29 +33,18 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
 
   void _takeImage() async {
     final imagePicker = ImagePicker();
-    XFile? image;
-
-    appsController.takeImageAllertDialog(context, GoogleFonts.poppins(),
-        () async {
-      image = await imagePicker.pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 50,
-        maxWidth: 150,
-      );
-    }, () async {
-      image = await imagePicker.pickImage(
-        source: ImageSource.camera,
-        imageQuality: 50,
-        maxWidth: 150,
-      );
-    });
+    var image = await imagePicker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 50,
+      maxWidth: 150,
+    );
 
     if (image == null) {
       return;
     }
 
     setState(() {
-      _selectedImage = File(image!.path);
+      _selectedImage = File(image.path);
     });
 
     widget.pickedImage(_selectedImage!);

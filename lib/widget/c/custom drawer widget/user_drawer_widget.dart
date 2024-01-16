@@ -9,7 +9,6 @@ import 'package:toserba/controller/api%20controller/jwt_api_controller.dart';
 import 'package:toserba/controller/api%20controller/user_account_api_controller.dart';
 import 'package:toserba/controller/apps%20controller/apps_controller.dart';
 import 'package:toserba/models/user_account_model.dart';
-import 'package:toserba/models/user_profile_model.dart';
 import 'package:toserba/view/admin/auth_view.dart';
 import 'package:toserba/view/user/detail_profile_view.dart';
 import 'package:toserba/view/user/user_auth_view.dart';
@@ -19,7 +18,10 @@ import 'package:toserba/widget/s/size_config.dart';
 class UserDrawerWidget extends StatefulWidget {
   const UserDrawerWidget({
     super.key,
+    required this.userAccountModel,
   });
+
+  final UserAccountModel userAccountModel;
   @override
   State<UserDrawerWidget> createState() => _UserDrawerWidgetState();
 }
@@ -30,21 +32,6 @@ class _UserDrawerWidgetState extends State<UserDrawerWidget> {
   final adminApiController = AdminApiController();
   final userApiController = UserAccountApiController();
   final userAppController = AppsController();
-  UserAccountModel userAccountModel = UserAccountModel(
-    userAccountId: 0,
-    email: '',
-    password: '',
-    username: '',
-    createdAt: DateTime(0),
-    updateAt: DateTime(0),
-    userProfileModel: UserProfileModel(
-        userProfileId: 0,
-        patokanAlamat: '',
-        userBirthday: DateTime(0),
-        userPhoto: '',
-        kodePos: '',
-        alamatLengkap: ''),
-  );
 
   var titleTextStyle = GoogleFonts.notoSansJavanese(
       color: Colors.black,
@@ -58,17 +45,6 @@ class _UserDrawerWidgetState extends State<UserDrawerWidget> {
       color: Colors.black,
       fontSize: SizeConfig.blockSizeVertical! * 2,
       fontWeight: FontWeight.w500);
-
-  Future<void> getUserAccountId() async {
-    final userAccountId = await storage.read(key: 'user-account-id');
-    userAccountModel = await userApiController.getUserAccountAndUserProfile(
-      int.parse(userAccountId!),
-    );
-    setState(() {
-      userAccountModel;
-    });
-    print(userAccountModel.email);
-  }
 
   void _startSelling() async {
     await storage.deleteAll();
@@ -92,12 +68,6 @@ class _UserDrawerWidgetState extends State<UserDrawerWidget> {
             userAccountApiController: userApiController);
       },
     ));
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getUserAccountId();
   }
 
   @override
@@ -131,8 +101,8 @@ class _UserDrawerWidgetState extends State<UserDrawerWidget> {
                             CircleAvatar(
                               backgroundColor: Colors.black,
                               backgroundImage: FileImage(
-                                File(userAccountModel
-                                    .userProfileModel!.userPhoto),
+                                File(widget.userAccountModel.userProfileModel!
+                                    .userPhoto),
                               ),
                               radius: Get.width * 0.06,
                             ),
@@ -143,11 +113,11 @@ class _UserDrawerWidgetState extends State<UserDrawerWidget> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  userAccountModel.username,
+                                  widget.userAccountModel.username,
                                   style: titleTextStyle,
                                 ),
                                 Text(
-                                  userAccountModel.email,
+                                  widget.userAccountModel.email,
                                   style: titleTextStyle.copyWith(
                                       fontSize: Get.width * 0.03),
                                 ),
@@ -168,7 +138,7 @@ class _UserDrawerWidgetState extends State<UserDrawerWidget> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => DetailProfileView(
-                              userAccountModel: userAccountModel),
+                              userAccountModel: widget.userAccountModel),
                         )),
                     onPesanan: () {})
               ],

@@ -34,8 +34,8 @@ class _CreateBarangViewState extends State<CreateBarangView> {
   var _enteredHargaJual = 0;
   var _enteredUnit = '';
   File? _enteredImage;
-  final _labelTextStyle =
-      GoogleFonts.inter(color: const Color.fromRGBO(71, 75, 82, 1), fontSize: 18);
+  final _labelTextStyle = GoogleFonts.inter(
+      color: const Color.fromRGBO(71, 75, 82, 1), fontSize: 18);
 
   Future<void> _saveBarang() async {
     if (_formKey.currentState!.validate()) {
@@ -45,7 +45,7 @@ class _CreateBarangViewState extends State<CreateBarangView> {
           hargaBarang: _enteredHarga,
           kodeBarang: _enteredCode,
           stokBarang: _enteredStok,
-          imageBarang: _enteredImage!.path,
+          imageBarang: _enteredImage,
           hargaJual: _enteredHargaJual,
           unit: _enteredUnit);
 
@@ -75,7 +75,7 @@ class _CreateBarangViewState extends State<CreateBarangView> {
                 height: SizeConfig.blockSizeVertical! * 1,
               ),
               Container(
-                height: SizeConfig.blockSizeVertical! * 56,
+                height: SizeConfig.blockSizeVertical! * 70,
                 width: SizeConfig.blockSizeVertical! * 47.7,
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -144,7 +144,7 @@ class _CreateBarangViewState extends State<CreateBarangView> {
                       labelText: "Stok*"),
                 ]),
               ),
-              SizedBox(height: SizeConfig.blockSizeVertical! * 1),
+              SizedBox(height: SizeConfig.blockSizeVertical! * 2),
               Column(
                 children: [
                   Container(

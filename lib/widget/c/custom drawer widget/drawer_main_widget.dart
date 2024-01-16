@@ -46,7 +46,6 @@ class _DrawerMainState extends State<DrawerMain> {
 
   Future<void> getAdminAccountId() async {
     final adminAccount = await storage.read(key: 'admin_account_id');
-    print('ini id $adminAccount');
     var response = await adminApiController.getEmailById(
       int.parse(adminAccount!),
     );
@@ -90,8 +89,6 @@ class _DrawerMainState extends State<DrawerMain> {
   void initState() {
     super.initState();
     getAdminAccountId();
-    print('dari init state$adminUsername');
-    print('dari init state$adminEmail');
   }
 
   @override

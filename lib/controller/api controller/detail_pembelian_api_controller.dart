@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:toserba/models/detail_pembelian_model.dart';
@@ -9,7 +10,7 @@ class DetailPembelianApiController {
 
   Future<DetailPembelianModel> getDetailBarangById(int id) async {
     final url =
-        Uri.parse("http://10.0.2.2:8127/api/v1/detail-pembelian/get-id/$id");
+        Uri.parse("http://localhost:8127/api/v1/detail-pembelian/get-id/$id");
     final response = await http.get(url);
     final responseData = json.decode(response.body);
     DetailPembelianModel detailPembelianModel =
@@ -25,7 +26,7 @@ class DetailPembelianApiController {
     required String alamatPengiriman,
   }) async {
     final url =
-        Uri.parse("http://10.0.2.2:8127/api/v1/detail-pembelian/create");
+        Uri.parse("http://localhost:8127/api/v1/detail-pembelian/create");
 
     final body = json.encode({
       "jumlahBarang": jumlahBarang,
@@ -43,13 +44,19 @@ class DetailPembelianApiController {
         var detailPembelianId = responseData['detailPembelianId'];
         getDetailBarangById(detailPembelianId);
       } else if (response.statusCode == 400) {
-        print(responseData);
-        throw Exception("failed to save item");
+        if (kDebugMode) {
+          print(responseData);
+          throw Exception("failed to save item");
+        }
       } else {
-        print(responseData);
-        throw Exception("failed to save item");
+        if (kDebugMode) {
+          print(responseData);
+          throw Exception("failed to save item");
+        }
       }
-    } catch (e) {}
+    } catch (e) {
+      throw Exception("problem on your server $e");
+    }
     return response;
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -53,7 +55,7 @@ class BarangTextWidget extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(10),
                       image: DecorationImage(
                         fit: BoxFit.fill,
-                        image: FileImage(barangModels[index].imageBarang!),
+                        image: MemoryImage(base64Decode(barangModels[index].imageBarang!.path)),
                       ),
                     ),
                   ),
@@ -106,7 +108,7 @@ class BarangTextWidget extends ConsumerWidget {
                       style: style.copyWith(
                         fontSize: SizeConfig.blockSizeVertical! * 2.3,
                         fontWeight: FontWeight.w500,
-                        color: Color.fromARGB(255, 56, 56, 56),
+                        color: const Color.fromARGB(255, 56, 56, 56),
                       ),
                     ),
                   ],

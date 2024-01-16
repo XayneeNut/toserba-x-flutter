@@ -1,14 +1,18 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:toserba/controller/api%20controller/jwt_api_controller.dart';
 import 'package:toserba/controller/api%20controller/user_account_api_controller.dart';
+import 'package:toserba/controller/apps%20controller/apps_controller.dart';
+import 'package:toserba/controller/apps%20controller/validator_controller.dart';
 import 'package:toserba/view/user/home_user_view.dart';
 import 'package:toserba/widget/i/image_picker_widget.dart';
 import 'package:toserba/widget/s/sign_up_text_widget.dart';
 import 'package:toserba/widget/s/size_config.dart';
+import 'package:email_validator/email_validator.dart';
 
 class UserAuthView extends StatefulWidget {
   const UserAuthView(
@@ -29,7 +33,11 @@ class _UserAuthViewState extends State<UserAuthView> {
   var _enteredEmail = '';
   var _enteredPassword = '';
   var _enteredUsername = '';
+  bool _isValidEmail = false;
   File? _entereImage;
+  bool _obscureText = true;
+  final ValidatorController _validatorController = ValidatorController();
+  final AppsController _appsController = AppsController();
 
   var titleStyle = GoogleFonts.poppins(
     color: Colors.black,
@@ -42,7 +50,7 @@ class _UserAuthViewState extends State<UserAuthView> {
 
   var labelStyle = GoogleFonts.poppins();
   var imageUrl =
-      'https://img.freepik.com/free-vector/user-verification-unauthorized-access-prevention-private-account-authentication-cyber-security-people-entering-login-password-safety-measures_335657-3530.jpg?w=740&t=st=1693831915~exp=1693832515~hmac=13d369ada8acdaf56d24c52bd4c5981cec1f9c9f8d8f7f17af74c817bf47aaaa';
+      'https://img.freepik.com/free-vector/user-verification-unauthorized-access-prevention-private-account-authentication-cyber-security-people-entering-login-password-safety-measures_335657-3530.jpg?w=740&t=st=1704420480~exp=1704421080~hmac=3bfca4d17f9ffda70bd93fcb60f860001ead259a0433a38319ca3f860e86ef38';
 
   void _toHomeUserView() {
     Navigator.pushAndRemoveUntil(
@@ -63,26 +71,28 @@ class _UserAuthViewState extends State<UserAuthView> {
 
     try {
       if (_isLogin && isValid) {
-        await widget.jwtApiController.getUserTokenJwt();
         _formKey.currentState!.save();
 
         final signUp = await widget.userAccountApiController.signUp(
             email: _enteredEmail,
             username: _enteredUsername,
-            password: _enteredPassword,);
+            password: _enteredPassword,
+            context: context);
 
         if (signUp.statusCode == 200) {
           if (!context.mounted) return;
+          await widget.jwtApiController.getUserTokenJwt();
           _toHomeUserView();
         }
       } else if (!_isLogin && isValid) {
-        await widget.jwtApiController.getUserTokenJwt();
         _formKey.currentState!.save();
+        if (!context.mounted) return;
+        final login = await widget.userAccountApiController.login(
+            context: context, email: _enteredEmail, password: _enteredPassword);
 
-        final login = await widget.userAccountApiController
-            .login(email: _enteredEmail, password: _enteredPassword);
         if (login.statusCode == 200) {
           if (!context.mounted) return;
+          await widget.jwtApiController.getUserTokenJwt();
           _toHomeUserView();
         }
       }
@@ -112,7 +122,8 @@ class _UserAuthViewState extends State<UserAuthView> {
                             height: 334,
                             width: 300,
                             margin: EdgeInsets.only(top: Get.width * 0.01),
-                            child: Image.network(imageUrl)),
+                            child: Image.asset(
+                                'assets/UserLoginAccountImage.png')),
                       ),
                 SizedBox(
                   height: Get.width * 0.0002,
@@ -145,8 +156,19 @@ class _UserAuthViewState extends State<UserAuthView> {
                   height: Get.width * 0.02,
                 ),
                 TextFormField(
+                  onChanged: (value) {
+                    setState(() {
+                      _isValidEmail = EmailValidator.validate(value);
+                    });
+                  },
                   onSaved: (newValue) {
                     _enteredEmail = newValue!;
+                  },
+                  validator: (value) {
+                    if (_isValidEmail == false) {
+                      return 'Email not valid';
+                    }
+                    return null;
                   },
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.alternate_email),
@@ -158,6 +180,8 @@ class _UserAuthViewState extends State<UserAuthView> {
                 ),
                 if (_isLogin)
                   TextFormField(
+                    validator: (value) =>
+                        _validatorController.authValidator('Username', value),
                     onSaved: (newValue) {
                       _enteredUsername = newValue!;
                     },
@@ -170,12 +194,25 @@ class _UserAuthViewState extends State<UserAuthView> {
                   height: Get.width * 0.02,
                 ),
                 TextFormField(
+                  obscureText: _obscureText,
+                  validator: (value) =>
+                      _validatorController.authValidator('Password', value),
                   onSaved: (newValue) {
                     _enteredPassword = newValue!;
                   },
-                  decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.lock_outlined),
-                    label: Text("Password"),
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.lock_outlined),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+                      icon: Icon(_obscureText == true
+                          ? CupertinoIcons.eye_fill
+                          : CupertinoIcons.eye_slash_fill),
+                    ),
+                    label: const Text("Password"),
                   ),
                 ),
                 SizedBox(
@@ -186,7 +223,12 @@ class _UserAuthViewState extends State<UserAuthView> {
                     width: 300,
                     height: 55,
                     child: ElevatedButton(
-                      onPressed: _isSubmit,
+                      onPressed: () {
+                        if (_formKey.currentState!.validate() == true) {
+                          _appsController.loginAllertDialog(context);
+                          _isSubmit();
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color.fromRGBO(85, 92, 246, 1),
                         shape: RoundedRectangleBorder(

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:toserba/models/barang_models.dart';
@@ -10,7 +11,7 @@ class BarangApiController {
   FlutterSecureStorage flutterSecureStorage = const FlutterSecureStorage();
 
   Future<http.Response> getAllBarang() async {
-    final url = Uri.parse("http://10.0.2.2:8127/api/v1/barang/get-all");
+    final url = Uri.parse("http://localhost:8127/api/v1/barang/get-all");
 
     final response = await http.get(url);
     return response;
@@ -25,31 +26,13 @@ class BarangApiController {
     List<BarangModels> barangModels = [];
 
     for (var allData in jsonData) {
-      final idBarang = allData['idBarang'];
-      final namaBarang = allData['namaBarang'];
-      final kodeBarang = allData['kodeBarang'];
-      final hargaBarang = allData['hargaBarang'];
-      final stokBarang = allData['stokBarang'];
-      final imageBarang = allData['imageBarang'];
       final accountId = allData['adminAccountEntity']['accountId'];
-      final unit = allData['unit'];
-      final hargaJual = allData['hargaJual'];
-      final barang = BarangModels(
-          idBarang: idBarang,
-          namaBarang: namaBarang,
-          kodeBarang: kodeBarang,
-          hargaBarang: hargaBarang,
-          stokBarang: stokBarang,
-          imageBarang: File(imageBarang as String),
-          accountId: accountId,
-          hargaJual: hargaJual,
-          unit: unit);
+      final barang = BarangModels.fromJson(allData);
 
       if (accountId == int.parse(currentAccountId!)) {
         barangModels.add(barang);
       }
     }
-    print(jsonData);
     return barangModels;
   }
 
@@ -60,29 +43,13 @@ class BarangApiController {
     List<BarangModels> barangModels = [];
 
     for (var allData in jsonData) {
-      final idBarang = allData['idBarang'];
-      final namaBarang = allData['namaBarang'];
-      final kodeBarang = allData['kodeBarang'];
-      final hargaBarang = allData['hargaBarang'];
-      final stokBarang = allData['stokBarang'];
-      final imageBarang = allData['imageBarang'];
-      final accountId = allData['adminAccountEntity']['accountId'];
-      final unit = allData['unit'];
-      final hargaJual = allData['hargaJual'];
-      final barang = BarangModels(
-          idBarang: idBarang,
-          namaBarang: namaBarang,
-          kodeBarang: kodeBarang,
-          hargaBarang: hargaBarang,
-          stokBarang: stokBarang,
-          imageBarang: File(imageBarang as String),
-          accountId: accountId,
-          hargaJual: hargaJual,
-          unit: unit);
+      final barang = BarangModels.fromJson(allData);
+      final image = allData['imageBarang'];
+      final decodeImage = base64Decode(image);
+      allData['imageBarang'] = decodeImage;
 
-        barangModels.add(barang);
+      barangModels.add(barang);
     }
-    print(jsonData);
     return barangModels;
   }
 
@@ -91,11 +58,65 @@ class BarangApiController {
     required int hargaBarang,
     required String kodeBarang,
     required int stokBarang,
+    required File? imageBarang,
+    required int hargaJual,
+    required String unit,
+  }) async {
+    final url = Uri.parse("http://localhost:8127/api/v1/barang/create");
+    final currentAccountId =
+        await flutterSecureStorage.read(key: 'admin_account_id');
+
+    try {
+      var request = http.MultipartRequest('POST', url);
+
+      request.fields["namaBarang"] = namaBarang;
+      request.fields["hargaBarang"] = hargaBarang.toString();
+      request.fields["kodeBarang"] = kodeBarang;
+      request.fields["stokBarang"] = stokBarang.toString();
+      request.fields["adminAccountEntity"] = currentAccountId!;
+      request.fields["unit"] = unit;
+      request.fields["hargaJual"] = hargaJual.toString();
+
+      var file =
+          await http.MultipartFile.fromPath('imageBarang', imageBarang!.path);
+
+      request.files.add(file);
+
+      var response = await request.send();
+
+      if (response.statusCode >= 400 || response.statusCode <= 499) {
+        if (kDebugMode) {
+          print(response.request);
+        }
+      }
+    } catch (e) {
+      throw Exception("$e");
+    }
+  }
+
+  Future<http.Response> getId(int id) async {
+    final url = Uri.parse('http://localhost:8127/api/v1/barang/get/$id');
+    final response = await http.get(url);
+    return response;
+  }
+
+  jsonToFormData(http.MultipartRequest request, Map<String, dynamic> data) {
+    for (var key in data.keys) {
+      request.fields[key] = data[key].toString();
+    }
+  }
+
+  Future<void> updateBarang({
+    required int idBarang,
+    required String namaBarang,
+    required int hargaBarang,
+    required String kodeBarang,
+    required int stokBarang,
     required String imageBarang,
     required int hargaJual,
     required String unit,
   }) async {
-    final url = Uri.parse("http://10.0.2.2:8127/api/v1/barang/create");
+    final url = Uri.parse("http://localhost:8127/api/v1/barang/update");
     final currentAccountId =
         await flutterSecureStorage.read(key: 'admin_account_id');
 
@@ -109,80 +130,33 @@ class BarangApiController {
       "hargaJual": hargaJual,
       "unit": unit,
     });
-
-    try {
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: body,
-      );
-
-      if (response.statusCode == 200) {
-      } else {
-        throw Exception("failed to save item");
-      }
-    } catch (e) {
-      throw Exception("failed to connect to the server");
-    }
-  }
-
-  Future<http.Response> getId(int id) async {
-    final url = Uri.parse('http://10.0.2.2:8127/api/v1/barang/get/$id');
-    final response = await http.get(url);
-    return response;
-  }
-
-  Future<void> updateBarang({
-    required int idBarang,
-    required String namaBarang,
-    required int hargaBarang,
-    required String kodeBarang,
-    required int stokBarang,
-    required String imageBarang,
-    required int hargaJual,
-    required String unit,
-  }) async {
-    final url = Uri.parse("http://10.0.2.2:8127/api/v1/barang/update");
-    final currentAccountId =
-        await flutterSecureStorage.read(key: 'admin_account_id');
-
-    final body = json.encode({
-      "idBarang" : idBarang,
-      "namaBarang": namaBarang,
-      "hargaBarang": hargaBarang,
-      "kodeBarang": kodeBarang,
-      "stokBarang": stokBarang,
-      "imageBarang": imageBarang,
-      "hargaJual": hargaJual,
-      "unit": unit,
-      "adminAccountEntity": {
-        "accountId": int.parse(currentAccountId!),
-      },
-    });
-
     try {
       final response = await http.put(
         url,
-        headers: {'Content-Type': 'application/json'},
         body: body,
       );
 
       if (response.statusCode == 200) {
-        // Berhasil mengupdate data barang
-        print("Data barang berhasil diupdate");
+        if (kDebugMode) {
+          print("Data barang berhasil diupdate");
+        }
       } else {
-        print(response.body);
-        throw Exception("Gagal mengupdate data barang");
+        if (kDebugMode) {
+          print(response.body);
+          throw Exception("Gagal mengupdate data barang");
+        }
       }
     } catch (e) {
-      print(e);
-      throw Exception("Gagal terhubung ke server");
+      if (kDebugMode) {
+        print(e);
+        throw Exception("Gagal terhubung ke server $e");
+      }
     }
   }
 
   Future<http.Response> deleteBarang(BarangModels barangModels) {
     final url = Uri.parse(
-        'http://10.0.2.2:8127/api/v1/barang/delete/${barangModels.idBarang}');
+        'http://localhost:8127/api/v1/barang/delete/${barangModels.idBarang}');
 
     final deleteById = http.delete(url);
     return deleteById;

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
+import 'package:toserba/models/admin_account_model.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/widget/a/add_clear_widget.dart';
 import 'package:toserba/widget/c/update_app_bar_widget.dart';
@@ -42,25 +43,28 @@ class _UpdateBarangViewState extends State<UpdateBarangView> {
       FlutterSecureStorage flutterSecureStorage = const FlutterSecureStorage();
       final currentAccountId =
           await flutterSecureStorage.read(key: 'admin_account_id');
-
-      final update = BarangModels(
+      final barangModel = BarangModels(
           idBarang: widget.newBarangModels.idBarang,
           namaBarang: _enteredName,
           kodeBarang: _enteredCode,
           hargaBarang: _enteredHarga,
+          imageBarang: _enteredImage,
           stokBarang: _enteredStok,
           hargaJual: _enteredHargaJual,
           unit: _enteredUnit,
-          accountId: int.parse(currentAccountId!));
+          adminAccountEntity: AdminAccountModel.second(
+              accountId: int.parse(currentAccountId!)));
+
+      final update = barangModel.toJson();
 
       await widget.newBarangController.updateBarang(
           idBarang: widget.newBarangModels.idBarang,
           hargaBarang: _enteredHarga,
           hargaJual: _enteredHargaJual,
-          imageBarang: _enteredImage!.path,
           kodeBarang: _enteredCode,
           namaBarang: _enteredName,
           stokBarang: _enteredStok,
+          imageBarang: _enteredImage!.path,
           unit: _enteredUnit);
       print(updateBarang);
 
@@ -90,7 +94,7 @@ class _UpdateBarangViewState extends State<UpdateBarangView> {
               Container(
                 margin:
                     EdgeInsets.only(left: SizeConfig.blockSizeVertical! * 0.6),
-                height: SizeConfig.blockSizeVertical! * 53,
+                height: SizeConfig.blockSizeVertical! * 60,
                 width: SizeConfig.blockSizeVertical! * 47.7,
                 decoration: BoxDecoration(
                   color: Colors.white,
