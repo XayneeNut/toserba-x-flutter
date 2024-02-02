@@ -1,5 +1,9 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:toserba/controller/apps%20controller/apps_controller.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/widget/c/update_app_bar_widget.dart';
 import 'package:toserba/widget/i/image_picker_widget.dart';
@@ -16,8 +20,30 @@ class DetailBarangView extends StatefulWidget {
 }
 
 class _DetailBarangViewState extends State<DetailBarangView> {
+  File? _convertUint8ListToFile(Uint8List? uint8list) {
+    if (uint8list == null) return null;
+
+    final tempDir = Directory.systemTemp;
+    final tempFile = File('${tempDir.path}/temp_image.png');
+
+    tempFile.writeAsBytesSync(uint8list);
+
+    return tempFile;
+  }
+
+  File? _getInitialImageFile() {
+    // Decode the base64 string if it exists
+    if (widget.barangModels.imageBarang != null) {
+      Uint8List base64ImageBytes = widget.barangModels.imageBarang![0].gambar;
+      return _convertUint8ListToFile(base64ImageBytes);
+    } else {
+      return null;
+    }
+  }
+
   final _labelTextStyle = GoogleFonts.inter(
       color: const Color.fromRGBO(71, 75, 82, 1), fontSize: 18);
+  final appsController = AppsController();
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +61,7 @@ class _DetailBarangViewState extends State<DetailBarangView> {
               Container(
                 margin:
                     EdgeInsets.only(left: SizeConfig.blockSizeVertical! * 0.6),
-                height: SizeConfig.blockSizeVertical! * 53,
+                height: SizeConfig.blockSizeVertical! * 70,
                 width: SizeConfig.blockSizeVertical! * 47.7,
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -70,13 +96,13 @@ class _DetailBarangViewState extends State<DetailBarangView> {
                           right: SizeConfig.blockSizeVertical! * 1.5),
                       child: ImagePickerWidget(
                         isUser: false,
-                        initialImage: widget.barangModels.imageBarang,
+                        initialImage: _getInitialImageFile(),
                         pickedImage: (image) {},
                       ),
                     ),
                   ),
                   NamaKodeWidget(
-                    initialValue: widget.barangModels.namaBarang,
+                    initialValue: widget.barangModels.namaBarang!,
                     onSaved: (val) {},
                     textStyle: _labelTextStyle.copyWith(
                       color: const Color.fromARGB(255, 116, 116, 116),
@@ -84,7 +110,7 @@ class _DetailBarangViewState extends State<DetailBarangView> {
                     labelText: "Nama Barang*",
                   ),
                   NamaKodeWidget(
-                      initialValue: widget.barangModels.unit,
+                      initialValue: widget.barangModels.unit!,
                       onSaved: (val) {},
                       textStyle: _labelTextStyle.copyWith(
                           color: const Color.fromARGB(255, 116, 116, 116)),
@@ -133,7 +159,7 @@ class _DetailBarangViewState extends State<DetailBarangView> {
                           ),
                         ),
                         NamaKodeWidget(
-                            initialValue: widget.barangModels.kodeBarang,
+                            initialValue: widget.barangModels.kodeBarang!,
                             onSaved: (val) {},
                             textStyle: _labelTextStyle.copyWith(
                                 color:

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,7 +35,7 @@ class _HomeUserViewState extends State<HomeUserView> {
     updateAt: DateTime(0),
     userProfileModel: UserProfileModel(
         userProfileId: 0,
-        patokanAlamat: '',
+        patokanAlamat: '',  
         userBirthday: DateTime(0),
         userPhoto: '',
         kodePos: '',
@@ -62,8 +60,6 @@ class _HomeUserViewState extends State<HomeUserView> {
       barangModels.addAll(barang);
     });
   }
-
-
 
   @override
   void initState() {
@@ -153,8 +149,11 @@ class _HomeUserViewState extends State<HomeUserView> {
                                     borderRadius: BorderRadius.circular(10),
                                     image: DecorationImage(
                                       fit: BoxFit.fill,
-                                      image: MemoryImage(base64Decode(
-                                          barangModels[index].imageBarang!.path),),
+                                      image: MemoryImage(
+                                        barangModels[index]
+                                            .imageBarang![index]
+                                            .gambar,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -166,7 +165,7 @@ class _HomeUserViewState extends State<HomeUserView> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    barangModels[index].namaBarang,
+                                    barangModels[index].namaBarang!,
                                     style: itemTextStyle,
                                   ),
                                   SizedBox(height: Get.width * 0.01),

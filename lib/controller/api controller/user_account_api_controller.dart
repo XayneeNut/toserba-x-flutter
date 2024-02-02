@@ -14,18 +14,9 @@ class UserAccountApiController {
 
   Future<http.Response> getUserEmailById(int id) async {
     final url =
-        Uri.parse("http://localhost:8127/api/v1/user-account/get-id/$id");
+        Uri.parse("http://localhost:8127/api/v1/user-account/get/$id");
     final response = await http.get(url);
     return response;
-  }
-
-  Future<UserAccountModel> getUserAccountAndUserProfile(int id) async {
-    final url = Uri.parse(
-        "http://localhost:8127/api/v1/user-account/get-by-profile/$id");
-    final response = await http.get(url);
-    final jsonData = json.decode(response.body);
-    UserAccountModel userAccountModel = UserAccountModel.fromJson(jsonData);
-    return userAccountModel;
   }
 
   Future<http.Response> login(
@@ -43,7 +34,7 @@ class UserAccountApiController {
         key: 'user-account-id', value: userAccountId.toString());
     await storage.read(key: 'user-account-id');
     try {
-      if (response.statusCode == 400) {
+      if (response.statusCode >= 400 || response.statusCode >= 499) {
         // ignore: use_build_context_synchronously
         _appsController.loginFailedAlertDialog(context);
         throw Exception("failed to save item");
@@ -52,6 +43,15 @@ class UserAccountApiController {
       }
     } catch (e) {}
     return response;
+  }
+
+  Future<UserAccountModel> getUserAccountAndUserProfile(int id) async {
+    final url = Uri.parse(
+        "http://localhost:8127/api/v1/user-account/get/$id");
+    final response = await http.get(url);
+    final jsonData = json.decode(response.body);
+    UserAccountModel userAccountModel = UserAccountModel.fromJson(jsonData);
+    return userAccountModel;
   }
 
   Future<http.Response> signUp({

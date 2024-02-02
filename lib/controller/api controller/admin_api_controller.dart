@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:toserba/controller/api%20controller/jwt_api_controller.dart';
 import 'package:toserba/controller/apps%20controller/apps_controller.dart';
+import 'package:toserba/models/admin_account_model.dart';
 
 class AdminApiController {
   final storage = const FlutterSecureStorage();
@@ -67,6 +68,23 @@ class AdminApiController {
       //handling error message
     }
     return response;
+  }
+
+  Future<AdminAccountModel> loadAdminAccount() async {
+    final adminAccount = await storage.read(key: 'admin_account_id');
+    final response = await getEmailById(int.parse(adminAccount!));
+    final data = json.decode(response.body);
+    final email = data['email'];
+    final username = data['username'];
+    final password = data['password'];
+
+    print("$email, $username, $password, $data");
+
+    return AdminAccountModel(
+        accountId: int.parse(adminAccount),
+        email: email,
+        username: username,
+        password: password);
   }
 
   Future<http.Response> getEmailById(int id) async {

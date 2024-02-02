@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class NamaKodeWidget extends StatelessWidget {
@@ -16,10 +17,11 @@ class NamaKodeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var margin = Get.width * 0.04;
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
+        Container(
+          margin: EdgeInsets.only(left: margin, top: margin, right: margin),
           child: TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (value) {
@@ -37,6 +39,9 @@ class NamaKodeWidget extends StatelessWidget {
             minLines: 1,
             maxLines: 3,
             decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
               labelText: labelText,
               counterText: '',
               errorStyle: GoogleFonts.poppins(color: Colors.red),

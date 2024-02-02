@@ -25,7 +25,7 @@ class _UserBarangDetailViewState extends State<UserBarangDetailView> {
   var subtitleStyle = GoogleFonts.poppins(fontWeight: FontWeight.w500);
   var selectedSize = "none";
   var defaultButtonColor = const Color.fromARGB(255, 231, 231, 231);
-  late Image image;
+  late List<Image> image;
   final AppsController appsController = AppsController();
 
   void toCheckoutBarang() {
@@ -67,8 +67,8 @@ class _UserBarangDetailViewState extends State<UserBarangDetailView> {
                         right: Get.width * 0.03),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      image:
-                          DecorationImage(fit: BoxFit.fill, image: image.image),
+                      image: DecorationImage(
+                          fit: BoxFit.fill, image: image[0].image),
                     ),
                   ),
                 ),
@@ -183,7 +183,7 @@ class _UserBarangDetailViewState extends State<UserBarangDetailView> {
                 height: Get.width * 0.06,
               ),
               Text(
-                widget.barangModels.namaBarang,
+                widget.barangModels.namaBarang!,
                 style: elevatedButtonStyle.copyWith(fontSize: Get.width * 0.09),
               ),
               SizedBox(

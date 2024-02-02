@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:toserba/controller/api%20controller/admin_api_controller.dart';
 import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
 import 'package:toserba/controller/list_barang_controller.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/view/admin/detail_barang_view.dart';
+import 'package:toserba/widget/a/admin_item_widget.dart';
+import 'package:toserba/widget/a/app_bar_admin_widget.dart';
 import 'package:toserba/widget/b/barang_text_widget.dart';
-import 'package:toserba/widget/c/custom_app_bar_widget.dart';
 import 'package:toserba/widget/s/size_config.dart';
 
 class ActivePageWidget extends StatefulWidget {
@@ -28,137 +31,97 @@ class _ActivePageWidgetState extends State<ActivePageWidget> {
   List<BarangModels> filteredBarangModels = [];
   final BarangApiController barangApiController = BarangApiController();
   final ListBarangController listBarangController = ListBarangController();
+  final appsController = AdminApiController();
   var groceryTextStyle =
       GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 30);
+  String email = "";
+  String username = "";
+
+  var customTextStyle = GoogleFonts.ubuntu();
+
+  @override
+  void initState() {
+    super.initState();
+    loadAdminAccount();
+    _loadItem();
+  }
+
+  Future<void> loadAdminAccount() async {
+    final adminAccount = await appsController.loadAdminAccount();
+    setState(() {
+      email = adminAccount.email!;
+      username = adminAccount.username!;
+    });
+  }
+
+  final List<BarangModels> barangModels = [];
+  void _loadItem() async {
+    List<BarangModels> barang = await barangApiController.loadBarang();
+
+    setState(() {
+      barangModels.clear();
+      barangModels.addAll(barang);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: SizeConfig.safeBlockVertical! * 5),
-        CustomAppBarWidget(
-            barangModels: widget.barangModels, isListBarang: true),
-        Container(
-          margin: const EdgeInsets.only(left: 12, top: 15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: SizeConfig.blockSizeVertical! * 16,
-                    height: SizeConfig.blockSizeVertical! * 12,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: const Color.fromARGB(255, 202, 233, 237)),
-                    child: Center(
-                      child: Text(
-                        'Sell',
-                        style: groceryTextStyle.copyWith(
-                            fontSize: SizeConfig.blockSizeVertical! * 7),
+    return SingleChildScrollView(
+      child: SizedBox(
+        height: Get.height * 2,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: Get.width * 0.068,
+            ),
+            AppBarAdminWidget(
+                username: username,
+                customTextStyle: customTextStyle,
+                barangModels: widget.barangModels,
+                listBarangController: listBarangController,
+                barangApiController: barangApiController),
+            widget.barangModels.isEmpty
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'upss... Your item is empty',
+                        style: GoogleFonts.poppins(
+                            fontSize: 20, fontWeight: FontWeight.w500),
                       ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'Your Best',
-                    style: groceryTextStyle.copyWith(
-                        fontSize: SizeConfig.blockSizeVertical! * 2.5,
-                        fontWeight: FontWeight.w400),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'Product',
-                    style: groceryTextStyle.copyWith(
-                        fontSize: SizeConfig.blockSizeVertical! * 3.8),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: widget.barangModels.isEmpty
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'upss... Your item is empty',
-                      style: GoogleFonts.poppins(
-                          fontSize: 20, fontWeight: FontWeight.w500),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.blockSizeHorizontal! * 100,
-                      width: SizeConfig.blockSizeHorizontal! * 100,
-                      child: Image.asset('assets/empty_list.png'),
-                    )
-                  ],
-                )
-              : ListView.builder(
-                  itemCount: widget.barangModels.length,
-                  itemBuilder: (context, index) => GestureDetector(
-                    onTap: () => listBarangController.toUpdateBarang(
-                      index,
-                      widget.barangModels,
-                      context,
-                      barangApiController,
-                      setState,
-                    ),
-                    onDoubleTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DetailBarangView(
-                            barangModels: widget.barangModels[index],
-                          ),
-                        ),
-                      );
-                    },
-                    child: Dismissible(
-                      direction: DismissDirection.endToStart,
-                      onDismissed: (direction) =>
-                          widget.deleteData(widget.barangModels[index]),
-                      key: ValueKey(widget.barangModels[index].idBarang),
-                      child: GestureDetector(
-                        onTap: () => listBarangController.toUpdateBarang(
-                          index,
-                          widget.barangModels,
-                          context,
-                          barangApiController,
-                          setState,
-                        ),
-                        onDoubleTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailBarangView(
-                                barangModels: widget.barangModels[index],
-                              ),
+                      SizedBox(
+                        height: SizeConfig.blockSizeHorizontal! * 100,
+                        width: SizeConfig.blockSizeHorizontal! * 100,
+                        child: Image.asset('assets/empty_list.png'),
+                      )
+                    ],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(
+                            left: Get.width * 0.03, top: Get.width * 0.07),
+                        child: Column(
+                          children: [
+                            Text(
+                              'Your Collection',
+                              style: GoogleFonts.ubuntu(
+                                  fontSize: Get.width * 0.08),
                             ),
-                          );
-                        },
-                        child: Container(
-                          margin:
-                              EdgeInsets.all(SizeConfig.blockSizeVertical! * 1),
-                          child: Stack(
-                            children: [
-                              BarangTextWidget(
-                                  index: index,
-                                  barangModels: widget.barangModels,
-                                  barangModel: widget.barangModel),
-                            ],
-                          ),
+                          ],
                         ),
                       ),
-                    ),
+                      AdminItemWidget(
+                          barangModels: barangModels,
+                          itemTextStyle:
+                              groceryTextStyle.copyWith(fontSize: 12))
+                    ],
                   ),
-                ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

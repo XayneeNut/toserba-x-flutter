@@ -25,7 +25,7 @@ class _CheckoutBarangViewState extends State<CheckoutBarangView> {
   bool alamat = false;
 
   double calculateTotalPrice() {
-    return widget.barangModels.hargaJual.toDouble() * jumlahItem;
+    return widget.barangModels.hargaJual!.toDouble() * jumlahItem;
   }
 
   double calculateTotalTax() {

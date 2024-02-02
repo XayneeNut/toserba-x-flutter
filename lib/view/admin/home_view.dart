@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
 import 'package:toserba/models/admin_account_model.dart';
@@ -21,7 +19,7 @@ class _HomeViewState extends State<HomeView> {
       kodeBarang: '',
       hargaBarang: 0,
       stokBarang: 0,
-      imageBarang: File(''),
+      imageBarang: [],
       adminAccountEntity: const AdminAccountModel(
           accountId: 0, email: "", username: "", password: ""),
       hargaJual: 0,

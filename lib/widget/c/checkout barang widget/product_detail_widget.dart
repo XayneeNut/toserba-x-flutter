@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -32,7 +31,7 @@ class ProductDetailWidget extends StatefulWidget {
 
 class _ProductDetailWidgetState extends State<ProductDetailWidget> {
   int localJumlahItem = 0;
-  late Image image;
+  late List<Image> image;
   final AppsController appsController = AppsController();
 
   @override
@@ -55,7 +54,7 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
                 fit: BoxFit.fill,
-                image: image.image,
+                image: image[0].image,
               ),
             ),
           ),
@@ -70,7 +69,7 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  widget.barangModels.namaBarang,
+                  widget.barangModels.namaBarang!,
                   style: widget.checkoutTextStyle
                       .copyWith(fontSize: Get.width * 0.05),
                 ),

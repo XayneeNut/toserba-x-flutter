@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:toserba/controller/api%20controller/admin_api_controller.dart';
@@ -26,14 +28,22 @@ class _AuthViewState extends ConsumerState<AuthView> {
   var textButtonStyle = GoogleFonts.nunitoSans(
       color: Colors.black, fontWeight: FontWeight.w500, fontSize: 25);
 
-  bool isLogin = false;
+  bool _isLogin = true;
   var _enteredEmail = '';
   var _enteredPassword = '';
+  var titleStyle2 = GoogleFonts.poppins(
+    color: Colors.grey,
+    fontWeight: FontWeight.w400,
+  );
 
   @override
   void initState() {
     super.initState();
-    isLogin;
+    _isLogin;
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+        statusBarColor: Color.fromARGB(255, 253, 112, 18),
+        statusBarBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.dark));
   }
 
   void _toHomeView() {
@@ -50,7 +60,7 @@ class _AuthViewState extends ConsumerState<AuthView> {
     final isValid = _formKey.currentState!.validate();
 
     try {
-      if (isLogin == true && isValid) {
+      if (_isLogin == true && isValid) {
         await widget.jwtApiController.getTokenJwt();
         _formKey.currentState!.save();
 
@@ -72,82 +82,116 @@ class _AuthViewState extends ConsumerState<AuthView> {
 
   @override
   Widget build(BuildContext context) {
+    const borderRadius = Radius.circular(75);
+    var labelStyle = GoogleFonts.ubuntu(
+      color: Colors.white,
+      fontWeight: FontWeight.w500,
+    );
     SizeConfig().init(context);
     return Scaffold(
-      body: ListView(
-        children: [
-          Container(
-            height: SizeConfig.blockSizeVertical! * 65,
-            width: SizeConfig.blockSizeVertical! * 70,
-            decoration: const BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 10,
-                  color: const Color.fromARGB(255, 207, 207, 207),
-                ),
-              ],
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(50),
-                bottomRight: Radius.circular(50),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          color: Color.fromARGB(255, 253, 112, 18),
+        ),
+        child: ListView(
+          children: [
+            Container(
+              margin: EdgeInsets.only(left: Get.width * 0.07),
+              width: double.infinity,
+              height: Get.height * 0.15,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _isLogin ? "Login" : "Register",
+                    style: labelStyle.copyWith(fontSize: Get.width * 0.15),
+                  ),
+                  Text(
+                    _isLogin ? "Welcome Back !" : "create new account !",
+                    style: labelStyle.copyWith(fontSize: Get.width * 0.06),
+                  )
+                ],
               ),
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                SizedBox(
-                  height: SizeConfig.blockSizeHorizontal! * 60,
-                  width: SizeConfig.blockSizeHorizontal! * 60,
-                  child: Image.asset('assets/logo.png'),
-                ),
-                SizedBox(height: SizeConfig.blockSizeHorizontal! * 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        setState(
-                          () {
-                            isLogin = true;
-                          },
-                        );
-                      },
-                      child: Text(
-                        "login",
-                        style: textButtonStyle,
+            Container(
+              height: Get.height * 1,
+              decoration: const BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 10,
+                    color: Color.fromARGB(255, 187, 187, 187),
+                  )
+                ],
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: borderRadius, topRight: borderRadius),
+              ),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: Get.height * 0.1,
+                  ),
+                  AuthForm(
+                    formKey: _formKey,
+                    isLogin: _isLogin,
+                    onEmailSaved: (value) {
+                      _enteredEmail = value!;
+                    },
+                    onPasswordSaved: (value) {
+                      _enteredPassword = value!;
+                    },
+                    onPressed: _isSubmit,
+                  ),
+                  SizedBox(
+                    height: Get.width * 0.03,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        _isLogin ? "already have account?" : "New in OurShop?",
+                        style: GoogleFonts.poppins(
+                          fontSize: 15,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.blockSizeVertical! * 15,
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          isLogin = false;
-                        });
-                      },
-                      child: Text(
-                        "sign up",
-                        style: textButtonStyle,
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            _isLogin = !_isLogin;
+                          });
+                        },
+                        child: Text(
+                          _isLogin ? "Login" : "Register",
+                          style: GoogleFonts.poppins(
+                            fontSize: 15,
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
-                )
-              ],
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.only(
+                              left: Get.width * 0.06, right: Get.width * 0.06),
+                          child: Text(
+                            "${_isLogin ? "if you are creating new account, " : "if you have an account, "} Terms & Conditions and Privacy Policy will apply. You can also set up your communication preferences",
+                            style: titleStyle2,
+                            textAlign: TextAlign.center,
+                            maxLines: 3,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          AuthForm(
-            formKey: _formKey,
-            isLogin: isLogin,
-            onEmailSaved: (value) {
-              _enteredEmail = value!;
-            },
-            onPasswordSaved: (value) {
-              _enteredPassword = value!;
-            },
-            onLoginButtonPressed: _isSubmit,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

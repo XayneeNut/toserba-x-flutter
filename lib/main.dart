@@ -22,10 +22,7 @@ void main() {
   runApp(
     const ProviderScope(child: MyApp()),
   );
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.white,
-      statusBarBrightness: Brightness.light,
-      statusBarIconBrightness: Brightness.dark));
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
 }
 
 class MyApp extends StatefulWidget {
@@ -79,6 +76,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return GetMaterialApp(
+      theme: ThemeData.light(),
       debugShowCheckedModeBanner: false,
       routes: {
         '/user-auth-view': (context) => UserAuthView(

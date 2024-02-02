@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -48,7 +49,7 @@ class _UpdateBarangViewState extends State<UpdateBarangView> {
           namaBarang: _enteredName,
           kodeBarang: _enteredCode,
           hargaBarang: _enteredHarga,
-          imageBarang: _enteredImage,
+          imageBarang: [],
           stokBarang: _enteredStok,
           hargaJual: _enteredHargaJual,
           unit: _enteredUnit,
@@ -58,7 +59,7 @@ class _UpdateBarangViewState extends State<UpdateBarangView> {
       final update = barangModel.toJson();
 
       await widget.newBarangController.updateBarang(
-          idBarang: widget.newBarangModels.idBarang,
+          idBarang: widget.newBarangModels.idBarang!,
           hargaBarang: _enteredHarga,
           hargaJual: _enteredHargaJual,
           kodeBarang: _enteredCode,
@@ -129,7 +130,8 @@ class _UpdateBarangViewState extends State<UpdateBarangView> {
                           right: SizeConfig.blockSizeVertical! * 1.5),
                       child: ImagePickerWidget(
                         isUser: false,
-                        initialImage: widget.newBarangModels.imageBarang,
+                        initialImage: File(base64Encode(widget
+                            .newBarangModels.imageBarang![0].gambar)),
                         pickedImage: (image) {
                           _enteredImage = image;
                         },
@@ -137,7 +139,7 @@ class _UpdateBarangViewState extends State<UpdateBarangView> {
                     ),
                   ),
                   NamaKodeWidget(
-                    initialValue: widget.newBarangModels.namaBarang,
+                    initialValue: widget.newBarangModels.namaBarang!,
                     onSaved: (val) {
                       _enteredName = val;
                     },
@@ -147,7 +149,7 @@ class _UpdateBarangViewState extends State<UpdateBarangView> {
                     labelText: "Nama Barang*",
                   ),
                   NamaKodeWidget(
-                      initialValue: widget.newBarangModels.unit,
+                      initialValue: widget.newBarangModels.unit!,
                       onSaved: (val) {
                         _enteredUnit = val;
                       },
@@ -201,7 +203,7 @@ class _UpdateBarangViewState extends State<UpdateBarangView> {
                           ),
                         ),
                         NamaKodeWidget(
-                            initialValue: widget.newBarangModels.kodeBarang,
+                            initialValue: widget.newBarangModels.kodeBarang!,
                             onSaved: (val) {
                               _enteredCode = val;
                             },

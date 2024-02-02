@@ -41,7 +41,7 @@ class CreateBarangController {
       });
 
       final getIdBarang =
-          await barangApiController.getId(allBarang.first.idBarang);
+          await barangApiController.getId(allBarang.first.idBarang!);
       final jsonData = json.decode(getIdBarang.body);
 
       final idBarang = jsonData['idBarang'];
@@ -56,7 +56,7 @@ class CreateBarangController {
             kodeBarang: enteredCode,
             hargaBarang: enteredHarga,
             stokBarang: enteredStok,
-            imageBarang: enteredImage,
+            imageBarang: [],
             adminAccountEntity: AdminAccountModel.second(
               accountId: int.parse(currentAccountId!),
             ),

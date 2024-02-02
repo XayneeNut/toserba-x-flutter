@@ -64,9 +64,11 @@ class AppsController {
     return Uint8List(0);
   }
 
-  Image loadImage(BarangModels barangModels) {
-    Uint8List bytes = base64Decode(barangModels.imageBarang!.path);
-    return Image.memory(bytes, fit: BoxFit.fill);
+  List<Image> loadImage(BarangModels barangModels) {
+    return barangModels.imageBarang!.map((imageModel) {
+      Uint8List bytes = imageModel.gambar;
+      return Image.memory(bytes, fit: BoxFit.fill);
+    }).toList();
   }
 
   Future<void> logoutAllertDialog(

@@ -272,7 +272,7 @@ class _UserAuthViewState extends State<UserAuthView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      _isLogin ? "already have account?" : "New in Grolist?",
+                      _isLogin ? "already have account?" : "New in OurShop?",
                       style: GoogleFonts.poppins(
                         fontSize: 15,
                       ),
@@ -292,20 +292,22 @@ class _UserAuthViewState extends State<UserAuthView> {
                     ),
                   ],
                 ),
-                Row(children: [
-                  Expanded(
-                    child: Container(
-                      padding: EdgeInsets.only(
-                          left: Get.width * 0.06, right: Get.width * 0.06),
-                      child: Text(
-                        "${_isLogin ? "if you are creating new account, " : "if you have an account, "} Terms & Conditions and Privacy Policy will apply. You can also set up your communication preferences",
-                        style: titleStyle2,
-                        textAlign: TextAlign.center,
-                        maxLines: 3,
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.only(
+                            left: Get.width * 0.06, right: Get.width * 0.06),
+                        child: Text(
+                          "${_isLogin ? "if you are creating new account, " : "if you have an account, "} Terms & Conditions and Privacy Policy will apply. You can also set up your communication preferences",
+                          style: titleStyle2,
+                          textAlign: TextAlign.center,
+                          maxLines: 3,
+                        ),
                       ),
                     ),
-                  ),
-                ])
+                  ],
+                ),
               ],
             ),
           ),

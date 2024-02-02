@@ -1,9 +1,10 @@
 import 'dart:io';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:toserba/models/admin_account_model.dart';
+import 'package:toserba/models/image_barang_model.dart';
 import 'package:toserba/models/json%20converter/file_converter.dart';
 
-part 'generated/barang_models.g.dart';
+part 'barang_models.g.dart';
 
 const FileConverter fileConverter = FileConverter();
 File? fromJsonToImageBarang(String? json) => fileConverter.fromJson(json);
@@ -24,32 +25,32 @@ class BarangModels {
     required this.unit,
   });
 
-  final int idBarang;
-  final String namaBarang;
-  final String kodeBarang;
-  final int hargaBarang;
-  final int stokBarang;
-  @JsonKey(fromJson: fromJsonToImageBarang, toJson: fromImageBarangToJson)
-  File? imageBarang;
-  final AdminAccountModel adminAccountEntity;
-  final int hargaJual;
-  final String unit;
-  
+  int? idBarang;
+  String? namaBarang;
+  String? kodeBarang;
+  int? hargaBarang;
+  int? stokBarang;
+  List<ImageBarangModel>? imageBarang;
+  AdminAccountModel? adminAccountEntity;
+  int? hargaJual;
+  String? unit;
 
-  factory BarangModels.fromJson(Map<String, dynamic> json) =>
-      _$BarangModelsFromJson(json);
-
-  Map<String, dynamic> toJson() {
-    return {
-      'idBarang': idBarang,
-      'namaBarang': namaBarang,
-      'kodeBarang': kodeBarang,
-      'hargaBarang': hargaBarang,
-      'stokBarang': stokBarang,
-      'imageBarang': fromImageBarangToJson(imageBarang),
-      'adminAccountEntity': adminAccountEntity.accountId,
-      'hargaJual': hargaJual,
-      'unit': unit,
-    };
+  BarangModels.fromJson(Map<String, dynamic> json) {
+    idBarang = json['idBarang'];
+    namaBarang = json['namaBarang'];
+    hargaBarang = json['hargaBarang'];
+    stokBarang = json['stokBarang'];
+    kodeBarang = json['kodeBarang'];
+    adminAccountEntity = json['adminAccountEntity'] != null
+        ? AdminAccountModel.fromJson(json['adminAccountEntity'])
+        : null;
+    hargaJual = json['hargaJual'];
+    unit = json['unit'];
+    if (json['imageBarang'] != null) {
+      imageBarang =
+          List<ImageBarangModel>.from(json["imageBarang"].map((x) => x));
+    }
   }
+
+  Map<String, dynamic> toJson() => _$BarangModelsToJson(this);
 }

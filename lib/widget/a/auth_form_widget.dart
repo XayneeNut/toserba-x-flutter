@@ -1,32 +1,51 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:toserba/widget/s/size_config.dart';
 
-class AuthForm extends StatelessWidget {
+class AuthForm extends StatefulWidget {
   const AuthForm({
     super.key,
     required this.formKey,
     required this.isLogin,
     required this.onEmailSaved,
     required this.onPasswordSaved,
-    required this.onLoginButtonPressed,
+    required this.onPressed,
   });
 
   final GlobalKey<FormState> formKey;
   final bool isLogin;
   final void Function(String?) onEmailSaved;
   final void Function(String?) onPasswordSaved;
-  final Function() onLoginButtonPressed;
+  final Function() onPressed;
+
+  @override
+  State<AuthForm> createState() => _AuthFormState();
+}
+
+class _AuthFormState extends State<AuthForm> {
+  var _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
+    final inputDecoration = InputDecoration(
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+      labelStyle: GoogleFonts.poppins(
+        fontSize: 15,
+        fontWeight: FontWeight.w500,
+      ),
+    );
+    final margin = SizedBox(
+      height: Get.height * 0.03,
+    );
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.only(
             left: SizeConfig.blockSizeVertical! * 3,
             right: SizeConfig.blockSizeVertical! * 3),
         child: Form(
-          key: formKey,
+          key: widget.formKey,
           child: Column(
             children: [
               TextFormField(
@@ -40,15 +59,10 @@ class AuthForm extends StatelessWidget {
                   }
                   return null;
                 },
-                onSaved: onEmailSaved,
-                decoration: InputDecoration(
-                  labelText: 'email',
-                  labelStyle: GoogleFonts.poppins(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                onSaved: widget.onEmailSaved,
+                decoration: inputDecoration.copyWith(labelText: "email"),
               ),
+              margin,
               TextFormField(
                 minLines: 1,
                 maxLength: 20,
@@ -60,15 +74,23 @@ class AuthForm extends StatelessWidget {
                   }
                   return null;
                 },
-                onSaved: onPasswordSaved,
-                decoration: InputDecoration(
-                  labelText: 'password',
-                  labelStyle: GoogleFonts.poppins(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
+                onSaved: widget.onPasswordSaved,
+                obscureText: _obscureText,
+                decoration: inputDecoration.copyWith(
+                  labelText: "password",
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      });
+                    },
+                    icon: Icon(_obscureText == true
+                        ? CupertinoIcons.eye_fill
+                        : CupertinoIcons.eye_slash_fill),
                   ),
                 ),
               ),
+              margin,
               Container(
                 margin: EdgeInsets.only(
                   bottom: SizeConfig.blockSizeVertical! * 2,
@@ -78,15 +100,15 @@ class AuthForm extends StatelessWidget {
                     height: SizeConfig.blockSizeVertical! * 8,
                     width: SizeConfig.blockSizeVertical! * 30,
                     child: ElevatedButton(
-                      onPressed: isLogin ? onLoginButtonPressed : null,
+                      onPressed: widget.onPressed,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromRGBO(85, 92, 246, 1),
+                        backgroundColor: Color.fromARGB(255, 255, 106, 7),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
                       child: Text(
-                        isLogin ? "Login" : "Sign Up",
+                        widget.isLogin == true ? "Login" : "Sign Up",
                         style: GoogleFonts.arimo(
                           color: Colors.white,
                           fontWeight: FontWeight.w700,

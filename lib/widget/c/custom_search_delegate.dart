@@ -41,14 +41,14 @@ class CustomSearchDelegate extends SearchDelegate<String> {
   @override
   Widget buildResults(BuildContext context) {
     List<BarangModels> searchResults = barangModels.where((barang) {
-      return barang.namaBarang.toLowerCase().contains(query.toLowerCase());
+      return barang.namaBarang!.toLowerCase().contains(query.toLowerCase());
     }).toList();
 
     return ListView.builder(
       itemCount: searchResults.length,
       itemBuilder: (context, index) {
         return ListTile(
-          title: Text(searchResults[index].namaBarang),
+          title: Text(searchResults[index].namaBarang!),
         );
       },
     );
@@ -59,7 +59,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
     List<BarangModels> suggestionList = query.isEmpty
         ? []
         : barangModels.where((barang) {
-            return barang.namaBarang
+            return barang.namaBarang!
                 .toLowerCase()
                 .contains(query.toLowerCase());
           }).toList();
@@ -68,7 +68,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
       itemCount: suggestionList.length,
       itemBuilder: (context, index) {
         return ListTile(
-          title: Text(suggestionList[index].namaBarang),
+          title: Text(suggestionList[index].namaBarang!),
           onTap: () {
             Navigator.push(
                 parentContext,

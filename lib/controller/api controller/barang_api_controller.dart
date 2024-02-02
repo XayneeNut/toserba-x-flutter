@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:toserba/models/barang_models.dart';
+import 'package:toserba/models/image_barang_model.dart';
 
 class BarangApiController {
   List<BarangModels> barangModels = [];
@@ -27,6 +28,15 @@ class BarangApiController {
 
     for (var allData in jsonData) {
       final accountId = allData['adminAccountEntity']['accountId'];
+      List<dynamic> images = allData['imageBarang'];
+      allData['imageBarang'] = images.map((imageData) {
+        Uint8List bytes = base64Decode(imageData['gambar']);
+        return ImageBarangModel(
+          gambarId: imageData['gambarId'],
+          gambar: bytes,
+        );
+      }).toList();
+      ;
       final barang = BarangModels.fromJson(allData);
 
       if (accountId == int.parse(currentAccountId!)) {
@@ -43,11 +53,17 @@ class BarangApiController {
     List<BarangModels> barangModels = [];
 
     for (var allData in jsonData) {
-      final barang = BarangModels.fromJson(allData);
-      final image = allData['imageBarang'];
-      final decodeImage = base64Decode(image);
-      allData['imageBarang'] = decodeImage;
+      // Ubah gambar menjadi List<ImageBarangModel>
+      List<dynamic> images = allData['imageBarang'];
+      allData['imageBarang'] = images.map((imageData) {
+        Uint8List bytes = base64Decode(imageData['path']);
+        return ImageBarangModel(
+          gambarId: imageData['idImage'],
+          gambar: bytes,
+        );
+      }).toList();
 
+      final barang = BarangModels.fromJson(allData);
       barangModels.add(barang);
     }
     return barangModels;
