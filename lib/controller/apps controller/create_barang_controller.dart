@@ -4,14 +4,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
-import 'package:toserba/models/admin_account_model.dart';
-import 'package:toserba/models/barang_models.dart';
+import 'package:toserba/controller/api%20controller/image_barang_api_controller.dart';
+import 'package:toserba/controller/apps%20controller/apps_controller.dart';
 
 class CreateBarangController {
   FlutterSecureStorage flutterSecureStorage = const FlutterSecureStorage();
   Future<void> saveBarang(
     GlobalKey<FormState> formKey,
     BarangApiController barangApiController,
+    ImageBarangApiController imageBarangApiController,
     String enteredName,
     int enteredHarga,
     String enteredCode,
@@ -23,46 +24,35 @@ class CreateBarangController {
     String enteredUnit,
   ) async {
     formKey = GlobalKey<FormState>();
-    if (formKey.currentState!.validate()) {
-      formKey.currentState!.save();
-      final currentAccountId =
-          await flutterSecureStorage.read(key: 'admin_account_id');
-      await barangApiController.saveBarang(
-          namaBarang: enteredName,
-          hargaBarang: enteredHarga,
-          kodeBarang: enteredCode,
-          stokBarang: enteredStok,
-          imageBarang: enteredImage,
-          hargaJual: enteredHargaJual,
-          unit: enteredUnit);
-      final allBarang = await barangApiController.loadBarang();
-      setState(() {
-        barangApiController.barangModels = allBarang;
-      });
+    AppsController appsController = AppsController();
+    appsController.waitingFor(
+        context: context,
+        title: "Wait a minute...",
+        content: "this action may take more time");
 
-      final getIdBarang =
-          await barangApiController.getId(allBarang.first.idBarang!);
-      final jsonData = json.decode(getIdBarang.body);
+    final response = await barangApiController.saveBarang(
+        namaBarang: enteredName,
+        hargaBarang: enteredHarga,
+        kodeBarang: enteredCode,
+        stokBarang: enteredStok,
+        hargaJual: enteredHargaJual,
+        unit: enteredUnit);
 
-      final idBarang = jsonData['idBarang'];
+    final newBarang = await json.decode(response.body);
+    if (!context.mounted) return;
 
-      if (!context.mounted) return;
-
-      Navigator.pop(
-        context,
-        BarangModels(
-            idBarang: idBarang,
-            namaBarang: enteredName,
-            kodeBarang: enteredCode,
-            hargaBarang: enteredHarga,
-            stokBarang: enteredStok,
-            imageBarang: [],
-            adminAccountEntity: AdminAccountModel.second(
-              accountId: int.parse(currentAccountId!),
-            ),
-            hargaJual: enteredHargaJual,
-            unit: enteredUnit),
-      );
+    if (response.statusCode == 200) {
+      final barangId = newBarang['idBarang'];
+      print(barangId);
+      await imageBarangApiController.saveImage(
+          barangId: barangId, gambar: enteredImage);
     }
+
+    final allBarang = await barangApiController.loadBarang(context);
+    setState(() {
+      barangApiController.barangModels = allBarang;
+    });
+
+    if (!context.mounted) return;
   }
 }

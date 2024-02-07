@@ -2,9 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
-import 'package:toserba/controller/list_barang_controller.dart';
+import 'package:toserba/controller/apps%20controller/list_barang_controller.dart';
 import 'package:toserba/models/barang_models.dart';
-import 'package:toserba/widget/c/custom_search_delegate.dart';
 
 class AppBarAdminWidget extends StatefulWidget {
   const AppBarAdminWidget(
@@ -60,7 +59,7 @@ class _AppBarAdminWidgetState extends State<AppBarAdminWidget> {
                         ],
                       ),
                       child: CircleAvatar(
-                        radius: Get.width * 0.07,
+                        radius: Get.width * 0.05,
                         backgroundImage: const AssetImage(
                             'assets/UserLoginAccountImage.png'),
                       ),
@@ -74,13 +73,13 @@ class _AppBarAdminWidgetState extends State<AppBarAdminWidget> {
                         Text(
                           'Hii, ${widget.username}',
                           style: widget.customTextStyle.copyWith(
-                              fontSize: Get.width * 0.05,
+                              fontSize: Get.width * 0.04,
                               fontWeight: FontWeight.w600),
                         ),
                         Text(
                           'Penjual',
                           style: widget.customTextStyle.copyWith(
-                            fontSize: Get.width * 0.05,
+                            fontSize: Get.width * 0.037,
                           ),
                         )
                       ],
@@ -90,47 +89,18 @@ class _AppBarAdminWidgetState extends State<AppBarAdminWidget> {
               ],
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          Row(
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5), // Shadow color
-                      spreadRadius: 2,
-                      blurRadius: 7,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                margin: EdgeInsets.only(right: Get.width * 0.04),
-                child: CircleAvatar(
-                  backgroundColor: const Color.fromARGB(255, 237, 237, 237),
-                  radius: Get.width * 0.065,
-                  child: IconButton(
-                    onPressed: () {
-                      showSearch(
-                        context: context,
-                        delegate: CustomSearchDelegate(
-                            widget.barangModels,
-                            widget.listBarangController,
-                            widget.barangApiController,
-                            setState,
-                            context),
-                      );
-                    },
-                    icon: Icon(
-                      CupertinoIcons.search,
-                      color: Colors.black,
-                      size: Get.width * 0.08,
-                    ),
-                  ),
-                ),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(CupertinoIcons.shopping_cart),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(CupertinoIcons.ellipsis_vertical),
               ),
             ],
-          ),
+          )
         ],
       ),
     );

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
-import 'package:toserba/controller/list_barang_controller.dart';
+import 'package:toserba/controller/apps%20controller/list_barang_controller.dart';
 import 'package:toserba/models/barang_models.dart';
 
 // ignore: must_be_immutable

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
+import 'package:toserba/controller/api%20controller/image_barang_api_controller.dart';
+import 'package:toserba/controller/apps%20controller/create_barang_controller.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/view/admin/create_barang_view.dart';
 import 'package:toserba/view/admin/update_barang_view.dart';
@@ -10,6 +12,8 @@ class ListBarangController {
     BarangApiController barangApiController,
     List<BarangModels> barangModels,
     Function setState,
+    CreateBarangController createBarangController,
+    ImageBarangApiController imageBarangApiController,
   ) async {
     final newBarang = await Navigator.push<BarangModels>(
       context,
@@ -18,6 +22,8 @@ class ListBarangController {
           barangModels: barangModels,
           barangApiController: barangApiController,
           toCreateBarang: (p0, p1, p2, p3) {},
+          createBarangController: createBarangController,
+          imageBarangApiController: imageBarangApiController,
         ),
       ),
     );
@@ -50,7 +56,7 @@ class ListBarangController {
       if (updateBarang != null) {
         setState(
           () {
-            loadItem(barangApiController, setState, barangModels);
+            loadItem(barangApiController, setState, context, barangModels);
           },
         );
       }
@@ -58,8 +64,8 @@ class ListBarangController {
   }
 
   void loadItem(BarangApiController barangApiController, Function setState,
-      List<BarangModels> barangModels) async {
-    List<BarangModels> barang = await barangApiController.loadBarang();
+      BuildContext context, List<BarangModels> barangModels) async {
+    List<BarangModels> barang = await barangApiController.loadBarang(context);
 
     setState(
       () {

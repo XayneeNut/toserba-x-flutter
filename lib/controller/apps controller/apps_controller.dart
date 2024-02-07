@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/widget/s/size_config.dart';
 
@@ -27,6 +28,44 @@ class AppsController {
               child: const Text('yahh'),
             ),
           ],
+        );
+      },
+    );
+  }
+
+  Future<void> waitingFor(
+      {required BuildContext context,
+      required String title,
+      required String content}) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          title: Text(title),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  const CircularProgressIndicator(),
+                  SizedBox(
+                    width: Get.width * 0.05,
+                  ),
+                  SizedBox(
+                    width: Get.width * 0.5,
+                    child: Text(
+                      content,
+                      style: GoogleFonts.ubuntu(),
+                      overflow: TextOverflow.fade,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         );
       },
     );

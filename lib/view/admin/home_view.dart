@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
+import 'package:toserba/controller/apps%20controller/apps_controller.dart';
 import 'package:toserba/models/admin_account_model.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/view/admin/list_barang_view.dart';
@@ -13,6 +14,7 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   final List<BarangModels> barangModels = [];
+  final appsController = AppsController();
   BarangModels barangModel = BarangModels(
       idBarang: 0,
       namaBarang: '',
@@ -33,7 +35,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void _loadItem() async {
-    List<BarangModels> barang = await barangController.loadBarang();
+    List<BarangModels> barang = await barangController.loadBarang(context);
 
     setState(() {
       barangModels.clear();

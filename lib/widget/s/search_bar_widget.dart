@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
+import 'package:toserba/controller/apps%20controller/list_barang_controller.dart';
+import 'package:toserba/models/barang_models.dart';
+import 'package:toserba/widget/c/custom_search_delegate.dart';
 
 class SearchBarWidget extends StatefulWidget {
-  const SearchBarWidget({super.key});
+  const SearchBarWidget(
+      {super.key,
+      required this.barangModels,
+      required this.listBarangController,
+      required this.barangApiController});
+  final List<BarangModels> barangModels;
+  final ListBarangController listBarangController;
+  final BarangApiController barangApiController;
 
   @override
   State<SearchBarWidget> createState() => _SearchBarWidgetState();
@@ -21,7 +32,14 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
           padding: const MaterialStatePropertyAll<EdgeInsets>(
               EdgeInsets.symmetric(horizontal: 16.0)),
           onTap: () {
-            controller.openView();
+            showSearch(
+                context: context,
+                delegate: CustomSearchDelegate(
+                    widget.barangModels,
+                    widget.listBarangController,
+                    widget.barangApiController,
+                    setState,
+                    context));
           },
           onChanged: (_) {
             controller.openView();

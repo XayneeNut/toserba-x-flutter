@@ -3,12 +3,12 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:toserba/controller/api%20controller/admin_api_controller.dart';
 import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
-import 'package:toserba/controller/list_barang_controller.dart';
+import 'package:toserba/controller/apps%20controller/apps_controller.dart';
+import 'package:toserba/controller/apps%20controller/list_barang_controller.dart';
 import 'package:toserba/models/barang_models.dart';
-import 'package:toserba/view/admin/detail_barang_view.dart';
 import 'package:toserba/widget/a/admin_item_widget.dart';
 import 'package:toserba/widget/a/app_bar_admin_widget.dart';
-import 'package:toserba/widget/b/barang_text_widget.dart';
+import 'package:toserba/widget/s/search_bar_widget.dart';
 import 'package:toserba/widget/s/size_config.dart';
 
 class ActivePageWidget extends StatefulWidget {
@@ -27,15 +27,18 @@ class ActivePageWidget extends StatefulWidget {
 }
 
 class _ActivePageWidgetState extends State<ActivePageWidget> {
-  TextEditingController searchController = TextEditingController();
+  final searchController = TextEditingController();
   List<BarangModels> filteredBarangModels = [];
-  final BarangApiController barangApiController = BarangApiController();
-  final ListBarangController listBarangController = ListBarangController();
-  final appsController = AdminApiController();
+  final barangApiController = BarangApiController();
+  final listBarangController = ListBarangController();
+  final adminApiController = AdminApiController();
+  final appsController = AppsController();
   var groceryTextStyle =
       GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 30);
   String email = "";
   String username = "";
+  bool _isLoading = true;
+  final List<BarangModels> barangModels = [];
 
   var customTextStyle = GoogleFonts.ubuntu();
 
@@ -47,18 +50,23 @@ class _ActivePageWidgetState extends State<ActivePageWidget> {
   }
 
   Future<void> loadAdminAccount() async {
-    final adminAccount = await appsController.loadAdminAccount();
+    final adminAccount = await adminApiController.loadAdminAccount();
     setState(() {
       email = adminAccount.email!;
       username = adminAccount.username!;
     });
   }
 
-  final List<BarangModels> barangModels = [];
   void _loadItem() async {
-    List<BarangModels> barang = await barangApiController.loadBarang();
+    setState(() {
+      _isLoading =
+          true; // Set isLoading menjadi true saat proses loading dimulai
+    });
+    List<BarangModels> barang = await barangApiController.loadBarang(context);
 
     setState(() {
+      _isLoading =
+          false; // Set isLoading menjadi true saat proses loading dimulai
       barangModels.clear();
       barangModels.addAll(barang);
     });
@@ -66,62 +74,76 @@ class _ActivePageWidgetState extends State<ActivePageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: SizedBox(
-        height: Get.height * 2,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: Get.width * 0.068,
+    return _isLoading
+        ? const Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [Text("sabar"), CircularProgressIndicator()],
             ),
-            AppBarAdminWidget(
-                username: username,
-                customTextStyle: customTextStyle,
-                barangModels: widget.barangModels,
-                listBarangController: listBarangController,
-                barangApiController: barangApiController),
-            widget.barangModels.isEmpty
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'upss... Your item is empty',
-                        style: GoogleFonts.poppins(
-                            fontSize: 20, fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(
-                        height: SizeConfig.blockSizeHorizontal! * 100,
-                        width: SizeConfig.blockSizeHorizontal! * 100,
-                        child: Image.asset('assets/empty_list.png'),
-                      )
-                    ],
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(
-                            left: Get.width * 0.03, top: Get.width * 0.07),
-                        child: Column(
+          )
+        : SingleChildScrollView(
+            child: SizedBox(
+              height: Get.height * 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: Get.width * 0.068,
+                  ),
+                  AppBarAdminWidget(
+                      username: username,
+                      customTextStyle: customTextStyle,
+                      barangModels: widget.barangModels,
+                      listBarangController: listBarangController,
+                      barangApiController: barangApiController),
+                  SearchBarWidget(
+                      barangModels: barangModels,
+                      listBarangController: listBarangController,
+                      barangApiController: barangApiController),
+                  widget.barangModels.isEmpty
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Your Collection',
-                              style: GoogleFonts.ubuntu(
-                                  fontSize: Get.width * 0.08),
+                              'upss... Your item is empty',
+                              style: GoogleFonts.poppins(
+                                  fontSize: 20, fontWeight: FontWeight.w500),
+                            ),
+                            SizedBox(
+                              height: SizeConfig.blockSizeHorizontal! * 100,
+                              width: SizeConfig.blockSizeHorizontal! * 100,
+                              child: Image.asset('assets/empty_list.png'),
+                            )
+                          ],
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(
+                                  left: Get.width * 0.03,
+                                  top: Get.width * 0.07),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'Your Collection',
+                                    style: GoogleFonts.ubuntu(
+                                        fontSize: Get.width * 0.08),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            AdminItemWidget(
+                              barangModels: barangModels,
+                              itemTextStyle:
+                                  groceryTextStyle.copyWith(fontSize: 15),
                             ),
                           ],
                         ),
-                      ),
-                      AdminItemWidget(
-                          barangModels: barangModels,
-                          itemTextStyle:
-                              groceryTextStyle.copyWith(fontSize: 12))
-                    ],
-                  ),
-          ],
-        ),
-      ),
-    );
+                ],
+              ),
+            ),
+          );
   }
 }

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:toserba/controller/api%20controller/admin_api_controller.dart';
 import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
+import 'package:toserba/controller/api%20controller/image_barang_api_controller.dart';
 import 'package:toserba/controller/api%20controller/jwt_api_controller.dart';
-import 'package:toserba/controller/list_barang_controller.dart';
+import 'package:toserba/controller/apps%20controller/create_barang_controller.dart';
+import 'package:toserba/controller/apps%20controller/list_barang_controller.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/view/admin/create_barang_view.dart';
 import 'package:toserba/widget/a/active_page_widget.dart';
@@ -29,7 +31,11 @@ class _ListBarangViewState extends State<ListBarangView>
   final BarangApiController barangApiController = BarangApiController();
   final JwtApiController jwtApiController = JwtApiController();
   final AdminApiController adminApiController = AdminApiController();
+  final ImageBarangApiController imageBarangApiController =
+      ImageBarangApiController();
   final ListBarangController listBarangController = ListBarangController();
+  final CreateBarangController createBarangController =
+      CreateBarangController();
   int _selectedPageIndex = 0;
   AnimationController? _controller;
   var bottomIconColor = const Color.fromARGB(255, 143, 143, 143);
@@ -41,7 +47,6 @@ class _ListBarangViewState extends State<ListBarangView>
     setState(() {
       _selectedPageIndex = index;
     });
-    
   }
 
   @override
@@ -80,11 +85,18 @@ class _ListBarangViewState extends State<ListBarangView>
         barangModels: widget.barangModels,
         barangApiController: barangApiController,
         toCreateBarang: (p0, p1, p2, p3) => listBarangController.toCreateBarang(
-            context, barangApiController, widget.barangModels, setState),
+            context,
+            barangApiController,
+            widget.barangModels,
+            setState,
+            createBarangController,
+            imageBarangApiController),
+        createBarangController: createBarangController,
+        imageBarangApiController: imageBarangApiController,
       );
     }
     return Scaffold(
-        drawer: DrawerMain(adminAccountModel: []),
+        drawer: const DrawerMain(adminAccountModel: []),
         bottomNavigationBar: CustomBottomNavBarWidget(
           bottomIconColor: bottomIconColor,
           pressedIconColor: pressedButtonColor,
@@ -95,7 +107,7 @@ class _ListBarangViewState extends State<ListBarangView>
             });
           },
         ),
-        backgroundColor: const Color.fromRGBO(251, 251, 251, 1),
+        backgroundColor: Colors.white,
         body: activePage);
   }
 }

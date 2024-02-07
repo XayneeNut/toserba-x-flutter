@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
+import 'package:toserba/controller/api%20controller/image_barang_api_controller.dart';
+import 'package:toserba/controller/apps%20controller/create_barang_controller.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/widget/a/add_clear_widget.dart';
 import 'package:toserba/widget/c/custom_app_bar_widget.dart';
@@ -13,11 +15,15 @@ import 'package:toserba/widget/s/size_config.dart';
 class CreateBarangView extends StatefulWidget {
   const CreateBarangView(
       {super.key,
-      required this.barangApiController,
+      required this.createBarangController,
       required this.toCreateBarang,
-      required this.barangModels});
+      required this.barangModels,
+      required this.barangApiController,
+      required this.imageBarangApiController});
 
+  final CreateBarangController createBarangController;
   final BarangApiController barangApiController;
+  final ImageBarangApiController imageBarangApiController;
   final List<BarangModels> barangModels;
   final void Function(BuildContext, BarangApiController, List<BarangModels>,
       void Function(VoidCallback)) toCreateBarang;
@@ -41,16 +47,22 @@ class _CreateBarangViewState extends State<CreateBarangView> {
   Future<void> _saveBarang() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      await widget.barangApiController.saveBarang(
-          namaBarang: _enteredName,
-          hargaBarang: _enteredHarga,
-          kodeBarang: _enteredCode,
-          stokBarang: _enteredStok,
-          imageBarang: _enteredImage,
-          hargaJual: _enteredHargaJual,
-          unit: _enteredUnit);
+      await widget.createBarangController.saveBarang(
+          _formKey,
+          widget.barangApiController,
+          widget.imageBarangApiController,
+          _enteredName,
+          _enteredHarga,
+          _enteredCode,
+          _enteredStok,
+          _enteredImage!,
+          setState,
+          context,
+          _enteredHargaJual,
+          _enteredUnit);
+      if (!context.mounted) return;
 
-      final allBarang = await widget.barangApiController.loadBarang();
+      final allBarang = await widget.barangApiController.loadBarang(context);
       setState(() {
         widget.barangApiController.barangModels = allBarang;
       });
@@ -62,7 +74,6 @@ class _CreateBarangViewState extends State<CreateBarangView> {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 244, 243, 243),
       appBar: CustomAppBarWidget(

@@ -1,7 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:toserba/models/barang_models.dart';
@@ -11,16 +13,18 @@ class BarangApiController {
   List<BarangModels> barangModels = [];
   FlutterSecureStorage flutterSecureStorage = const FlutterSecureStorage();
 
-  Future<http.Response> getAllBarang() async {
+  Future<http.Response> getAllBarang(BuildContext context) async {
     final url = Uri.parse("http://localhost:8127/api/v1/barang/get-all");
 
     final response = await http.get(url);
     return response;
   }
 
-  Future<List<BarangModels>> loadBarang() async {
-    final response = await getAllBarang();
+  Future<List<BarangModels>> loadBarang(BuildContext context) async {
+    final response = await getAllBarang(context);
+
     final jsonData = json.decode(response.body);
+
     final currentAccountId =
         await flutterSecureStorage.read(key: 'admin_account_id');
 
@@ -36,7 +40,6 @@ class BarangApiController {
           gambar: bytes,
         );
       }).toList();
-      ;
       final barang = BarangModels.fromJson(allData);
 
       if (accountId == int.parse(currentAccountId!)) {
@@ -46,8 +49,8 @@ class BarangApiController {
     return barangModels;
   }
 
-  Future<List<BarangModels>> loadAllUserBarang() async {
-    final response = await getAllBarang();
+  Future<List<BarangModels>> loadAllUserBarang(BuildContext context) async {
+    final response = await getAllBarang(context);
     final jsonData = json.decode(response.body);
 
     List<BarangModels> barangModels = [];
@@ -69,12 +72,11 @@ class BarangApiController {
     return barangModels;
   }
 
-  Future<void> saveBarang({
+  Future<http.Response> saveBarang({
     required String namaBarang,
     required int hargaBarang,
     required String kodeBarang,
     required int stokBarang,
-    required File? imageBarang,
     required int hargaJual,
     required String unit,
   }) async {
@@ -83,28 +85,24 @@ class BarangApiController {
         await flutterSecureStorage.read(key: 'admin_account_id');
 
     try {
-      var request = http.MultipartRequest('POST', url);
-
-      request.fields["namaBarang"] = namaBarang;
-      request.fields["hargaBarang"] = hargaBarang.toString();
-      request.fields["kodeBarang"] = kodeBarang;
-      request.fields["stokBarang"] = stokBarang.toString();
-      request.fields["adminAccountEntity"] = currentAccountId!;
-      request.fields["unit"] = unit;
-      request.fields["hargaJual"] = hargaJual.toString();
-
-      var file =
-          await http.MultipartFile.fromPath('imageBarang', imageBarang!.path);
-
-      request.files.add(file);
-
-      var response = await request.send();
+      final body = json.encode({
+        'namaBarang': namaBarang,
+        'hargaBarang': hargaBarang,
+        'stokBarang': stokBarang,
+        'kodeBarang': kodeBarang,
+        'adminAccountEntity': currentAccountId,
+        'hargaJual': hargaJual,
+        'unit': unit,
+      });
+      final response = await http.post(url,
+          headers: {'Content-Type': 'application/json'}, body: body);
 
       if (response.statusCode >= 400 || response.statusCode <= 499) {
         if (kDebugMode) {
           print(response.request);
         }
       }
+      return response;
     } catch (e) {
       throw Exception("$e");
     }

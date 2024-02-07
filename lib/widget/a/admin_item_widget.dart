@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/view/admin/detail_barang_view.dart';
@@ -16,8 +17,9 @@ class AdminItemWidget extends StatefulWidget {
 }
 
 class _AdminItemWidgetState extends State<AdminItemWidget> {
-  final currencyFormatter = NumberFormat.currency(locale: 'ID');
+  final currencyFormatter = NumberFormat.currency(locale: 'ID', symbol: 'Rp');
   var margin = Get.width * 0.04;
+  double borderRadius = 15;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -25,7 +27,7 @@ class _AdminItemWidgetState extends State<AdminItemWidget> {
       child: GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            childAspectRatio: 2.2 / 3,
+            childAspectRatio: 2  / 3,
             crossAxisSpacing: 10,
             mainAxisSpacing: 20),
         itemBuilder: (context, index) {
@@ -43,19 +45,33 @@ class _AdminItemWidgetState extends State<AdminItemWidget> {
                 );
               },
               child: Container(
+                height: Get.width * 2,
                 margin: EdgeInsets.only(
-                    left: margin, right: margin, bottom: margin),
+                    left: margin, right: margin, bottom: margin, top: margin),
                 decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                    color: const Color.fromARGB(255, 255, 253, 251),
+                    border: Border.all(
+                        width: 1.5,
+                        color: const Color.fromARGB(255, 196, 196, 196)),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey
+                            .withOpacity(0.4), // Warna shadow dan opasitasnya
+                        blurRadius: 10, // Besarnya blur radius
+                        offset: const Offset(0, 3),
+                      )
+                    ]),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     AspectRatio(
                       aspectRatio: 1.0,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(borderRadius),
+                          topRight: Radius.circular(borderRadius),
+                        ),
                         child: Container(
                           decoration: BoxDecoration(
                             image: DecorationImage(
@@ -71,13 +87,16 @@ class _AdminItemWidgetState extends State<AdminItemWidget> {
                     ),
                     Container(
                       margin: EdgeInsets.only(
-                          left: Get.width * 0.007, top: Get.width * 0.007),
+                          left: Get.width * 0.02, top: Get.width * 0.007),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          SizedBox(height: Get.width * 0.02,),
                           Text(
                             widget.barangModels[index].namaBarang!,
-                            style: widget.itemTextStyle,
+                            style: GoogleFonts.roboto(
+                              fontSize: Get.width * 0.043,
+                            ),
                           ),
                           SizedBox(height: Get.width * 0.01),
                           Text(
@@ -94,7 +113,6 @@ class _AdminItemWidgetState extends State<AdminItemWidget> {
               ),
             );
           } else {
-            // Return an empty container if index is out of bounds
             return Container();
           }
         },

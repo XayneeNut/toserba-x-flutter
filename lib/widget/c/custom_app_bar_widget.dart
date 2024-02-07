@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
-import 'package:toserba/controller/list_barang_controller.dart';
+import 'package:toserba/controller/apps%20controller/list_barang_controller.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/widget/c/custom_search_delegate.dart';
 import 'package:toserba/widget/s/size_config.dart';
