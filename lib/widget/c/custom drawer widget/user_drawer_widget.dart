@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
@@ -98,14 +96,6 @@ class _UserDrawerWidgetState extends State<UserDrawerWidget> {
                       Expanded(
                         child: Row(
                           children: [
-                            CircleAvatar(
-                              backgroundColor: Colors.black,
-                              backgroundImage: FileImage(
-                                File(widget.userAccountModel.userProfileModel!
-                                    .userPhoto),
-                              ),
-                              radius: Get.width * 0.06,
-                            ),
                             SizedBox(
                               width: Get.width * 0.03,
                             ),

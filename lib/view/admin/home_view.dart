@@ -22,6 +22,7 @@ class _HomeViewState extends State<HomeView> {
       hargaBarang: 0,
       stokBarang: 0,
       imageBarang: [],
+      deskripsi: '',
       adminAccountEntity: const AdminAccountModel(
           accountId: 0, email: "", username: "", password: ""),
       hargaJual: 0,

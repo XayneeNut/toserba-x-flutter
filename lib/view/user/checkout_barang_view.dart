@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/widget/a/action_button_row.dart';
 import 'package:toserba/widget/c/checkout%20barang%20widget/checkout_summary_widget.dart';
-import 'package:toserba/widget/c/checkout%20barang%20widget/product_detail_widget.dart';
+import 'package:toserba/widget/p/product_detail_widget.dart';
 import 'package:toserba/widget/c/user_app_bar_widget.dart';
 
 class CheckoutBarangView extends StatefulWidget {

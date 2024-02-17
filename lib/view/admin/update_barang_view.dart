@@ -8,7 +8,7 @@ import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
 import 'package:toserba/models/admin_account_model.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/widget/a/add_clear_widget.dart';
-import 'package:toserba/widget/c/update_app_bar_widget.dart';
+import 'package:toserba/widget/u/update_app_bar_widget.dart';
 import 'package:toserba/widget/n/nama_kode_widget.dart';
 import 'package:toserba/widget/s/size_config.dart';
 import 'package:toserba/widget/i/image_picker_widget.dart';
@@ -45,6 +45,7 @@ class _UpdateBarangViewState extends State<UpdateBarangView> {
       final currentAccountId =
           await flutterSecureStorage.read(key: 'admin_account_id');
       final barangModel = BarangModels(
+          deskripsi: '',
           idBarang: widget.newBarangModels.idBarang,
           namaBarang: _enteredName,
           kodeBarang: _enteredCode,
@@ -130,8 +131,8 @@ class _UpdateBarangViewState extends State<UpdateBarangView> {
                           right: SizeConfig.blockSizeVertical! * 1.5),
                       child: ImagePickerWidget(
                         isUser: false,
-                        initialImage: File(base64Encode(widget
-                            .newBarangModels.imageBarang![0].gambar)),
+                        initialImage: File(base64Encode(
+                            widget.newBarangModels.imageBarang![0].gambar)),
                         pickedImage: (image) {
                           _enteredImage = image;
                         },

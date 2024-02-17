@@ -16,7 +16,7 @@ import 'package:toserba/view/user/user_auth_view.dart';
 import 'package:toserba/widget/s/size_config.dart';
 import 'package:toserba/widget/s/stream_builder_widget.dart';
 
-void main() {
+void main() async {
   CachedNetworkImage.logLevel = CacheManagerLogLevel.debug;
   WidgetsFlutterBinding.ensureInitialized();
   runApp(

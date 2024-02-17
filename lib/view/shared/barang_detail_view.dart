@@ -192,7 +192,7 @@ class _UserBarangDetailViewState extends State<UserBarangDetailView> {
               Container(
                 margin: EdgeInsets.only(right: Get.width * 0.05),
                 child: Text(
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+                  widget.barangModels.deskripsi!,
                   style: subtitleStyle.copyWith(
                     fontSize: Get.width * 0.037,
                   ),

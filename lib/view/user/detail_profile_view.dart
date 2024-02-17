@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:toserba/models/user_account_model.dart';
 import 'package:toserba/widget/c/user_app_bar_widget.dart';
 import 'package:toserba/widget/i/image_picker_widget.dart';
-import 'package:toserba/widget/profile_form_field_widget.dart';
+import 'package:toserba/widget/p/profile_form_field_widget.dart';
 
 class DetailProfileView extends StatefulWidget {
   const DetailProfileView({super.key, required this.userAccountModel});

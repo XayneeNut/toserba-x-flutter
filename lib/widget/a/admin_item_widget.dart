@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:toserba/models/barang_models.dart';
-import 'package:toserba/view/admin/detail_barang_view.dart';
+import 'package:toserba/view/shared/barang_detail_view.dart';
 
 class AdminItemWidget extends StatefulWidget {
   const AdminItemWidget(
@@ -27,7 +27,7 @@ class _AdminItemWidgetState extends State<AdminItemWidget> {
       child: GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            childAspectRatio: 2  / 3,
+            childAspectRatio: 2 / 3,
             crossAxisSpacing: 10,
             mainAxisSpacing: 20),
         itemBuilder: (context, index) {
@@ -38,10 +38,8 @@ class _AdminItemWidgetState extends State<AdminItemWidget> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => DetailBarangView(
-                      barangModels: widget.barangModels[index],
-                    ),
-                  ),
+                      builder: (context) => UserBarangDetailView(
+                          barangModels: widget.barangModels[index])),
                 );
               },
               child: Container(
@@ -91,7 +89,9 @@ class _AdminItemWidgetState extends State<AdminItemWidget> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: Get.width * 0.02,),
+                          SizedBox(
+                            height: Get.width * 0.02,
+                          ),
                           Text(
                             widget.barangModels[index].namaBarang!,
                             style: GoogleFonts.roboto(

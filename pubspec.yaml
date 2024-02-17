@@ -33,6 +33,7 @@ dependencies:
   email_validator: ^2.1.17
   flutter:
     sdk: flutter
+  flutter_cache_manager: ^3.3.1
   flutter_secure_storage: ^9.0.0
   flutter_sizer: ^1.0.5
   flutter_statusbarcolor_ns: ^0.5.0
@@ -46,6 +47,7 @@ dependencies:
   json_annotation: ^4.8.1
   jwt_decoder: ^2.0.1
   page_transition: ^2.1.0
+  shared_preferences: ^2.2.2
   sizer: ^2.0.15
   sqflite: ^2.3.0
 

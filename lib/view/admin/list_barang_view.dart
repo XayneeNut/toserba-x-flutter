@@ -10,7 +10,6 @@ import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/view/admin/create_barang_view.dart';
 import 'package:toserba/widget/a/active_page_widget.dart';
 import 'package:toserba/widget/c/custom_bottom_nav_bar_widget.dart';
-import 'package:toserba/widget/c/custom%20drawer%20widget/drawer_main_widget.dart';
 import 'package:toserba/widget/s/size_config.dart';
 
 class ListBarangView extends StatefulWidget {
@@ -25,7 +24,7 @@ class ListBarangView extends StatefulWidget {
 }
 
 class _ListBarangViewState extends State<ListBarangView>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   TextEditingController searchController = TextEditingController();
   List<BarangModels> filteredBarangModels = [];
   final BarangApiController barangApiController = BarangApiController();
@@ -48,6 +47,9 @@ class _ListBarangViewState extends State<ListBarangView>
       _selectedPageIndex = index;
     });
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -73,6 +75,7 @@ class _ListBarangViewState extends State<ListBarangView>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     SizeConfig().init(context);
     Widget activePage = ActivePageWidget(
       barangModels: widget.barangModels,
@@ -96,7 +99,6 @@ class _ListBarangViewState extends State<ListBarangView>
       );
     }
     return Scaffold(
-        drawer: const DrawerMain(adminAccountModel: []),
         bottomNavigationBar: CustomBottomNavBarWidget(
           bottomIconColor: bottomIconColor,
           pressedIconColor: pressedButtonColor,

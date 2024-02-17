@@ -8,12 +8,14 @@ class NamaKodeWidget extends StatelessWidget {
       required this.onSaved,
       required this.textStyle,
       required this.labelText,
-      required this.initialValue});
+      required this.initialValue,
+      this.keyboardType});
 
   final void Function(String value) onSaved;
   final TextStyle textStyle;
   final String labelText;
   final String initialValue;
+  final TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,7 @@ class NamaKodeWidget extends StatelessWidget {
             maxLength: 50,
             minLines: 1,
             maxLines: 3,
+            keyboardType: keyboardType,
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),

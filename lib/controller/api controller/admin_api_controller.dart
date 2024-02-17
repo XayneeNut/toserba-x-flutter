@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:toserba/controller/api%20controller/jwt_api_controller.dart';
 import 'package:toserba/controller/apps%20controller/apps_controller.dart';
 import 'package:toserba/models/admin_account_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AdminApiController {
   final storage = const FlutterSecureStorage();
@@ -71,20 +72,30 @@ class AdminApiController {
   }
 
   Future<AdminAccountModel> loadAdminAccount() async {
-    final adminAccount = await storage.read(key: 'admin_account_id');
-    final response = await getEmailById(int.parse(adminAccount!));
-    final data = json.decode(response.body);
-    final email = data['email'];
-    final username = data['username'];
-    final password = data['password'];
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey('adminAccount')) {
+      // Load data from cache
+      var adminAccount = AdminAccountModel.fromJson(
+          jsonDecode(prefs.getString('adminAccount')!));
+      return adminAccount;
+    } else {
+      // Fetch data from API and store it in cache
+      final adminAccount = await storage.read(key: 'admin_account_id');
+      final response = await getEmailById(int.parse(adminAccount!));
+      final data = json.decode(response.body);
+      final email = data['email'];
+      final username = data['username'];
+      final password = data['password'];
 
-    print("$email, $username, $password, $data");
+      AdminAccountModel adminAccountModel = AdminAccountModel(
+          accountId: int.parse(adminAccount),
+          email: email,
+          username: username,
+          password: password);
 
-    return AdminAccountModel(
-        accountId: int.parse(adminAccount),
-        email: email,
-        username: username,
-        password: password);
+      prefs.setString('adminAccount', jsonEncode(adminAccountModel.toJson()));
+      return adminAccountModel;
+    }
   }
 
   Future<http.Response> getEmailById(int id) async {

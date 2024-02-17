@@ -3,9 +3,13 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:toserba/controller/api%20controller/admin_api_controller.dart';
+import 'package:toserba/controller/api%20controller/jwt_api_controller.dart';
 import 'package:toserba/models/barang_models.dart';
+import 'package:toserba/view/admin/auth_view.dart';
 import 'package:toserba/widget/s/size_config.dart';
 
 class AppsController {
@@ -30,6 +34,23 @@ class AppsController {
           ],
         );
       },
+    );
+  }
+
+  void logout(
+      FlutterSecureStorage storage,
+      BuildContext context,
+      JwtApiController jwtApiController,
+      AdminApiController adminApiController) async {
+    await storage.deleteAll();
+    // ignore: use_build_context_synchronously
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+          builder: (context) => AuthView(
+              jwtApiController: jwtApiController,
+              adminApiController: adminApiController)),
+      (route) => false,
     );
   }
 
@@ -240,7 +261,7 @@ class AppsController {
       builder: (context) {
         return AlertDialog(
           title: Text(
-            "Log in as admin?",
+            "Log in as $account?",
             style: titleTextStyle.copyWith(
                 fontSize: SizeConfig.blockSizeVertical! * 2.3),
           ),

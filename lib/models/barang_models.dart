@@ -23,6 +23,7 @@ class BarangModels {
     required this.adminAccountEntity,
     required this.hargaJual,
     required this.unit,
+    required this.deskripsi,
   });
 
   int? idBarang;
@@ -34,6 +35,7 @@ class BarangModels {
   AdminAccountModel? adminAccountEntity;
   int? hargaJual;
   String? unit;
+  String? deskripsi;
 
   BarangModels.fromJson(Map<String, dynamic> json) {
     idBarang = json['idBarang'];
@@ -41,6 +43,7 @@ class BarangModels {
     hargaBarang = json['hargaBarang'];
     stokBarang = json['stokBarang'];
     kodeBarang = json['kodeBarang'];
+    deskripsi = json['deskripsi'];
     adminAccountEntity = json['adminAccountEntity'] != null
         ? AdminAccountModel.fromJson(json['adminAccountEntity'])
         : null;
@@ -52,5 +55,17 @@ class BarangModels {
     }
   }
 
-  Map<String, dynamic> toJson() => _$BarangModelsToJson(this);
+  Map<String, dynamic> toJson() {
+    return {
+      'idBarang': idBarang,
+      'namaBarang': namaBarang,
+      'hargaBarang': hargaBarang,
+      'stokBarang': stokBarang,
+      'kodeBarang': kodeBarang,
+      'adminAccountEntity': adminAccountEntity?.toJson(),
+      'hargaJual': hargaJual,
+      'unit': unit,
+      'imageBarang': imageBarang?.map((item) => item.toJson()).toList(),
+    };
+  }
 }

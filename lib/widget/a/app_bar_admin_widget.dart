@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
 import 'package:toserba/controller/apps%20controller/list_barang_controller.dart';
 import 'package:toserba/models/barang_models.dart';
+import 'package:toserba/widget/p/popup_menu_widget.dart';
 
 class AppBarAdminWidget extends StatefulWidget {
   const AppBarAdminWidget(
@@ -12,13 +13,17 @@ class AppBarAdminWidget extends StatefulWidget {
       required this.customTextStyle,
       required this.barangModels,
       required this.listBarangController,
-      required this.barangApiController});
+      required this.barangApiController,
+      required this.onLogout,
+      required this.onLoginAsUser});
 
   final String username;
   final TextStyle customTextStyle;
   final List<BarangModels> barangModels;
   final ListBarangController listBarangController;
   final BarangApiController barangApiController;
+  final Function() onLogout;
+  final Function() onLoginAsUser;
 
   @override
   State<AppBarAdminWidget> createState() => _AppBarAdminWidgetState();
@@ -95,9 +100,9 @@ class _AppBarAdminWidgetState extends State<AppBarAdminWidget> {
                 onPressed: () {},
                 icon: const Icon(CupertinoIcons.shopping_cart),
               ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(CupertinoIcons.ellipsis_vertical),
+              PopUpMenuWidget(
+                onLogoutTap: widget.onLogout,
+                onloginAsUserTap: widget.onLoginAsUser,
               ),
             ],
           )

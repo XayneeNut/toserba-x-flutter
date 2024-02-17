@@ -17,11 +17,12 @@ class CreateBarangController {
     int enteredHarga,
     String enteredCode,
     int enteredStok,
-    File enteredImage,
+    File? enteredImage,
     Function setState,
     BuildContext context,
     int enteredHargaJual,
     String enteredUnit,
+    String enteredDeskripsi,
   ) async {
     formKey = GlobalKey<FormState>();
     AppsController appsController = AppsController();
@@ -36,6 +37,7 @@ class CreateBarangController {
         kodeBarang: enteredCode,
         stokBarang: enteredStok,
         hargaJual: enteredHargaJual,
+        deskripsi: enteredDeskripsi,
         unit: enteredUnit);
 
     final newBarang = await json.decode(response.body);
@@ -45,7 +47,7 @@ class CreateBarangController {
       final barangId = newBarang['idBarang'];
       print(barangId);
       await imageBarangApiController.saveImage(
-          barangId: barangId, gambar: enteredImage);
+          barangId: barangId, gambar: enteredImage!);
     }
 
     final allBarang = await barangApiController.loadBarang(context);

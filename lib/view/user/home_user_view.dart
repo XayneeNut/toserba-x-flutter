@@ -7,7 +7,7 @@ import 'package:toserba/controller/api%20controller/user_account_api_controller.
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/models/user_account_model.dart';
 import 'package:toserba/models/user_profile_model.dart';
-import 'package:toserba/view/user/user_barang_detail_view.dart';
+import 'package:toserba/view/shared/barang_detail_view.dart';
 import 'package:toserba/widget/c/user_app_bar_widget.dart';
 import 'package:toserba/widget/c/custom%20drawer%20widget/user_drawer_widget.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';

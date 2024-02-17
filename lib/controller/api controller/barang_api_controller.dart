@@ -79,6 +79,7 @@ class BarangApiController {
     required int stokBarang,
     required int hargaJual,
     required String unit,
+    required String deskripsi,
   }) async {
     final url = Uri.parse("http://localhost:8127/api/v1/barang/create");
     final currentAccountId =
@@ -93,6 +94,7 @@ class BarangApiController {
         'adminAccountEntity': currentAccountId,
         'hargaJual': hargaJual,
         'unit': unit,
+        'deskripsi' : deskripsi,
       });
       final response = await http.post(url,
           headers: {'Content-Type': 'application/json'}, body: body);
