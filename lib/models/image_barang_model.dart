@@ -13,6 +13,11 @@ Uint8List fromJsonToImageBarang(String? json) {
   return bytes;
 }
 
+Uint8List fromJsonToImageBarang2(String json) {
+  List<int> bytes = base64Decode(json);
+  return Uint8List.fromList(bytes);
+}
+
 String fromImageBarangToJson(Uint8List bytes) {
   String base64String = base64Encode(bytes);
   return base64String;
@@ -29,8 +34,12 @@ class ImageBarangModel {
     required this.gambar,
   });
 
-  factory ImageBarangModel.fromJson(Map<String, dynamic> json) =>
-      _$ImageBarangModelFromJson(json);
+  factory ImageBarangModel.fromJson(Map<String, dynamic> json) {
+    return ImageBarangModel(
+      gambarId: json['gambarId'],
+      gambar: fromJsonToImageBarang2(json['gambar']),
+    );
+  }
 
   Map<String, dynamic> toJson() => _$ImageBarangModelToJson(this);
 }

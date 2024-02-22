@@ -3,6 +3,7 @@ import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
 import 'package:toserba/controller/apps%20controller/apps_controller.dart';
 import 'package:toserba/models/admin_account_model.dart';
 import 'package:toserba/models/barang_models.dart';
+import 'package:flutter/services.dart';
 import 'package:toserba/view/admin/list_barang_view.dart';
 
 class HomeView extends StatefulWidget {
@@ -32,6 +33,8 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.white));
     _loadItem();
   }
 

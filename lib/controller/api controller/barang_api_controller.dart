@@ -8,6 +8,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/models/image_barang_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BarangApiController {
   List<BarangModels> barangModels = [];
@@ -18,6 +19,27 @@ class BarangApiController {
 
     final response = await http.get(url);
     return response;
+  }
+
+  Future<void> saveBarangToCache(List<BarangModels> barangModels) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonBarangModels =
+        jsonEncode(barangModels.map((barang) => barang.toJson()).toList());
+    await prefs.setString('barang_models', jsonBarangModels);
+  }
+
+  Future<List<BarangModels>> loadBarangFromCache() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonBarangModels = prefs.getString('barang_models');
+
+    if (jsonBarangModels != null) {
+      final barangModels = (jsonDecode(jsonBarangModels) as List<dynamic>)
+          .map((barangJson) => BarangModels.fromJson2(barangJson))
+          .toList();
+      return barangModels;
+    } else {
+      return [];
+    }
   }
 
   Future<List<BarangModels>> loadBarang(BuildContext context) async {
@@ -44,8 +66,10 @@ class BarangApiController {
 
       if (accountId == int.parse(currentAccountId!)) {
         barangModels.add(barang);
+        await saveBarangToCache(barangModels);
       }
     }
+
     return barangModels;
   }
 
@@ -94,7 +118,7 @@ class BarangApiController {
         'adminAccountEntity': currentAccountId,
         'hargaJual': hargaJual,
         'unit': unit,
-        'deskripsi' : deskripsi,
+        'deskripsi': deskripsi,
       });
       final response = await http.post(url,
           headers: {'Content-Type': 'application/json'}, body: body);

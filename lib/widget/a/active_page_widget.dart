@@ -92,12 +92,16 @@ class _ActivePageWidgetState extends State<ActivePageWidget>
         (route) => false);
   }
 
+  Future<List<BarangModels>> loadBarang() async {
+    final barangModels = await barangApiController.loadBarangFromCache();
+    return barangModels;
+  }
+
   void _loadItem() async {
     setState(() {
       _isLoading = true;
     });
-    List<BarangModels> barang = await barangApiController.loadBarang(context);
-
+    List<BarangModels> barang = await barangApiController.loadBarangFromCache();
     setState(() {
       barangModels.clear();
       barangModels.addAll(barang);

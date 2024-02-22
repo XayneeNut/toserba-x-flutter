@@ -55,6 +55,28 @@ class BarangModels {
     }
   }
 
+  BarangModels.fromJson2(Map<String, dynamic> json) {
+    idBarang = json['idBarang'];
+    namaBarang = json['namaBarang'];
+    hargaBarang = json['hargaBarang'];
+    stokBarang = json['stokBarang'];
+    kodeBarang = json['kodeBarang'];
+    deskripsi = json['deskripsi'];
+    adminAccountEntity = json['adminAccountEntity'] != null
+        ? AdminAccountModel.fromJson(json['adminAccountEntity'])
+        : null;
+    hargaJual = json['hargaJual'];
+    unit = json['unit'];
+    if (json['imageBarang'] != null && json['imageBarang'] is List) {
+      imageBarang = <ImageBarangModel>[];
+      for (var image in json['imageBarang']) {
+        if (image is Map<String, dynamic>) {
+          imageBarang!.add(ImageBarangModel.fromJson(image));
+        }
+      }
+    }
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'idBarang': idBarang,
@@ -65,6 +87,7 @@ class BarangModels {
       'adminAccountEntity': adminAccountEntity?.toJson(),
       'hargaJual': hargaJual,
       'unit': unit,
+      'deskripsi' : deskripsi,
       'imageBarang': imageBarang?.map((item) => item.toJson()).toList(),
     };
   }
