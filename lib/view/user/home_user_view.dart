@@ -102,7 +102,7 @@ class _HomeUserViewState extends State<HomeUserView> {
                 padding: const EdgeInsets.all(24),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    childAspectRatio: 2.2 / 3,
+                    childAspectRatio: 2 / 3,
                     crossAxisSpacing: 20,
                     mainAxisSpacing: 20),
                 itemBuilder: (context, index) {
@@ -112,6 +112,7 @@ class _HomeUserViewState extends State<HomeUserView> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => UserBarangDetailView(
+                            isAdmin : false,
                               barangModels: barangModels[index]),
                         ),
                       );
@@ -131,6 +132,7 @@ class _HomeUserViewState extends State<HomeUserView> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => UserBarangDetailView(
+                                isAdmin: false,
                                   barangModels: barangModels[index]),
                             ),
                           );
@@ -142,14 +144,14 @@ class _HomeUserViewState extends State<HomeUserView> {
                               aspectRatio: 1.0,
                               child: ClipRRect(
                                 child: Container(
-                                  margin: EdgeInsets.all(Get.width * 0.02),
+                                  margin: EdgeInsets.all(Get.width * 0.01),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                     image: DecorationImage(
                                       fit: BoxFit.fill,
                                       image: MemoryImage(
                                         barangModels[index]
-                                            .imageBarang![index]
+                                            .imageBarang![0]
                                             .gambar,
                                       ),
                                     ),

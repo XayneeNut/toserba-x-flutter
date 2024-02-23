@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:toserba/widget/n/nama_kode_widget.dart';
 
 class CheckoutSummaryWidget extends StatefulWidget {
   const CheckoutSummaryWidget(
@@ -14,7 +16,8 @@ class CheckoutSummaryWidget extends StatefulWidget {
       required this.calculateTotalTax,
       required this.calculateSubtotal,
       required this.hargaProteksiTambahan,
-      required this.updateHarga});
+      required this.updateHarga,
+      required this.onCatatanChange});
 
   final bool alamat;
   final bool cod;
@@ -26,6 +29,7 @@ class CheckoutSummaryWidget extends StatefulWidget {
   final double Function() calculateSubtotal;
   final double hargaProteksiTambahan;
   final void Function(bool value) updateHarga;
+  final Function(String) onCatatanChange;
 
   @override
   State<CheckoutSummaryWidget> createState() => _CheckoutSummaryWidgetState();
@@ -130,6 +134,11 @@ class _CheckoutSummaryWidgetState extends State<CheckoutSummaryWidget> {
                   ],
                 ),
               ),
+              NamaKodeWidget(
+                  onSaved: widget.onCatatanChange,
+                  textStyle: GoogleFonts.ubuntu(),
+                  labelText: 'catatan',
+                  initialValue: '')
             ],
           ),
           Container(

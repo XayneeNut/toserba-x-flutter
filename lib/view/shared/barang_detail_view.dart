@@ -9,10 +9,12 @@ import 'package:toserba/widget/a/action_button_row.dart';
 import 'package:toserba/widget/c/user_app_bar_widget.dart';
 
 class UserBarangDetailView extends StatefulWidget {
-  const UserBarangDetailView({Key? key, required this.barangModels})
+  const UserBarangDetailView(
+      {Key? key, required this.barangModels, required this.isAdmin})
       : super(key: key);
 
   final BarangModels barangModels;
+  final bool isAdmin;
 
   @override
   State<UserBarangDetailView> createState() => _UserBarangDetailViewState();
@@ -119,7 +121,7 @@ class _UserBarangDetailViewState extends State<UserBarangDetailView> {
                   ),
                   SizedBox(
                     height: Get.width * 0.12,
-                    width: Get.width * 0.24,
+                    width: Get.width * 0.27,
                     child: ElevatedButton(
                       onPressed: () {
                         setState(() {
@@ -214,8 +216,9 @@ class _UserBarangDetailViewState extends State<UserBarangDetailView> {
                   elevatedButtonStyle: elevatedButtonStyle,
                   onFirstButtonPressed: () {},
                   onSecondButtonPressed: toCheckoutBarang,
-                  firstButtonTitle: 'keranjang',
-                  secondButtonTitle: 'checkout'),
+                  firstButtonTitle: widget.isAdmin == true ? 'delete' : 'cart',
+                  secondButtonTitle:
+                      widget.isAdmin == true ? 'update' : 'checkout'),
             ],
           ),
         ),

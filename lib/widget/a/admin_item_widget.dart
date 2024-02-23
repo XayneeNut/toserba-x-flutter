@@ -39,6 +39,7 @@ class _AdminItemWidgetState extends State<AdminItemWidget> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => UserBarangDetailView(
+                          isAdmin: true,
                           barangModels: widget.barangModels[index])),
                 );
               },

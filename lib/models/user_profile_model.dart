@@ -12,7 +12,7 @@ class UserProfileModel {
   final String kodePos;
   final String alamatLengkap;
 
-  UserProfileModel({
+  UserProfileModel({  
     required this.userProfileId,
     required this.patokanAlamat,
     required this.userBirthday,

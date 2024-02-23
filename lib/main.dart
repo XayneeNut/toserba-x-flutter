@@ -11,6 +11,7 @@ import 'package:toserba/controller/api%20controller/user_account_api_controller.
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:toserba/view/admin/auth_view.dart';
 import 'package:toserba/view/admin/home_view.dart';
+import 'package:toserba/view/user/detail_order_view.dart';
 import 'package:toserba/view/user/home_user_view.dart';
 import 'package:toserba/view/user/user_auth_view.dart';
 import 'package:toserba/widget/s/size_config.dart';
@@ -77,24 +78,18 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return GetMaterialApp(
-      theme: ThemeData.light(),
-      debugShowCheckedModeBanner: false,
-      routes: {
-        '/user-auth-view': (context) => UserAuthView(
-            jwtApiController: jwtApiController,
-            userAccountApiController: userAccountApiController),
-        '/user-home-view': (context) => const HomeUserView(),
-        '/authview': (context) => AuthView(
-            jwtApiController: jwtApiController,
-            adminApiController: adminApiController),
-        '/homeview': (context) => const HomeView(),
-      },
-      home: StreamBuilderWidget(
-          isAdmin: isAdmin,
-          token: _token,
-          jwtApiController: jwtApiController,
-          adminApiController: adminApiController,
-          userAccountApiController: userAccountApiController),
-    );
+        theme: ThemeData.light(),
+        debugShowCheckedModeBanner: false,
+        routes: {
+          '/user-auth-view': (context) => UserAuthView(
+              jwtApiController: jwtApiController,
+              userAccountApiController: userAccountApiController),
+          '/user-home-view': (context) => const HomeUserView(),
+          '/authview': (context) => AuthView(
+              jwtApiController: jwtApiController,
+              adminApiController: adminApiController),
+          '/homeview': (context) => const HomeView(),
+        },
+        home: DetailOrderView(pembelianModel: []));
   }
 }

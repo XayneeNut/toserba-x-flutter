@@ -1,13 +1,18 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
+import 'package:toserba/controller/api%20controller/detail_pembelian_api_controller.dart';
+import 'package:toserba/controller/api%20controller/pembelian_api_controller.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/widget/a/action_button_row.dart';
 import 'package:toserba/widget/c/checkout%20barang%20widget/checkout_summary_widget.dart';
 import 'package:toserba/widget/p/product_detail_widget.dart';
 import 'package:toserba/widget/c/user_app_bar_widget.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class CheckoutBarangView extends StatefulWidget {
   const CheckoutBarangView({super.key, required this.barangModels});
@@ -19,21 +24,62 @@ class CheckoutBarangView extends StatefulWidget {
 }
 
 class _CheckoutBarangViewState extends State<CheckoutBarangView> {
+  final _detailPembelianApiController = DetailPembelianApiController();
+  final _barangApiController = BarangApiController();
+  final _pembelianApiController = PembelianApiController();
+  final _flutterSecureStorage = const FlutterSecureStorage();
+  final _formKey = GlobalKey<FormState>();
   var jumlahItem = 1;
   bool proteksiTambahan = false;
   bool cod = false;
   bool alamat = false;
+  String catatan = '';
+  int? detailPembelianId;
 
-  double calculateTotalPrice() {
+  double _calculateTotalPrice() {
     return widget.barangModels.hargaJual!.toDouble() * jumlahItem;
   }
 
-  double calculateTotalTax() {
-    return calculateTotalPrice() * 0.05;
+  double _calculateTotalTax() {
+    return _calculateTotalPrice() * 0.05;
   }
 
-  double calculateSubtotal() {
-    return calculateTotalPrice() + calculateTotalTax();
+  double _calculateSubtotal() {
+    return _calculateTotalPrice() + _calculateTotalTax();
+  }
+
+  int _calculateNewStock() {
+    var stok = widget.barangModels.stokBarang!;
+    var newStok = stok - jumlahItem;
+    return newStok;
+  }
+
+  Future<void> saveDetailBarang() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      await _barangApiController.updateStok(
+          idBarang: widget.barangModels.idBarang!,
+          stokBarang: _calculateNewStock());
+      final detailJson =
+          await _detailPembelianApiController.saveDetailPembelian(
+              jumlahBarang: jumlahItem,
+              subtotal: _calculateSubtotal().toInt(),
+              hargaSatuan: widget.barangModels.hargaJual!,
+              catatan: catatan,
+              alamatPengiriman: 'belum ada');
+      final detailJsonData = json.decode(detailJson.body);
+      detailPembelianId = detailJsonData['detailPembelianId'];
+      await savePembelian();
+    }
+  }
+
+  Future<void> savePembelian() async {
+    final userAccountId =
+        await _flutterSecureStorage.read(key: 'user-account-id');
+    await _pembelianApiController.savePembelian(
+        userAccountId: int.parse(userAccountId!),
+        barangId: widget.barangModels.idBarang!,
+        detailPembelianId: detailPembelianId!);
   }
 
   @override
@@ -60,11 +106,13 @@ class _CheckoutBarangViewState extends State<CheckoutBarangView> {
     );
     var defaultButtonColor = const Color.fromARGB(255, 231, 231, 231);
 
-    final currencyFormatter = NumberFormat.currency(locale: 'ID');
+    final currencyFormatter =
+        NumberFormat.currency(locale: 'ID', symbol: 'Rp ');
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: UserAppBarWidget.home(barangModels: [], isListBarang: false),
+      appBar:
+          UserAppBarWidget.home(barangModels: const [], isListBarang: false),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,8 +164,8 @@ class _CheckoutBarangViewState extends State<CheckoutBarangView> {
                       jumlahItem++;
                     },
                   );
-                  calculateTotalPrice();
-                  calculateTotalTax();
+                  _calculateTotalPrice();
+                  _calculateTotalTax();
                 },
                 onMinusPressed: () {
                   setState(
@@ -127,8 +175,8 @@ class _CheckoutBarangViewState extends State<CheckoutBarangView> {
                       }
                     },
                   );
-                  calculateTotalPrice();
-                  calculateTotalTax();
+                  _calculateTotalPrice();
+                  _calculateTotalTax();
                 },
               ),
             ),
@@ -139,34 +187,38 @@ class _CheckoutBarangViewState extends State<CheckoutBarangView> {
                 color: Color.fromARGB(255, 103, 103, 103),
               ),
             ),
-            CheckoutSummaryWidget(
-              alamat: alamat,
-              cod: cod,
-              proteksiTambahan: proteksiTambahan,
-              detailSubtotalTextStyle: detailSubtotalStyle,
-              currencyFormatter: currencyFormatter,
-              hargaProteksiTambahan: hargaProteksiTambahan.toDouble(),
-              calculateTotalPrice: () {
-                if (proteksiTambahan == true) {
-                  calculateTotalPrice();
-                }
-                return calculateTotalPrice();
-              },
-              calculateTotalTax: () => calculateTotalTax(),
-              calculateSubtotal: () {
-                print('$proteksiTambahan dari view');
-                if (proteksiTambahan == true) {
-                  var harga = calculateSubtotal() + hargaProteksiTambahan;
-                  print(harga);
-                  return harga;
-                }
-                return calculateSubtotal();
-              },
-              updateHarga: (value) {
-                setState(() {
-                  proteksiTambahan = value;
-                });
-              },
+            Form(
+              key: _formKey,
+              child: CheckoutSummaryWidget(
+                onCatatanChange: (value) {
+                  catatan = value;
+                },
+                alamat: alamat,
+                cod: cod,
+                proteksiTambahan: proteksiTambahan,
+                detailSubtotalTextStyle: detailSubtotalStyle,
+                currencyFormatter: currencyFormatter,
+                hargaProteksiTambahan: hargaProteksiTambahan.toDouble(),
+                calculateTotalPrice: () {
+                  if (proteksiTambahan == true) {
+                    _calculateTotalPrice();
+                  }
+                  return _calculateTotalPrice();
+                },
+                calculateTotalTax: () => _calculateTotalTax(),
+                calculateSubtotal: () {
+                  if (proteksiTambahan == true) {
+                    var harga = _calculateSubtotal() + hargaProteksiTambahan;
+                    return harga;
+                  }
+                  return _calculateSubtotal();
+                },
+                updateHarga: (value) {
+                  setState(() {
+                    proteksiTambahan = value;
+                  });
+                },
+              ),
             ),
             Container(
               margin: EdgeInsets.only(left: Get.width * 0.03),
@@ -176,7 +228,7 @@ class _CheckoutBarangViewState extends State<CheckoutBarangView> {
                   onFirstButtonPressed: () {
                     Navigator.pop(context);
                   },
-                  onSecondButtonPressed: () {},
+                  onSecondButtonPressed: () => saveDetailBarang(),
                   firstButtonTitle: 'cancel',
                   secondButtonTitle: 'confirm'),
             ),

@@ -83,9 +83,9 @@ class BarangApiController {
       // Ubah gambar menjadi List<ImageBarangModel>
       List<dynamic> images = allData['imageBarang'];
       allData['imageBarang'] = images.map((imageData) {
-        Uint8List bytes = base64Decode(imageData['path']);
+        Uint8List bytes = base64Decode(imageData['gambar']);
         return ImageBarangModel(
-          gambarId: imageData['idImage'],
+          gambarId: imageData['gambarId'],
           gambar: bytes,
         );
       }).toList();
@@ -143,6 +143,22 @@ class BarangApiController {
   jsonToFormData(http.MultipartRequest request, Map<String, dynamic> data) {
     for (var key in data.keys) {
       request.fields[key] = data[key].toString();
+    }
+  }
+
+  Future<void> updateStok(
+      {required int idBarang, required int stokBarang}) async {
+    final url = Uri.parse("http://localhost:8127/api/v1/barang/update-stok");
+    final body = json.encode({
+      "idBarang": idBarang,
+      "stokBarang": stokBarang,
+    });
+
+    try {
+      await http
+          .put(url, body: body, headers: {'Content-Type': 'application/json'});
+    } catch (e) {
+      print(e);
     }
   }
 

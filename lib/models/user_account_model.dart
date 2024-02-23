@@ -37,4 +37,5 @@ class UserAccountModel {
       _$UserAccountModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserAccountModelToJson(this);
+
 }

@@ -42,6 +42,7 @@ class DetailPembelianApiController {
     try {
       if (response.statusCode == 200) {
         var detailPembelianId = responseData['detailPembelianId'];
+        print(detailPembelianId);
         getDetailBarangById(detailPembelianId);
       } else if (response.statusCode == 400) {
         if (kDebugMode) {

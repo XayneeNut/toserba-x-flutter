@@ -104,7 +104,7 @@ class _ProductDetailWidgetState extends State<ProductDetailWidget> {
         Container(
           margin:
               EdgeInsets.only(top: Get.width * 0.04, right: Get.width * 0.025),
-          height: Get.width * 0.286,
+          height: Get.width * 0.298,
           width: Get.width * 0.09,
           decoration: BoxDecoration(
             boxShadow: const [
