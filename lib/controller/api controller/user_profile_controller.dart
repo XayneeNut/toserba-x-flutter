@@ -3,16 +3,16 @@ import 'dart:io';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:toserba/models/user_profile_model.dart';
+import 'package:toserba/models/user_address_model.dart';
 
 class UserProfileController {
   FlutterSecureStorage flutterSecureStorage = const FlutterSecureStorage();
 
-  Future<UserProfileModel> getUserProfileModelById(int id) async {
+  Future<UserAddressModel> getUserProfileModelById(int id) async {
     final url = Uri.parse("http://localhost:8127/api/v1/user-profile/get/$id");
     final response = await http.get(url);
     final responseData = json.decode(response.body);
-    UserProfileModel userProfileModel = UserProfileModel.fromJson(responseData);
+    UserAddressModel userProfileModel = UserAddressModel.fromJson(responseData);
     return userProfileModel;
   }
 

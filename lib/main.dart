@@ -18,13 +18,13 @@ import 'package:toserba/widget/s/size_config.dart';
 import 'package:toserba/widget/s/stream_builder_widget.dart';
 
 void main() async {
+  SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.white));
   CachedNetworkImage.logLevel = CacheManagerLogLevel.debug;
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     const ProviderScope(child: MyApp()),
   );
-  SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.white));
 }
 
 class MyApp extends StatefulWidget {
@@ -90,6 +90,6 @@ class _MyAppState extends State<MyApp> {
               adminApiController: adminApiController),
           '/homeview': (context) => const HomeView(),
         },
-        home: DetailOrderView(pembelianModel: []));
+        home: DetailOrderView(userAccountModel: null));
   }
 }

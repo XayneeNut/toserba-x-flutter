@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
 import 'package:toserba/controller/apps%20controller/list_barang_controller.dart';
 import 'package:toserba/models/barang_models.dart';
-import 'package:toserba/widget/c/custom_search_delegate.dart';
+import 'package:toserba/widget/b/barang_search_delegate.dart';
 
 class SearchBarWidget extends StatefulWidget {
   const SearchBarWidget(
@@ -34,7 +34,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
           onTap: () {
             showSearch(
                 context: context,
-                delegate: CustomSearchDelegate(
+                delegate: BarangSearchDelegate(
                     widget.barangModels,
                     widget.listBarangController,
                     widget.barangApiController,

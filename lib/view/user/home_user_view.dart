@@ -6,7 +6,6 @@ import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
 import 'package:toserba/controller/api%20controller/user_account_api_controller.dart';
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/models/user_account_model.dart';
-import 'package:toserba/models/user_profile_model.dart';
 import 'package:toserba/view/shared/barang_detail_view.dart';
 import 'package:toserba/widget/c/user_app_bar_widget.dart';
 import 'package:toserba/widget/c/custom%20drawer%20widget/user_drawer_widget.dart';
@@ -26,24 +25,18 @@ class _HomeUserViewState extends State<HomeUserView> {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
 
   UserAccountModel userAccountModel = UserAccountModel(
-    userAccountId: 0,
-    email: '',
-    password: '',
-    username: '',
-    createdAt: DateTime(0),
-    updateAt: DateTime(0),
-    userProfileModel: UserProfileModel(
-        userProfileId: 0,
-        patokanAlamat: '',
-        userBirthday: DateTime(0),
-        userPhoto: '',
-        kodePos: '',
-        alamatLengkap: ''),
-  );
+      userAccountId: 0,
+      email: '',
+      password: '',
+      username: '',
+      createdAt: DateTime(0),
+      updateAt: DateTime(0),
+      userAddressEntity: null,
+      pembelianModel: null);
 
   Future<void> _getUserAccountId() async {
     final userAccountId = await storage.read(key: 'user-account-id');
-    userAccountModel = await userApiController.getUserAccountAndUserProfile(
+    userAccountModel = await userApiController.loadUserData(
       int.parse(userAccountId!),
     );
     setState(() {
@@ -52,7 +45,8 @@ class _HomeUserViewState extends State<HomeUserView> {
   }
 
   void _loadItem() async {
-    List<BarangModels> barang = await barangController.loadAllUserBarang(context);
+    List<BarangModels> barang =
+        await barangController.loadAllUserBarang(context);
 
     setState(() {
       barangModels.clear();
@@ -112,7 +106,7 @@ class _HomeUserViewState extends State<HomeUserView> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => UserBarangDetailView(
-                            isAdmin : false,
+                              isAdmin: false,
                               barangModels: barangModels[index]),
                         ),
                       );
@@ -132,7 +126,7 @@ class _HomeUserViewState extends State<HomeUserView> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => UserBarangDetailView(
-                                isAdmin: false,
+                                  isAdmin: false,
                                   barangModels: barangModels[index]),
                             ),
                           );

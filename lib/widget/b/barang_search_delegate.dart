@@ -5,7 +5,7 @@ import 'package:toserba/controller/apps%20controller/list_barang_controller.dart
 import 'package:toserba/models/barang_models.dart';
 import 'package:toserba/widget/a/admin_item_widget.dart';
 
-class CustomSearchDelegate extends SearchDelegate<String> {
+class BarangSearchDelegate extends SearchDelegate<String> {
   final List<BarangModels> barangModels;
   final ListBarangController listBarangController;
   final BarangApiController barangApiController;
@@ -13,7 +13,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
   final Function setState;
   final BuildContext parentContext;
 
-  CustomSearchDelegate(this.barangModels, this.listBarangController,
+  BarangSearchDelegate(this.barangModels, this.listBarangController,
       this.barangApiController, this.setState, this.parentContext);
 
   @override
@@ -21,12 +21,14 @@ class CustomSearchDelegate extends SearchDelegate<String> {
     // TODO: implement appBarTheme
     return super.appBarTheme(context).copyWith(
           appBarTheme: super.appBarTheme(context).appBarTheme.copyWith(
-                elevation: 3,
-                shadowColor:const Color.fromARGB(255, 231, 231, 231),
-                shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(60),)
-              ),
+              elevation: 3,
+              shadowColor: const Color.fromARGB(255, 231, 231, 231),
+              shape: ContinuousRectangleBorder(
+                borderRadius: BorderRadius.circular(60),
+              )),
         );
   }
+
   @override
   // TODO: implement searchFieldStyle
   TextStyle? get searchFieldStyle => GoogleFonts.ubuntu();

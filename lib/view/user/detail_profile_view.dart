@@ -1,12 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:toserba/models/user_account_model.dart';
 import 'package:toserba/widget/c/user_app_bar_widget.dart';
-import 'package:toserba/widget/i/image_picker_widget.dart';
 import 'package:toserba/widget/p/profile_form_field_widget.dart';
 
 class DetailProfileView extends StatefulWidget {
@@ -37,11 +34,6 @@ class _DetailProfileViewState extends State<DetailProfileView> {
               alignment: Alignment.center,
               child: Column(
                 children: [
-                  ImagePickerWidget(
-                      pickedImage: (image) {},
-                      initialImage: File(
-                          widget.userAccountModel.userProfileModel!.userPhoto),
-                      isUser: true),
                   SizedBox(
                     height: Get.width * 0.05,
                   ),
@@ -83,7 +75,7 @@ class _DetailProfileViewState extends State<DetailProfileView> {
                       titleText: 'Alamat Lengkap',
                       icon: const Icon(CupertinoIcons.location_solid),
                       initialValue: widget
-                          .userAccountModel.userProfileModel!.alamatLengkap,
+                          .userAccountModel.userAddressEntity!.first.patokan,
                     ),
                     SizedBox(
                       height: Get.width * 0.03,
@@ -92,8 +84,8 @@ class _DetailProfileViewState extends State<DetailProfileView> {
                       hintText: '',
                       titleText: 'Your Code Pos',
                       icon: const Icon(CupertinoIcons.map_pin),
-                      initialValue:
-                          widget.userAccountModel.userProfileModel!.kodePos,
+                      initialValue: widget
+                          .userAccountModel.userAddressEntity!.first.posCode,
                     ),
                     SizedBox(
                       height: Get.width * 0.07,

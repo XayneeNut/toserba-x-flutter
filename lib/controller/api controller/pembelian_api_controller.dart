@@ -1,10 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:toserba/models/pembelian_model.dart';
 
-class PembelianApiController {
+class PembelianApiController extends GetxController{
+  final _pembelianList = <PembelianModel>[].obs;
+
+  List<PembelianModel> get pembelianList => _pembelianList;
+
   Future<http.Response> savePembelian(
       {required int userAccountId,
       required int barangId,
