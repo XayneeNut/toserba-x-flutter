@@ -35,11 +35,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
             showSearch(
                 context: context,
                 delegate: BarangSearchDelegate(
-                    widget.barangModels,
-                    widget.listBarangController,
-                    widget.barangApiController,
-                    setState,
-                    context));
+                    widget.barangModels, setState, context));
           },
           onChanged: (_) {
             controller.openView();

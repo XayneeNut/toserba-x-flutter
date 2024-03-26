@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:toserba/models/barang_models.dart';
-import 'package:toserba/widget/a/admin_item_widget.dart';
 
-class BarangSearchDelegate extends SearchDelegate<String> {
-  final List<BarangModels> barangModels;
+import 'package:toserba/models/pembelian_model.dart';
+import 'package:toserba/models/user_account_model.dart';
+import 'package:toserba/widget/order_summary_widget.dart';
+
+class DetailOrderDelegate extends SearchDelegate<String> {
+  final UserAccountModel userAccountModel;
 
   final Function setState;
   final BuildContext parentContext;
 
-  BarangSearchDelegate(this.barangModels, this.setState, this.parentContext);
+  DetailOrderDelegate(this.userAccountModel, this.setState, this.parentContext);
 
   @override
   ThemeData appBarTheme(BuildContext context) {
@@ -62,15 +65,20 @@ class BarangSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    List<BarangModels> searchResults = barangModels.where((barang) {
-      return barang.namaBarang!.toLowerCase().contains(query.toLowerCase());
+    List<PembelianModel> searchResults =
+        userAccountModel.pembelianModel!.where((pembelian) {
+      return pembelian.barangEntity!.namaBarang!
+          .toLowerCase()
+          .contains(query.toLowerCase());
     }).toList();
 
     return ListView.builder(
       itemCount: searchResults.length,
       itemBuilder: (context, index) {
+        PembelianModel pembelianModel = searchResults[index];
+
         return ListTile(
-          title: Text(searchResults[index].namaBarang!),
+          title: Text(pembelianModel.barangEntity!.namaBarang!),
         );
       },
     );
@@ -78,20 +86,22 @@ class BarangSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    List<BarangModels> suggestionList = query.isEmpty
+    List<UserAccountModel> suggestionList = query.isEmpty
         ? []
-        : barangModels.where((barang) {
-            return barang.namaBarang!
-                .toLowerCase()
-                .contains(query.toLowerCase());
+        : [userAccountModel].where((user) {
+            return user.pembelianModel!.any((pembelian) {
+              return pembelian.barangEntity!.namaBarang!
+                  .toLowerCase()
+                  .contains(query.toLowerCase());
+            });
           }).toList();
 
     return ListView.builder(
       itemCount: suggestionList.length,
       itemBuilder: (context, index) {
-        return AdminItemWidget(
-          barangModels: suggestionList,
-          itemTextStyle: GoogleFonts.ubuntu(),
+        return SizedBox(
+          height: Get.width * 1,
+          child: OrderSummaryWidget(userAccountModel: userAccountModel),
         );
       },
     );

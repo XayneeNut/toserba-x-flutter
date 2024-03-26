@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -17,20 +16,18 @@ class UserProfileController {
   }
 
   Future<http.Response> saveUserProfile({
-    required String patokanAlamat,
-    required File userPoto,
-    required String codePos,
     required String alamatLengkap,
+    required String patokan,
+    required String posCode,
     required int userAccountId,
   }) async {
     final url = Uri.parse("http://localhost:8127/api/v1/user-profile/create");
 
     final body = json.encode({
-      "patokanAlamat": patokanAlamat,
-      "userPoto": userPoto,
-      "kodePos": codePos,
-      "alamatLengkap": alamatLengkap,
-      "userAccountId": userAccountId
+      "alamatlengkap": alamatLengkap,
+      "patokan": patokan,
+      "posCode": posCode,
+      "userAccountEntity": userAccountId
     });
 
     final response = await http.post(url,

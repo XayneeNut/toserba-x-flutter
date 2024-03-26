@@ -6,13 +6,13 @@ import 'package:toserba/widget/s/size_config.dart';
 class UserDrawerActionWidgets extends StatelessWidget {
   final Function() onHome;
   final Function() onAccount;
-  final Function() onPesanan;
+  final Function() onOrders;
 
   const UserDrawerActionWidgets({
     super.key,
     required this.onHome,
     required this.onAccount,
-    required this.onPesanan,
+    required this.onOrders,
   });
 
   @override
@@ -59,14 +59,14 @@ class UserDrawerActionWidgets extends StatelessWidget {
           ),
           SizedBox(height: SizeConfig.blockSizeVertical! * 1),
           TextButton.icon(
-            onPressed: onPesanan,
+            onPressed: onOrders,
             icon: Icon(
-              CupertinoIcons.bookmark,
+              CupertinoIcons.shopping_cart,
               color: const Color.fromARGB(255, 63, 63, 63),
               size: SizeConfig.blockSizeVertical! * 4,
             ),
             label: Text(
-              'Report ',
+              'Orders',
               style: GoogleFonts.rubik(
                 color: Colors.black,
                 fontSize: SizeConfig.blockSizeVertical! * 2.7,
@@ -75,7 +75,7 @@ class UserDrawerActionWidgets extends StatelessWidget {
           ),
           SizedBox(height: SizeConfig.blockSizeVertical! * 1),
           TextButton.icon(
-            onPressed: onPesanan,
+            onPressed: onOrders,
             icon: Icon(
               CupertinoIcons.settings,
               color: const Color.fromARGB(255, 63, 63, 63),

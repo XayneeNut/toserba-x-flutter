@@ -122,7 +122,7 @@ class _DrawerMainState extends State<DrawerMain> {
                 UserDrawerActionWidgets(
                   onHome: () {},
                   onAccount: () {},
-                  onPesanan: () {},
+                  onOrders: () {},
                 )
               ],
             ),

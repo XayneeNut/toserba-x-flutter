@@ -7,7 +7,9 @@ import 'package:intl/intl.dart';
 import 'package:toserba/controller/api%20controller/barang_api_controller.dart';
 import 'package:toserba/controller/api%20controller/detail_pembelian_api_controller.dart';
 import 'package:toserba/controller/api%20controller/pembelian_api_controller.dart';
+import 'package:toserba/controller/apps%20controller/apps_controller.dart';
 import 'package:toserba/models/barang_models.dart';
+import 'package:toserba/view/user/order_view.dart';
 import 'package:toserba/widget/a/action_button_row.dart';
 import 'package:toserba/widget/c/checkout%20barang%20widget/checkout_summary_widget.dart';
 import 'package:toserba/widget/p/product_detail_widget.dart';
@@ -57,6 +59,11 @@ class _CheckoutBarangViewState extends State<CheckoutBarangView> {
   Future<void> saveDetailBarang() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      final appsController = AppsController();
+      appsController.waitingFor(
+          context: context,
+          title: 'Wait a minute...',
+          content: 'Wait for the transaction to complete');
       await _barangApiController.updateStok(
           idBarang: widget.barangModels.idBarang!,
           stokBarang: _calculateNewStock());
@@ -70,6 +77,8 @@ class _CheckoutBarangViewState extends State<CheckoutBarangView> {
       final detailJsonData = json.decode(detailJson.body);
       detailPembelianId = detailJsonData['detailPembelianId'];
       await savePembelian();
+      if (!context.mounted) return;
+      Get.off(() => const OrderView());
     }
   }
 
@@ -228,7 +237,9 @@ class _CheckoutBarangViewState extends State<CheckoutBarangView> {
                   onFirstButtonPressed: () {
                     Navigator.pop(context);
                   },
-                  onSecondButtonPressed: () => saveDetailBarang(),
+                  onSecondButtonPressed: () {
+                    saveDetailBarang();
+                  },
                   firstButtonTitle: 'cancel',
                   secondButtonTitle: 'confirm'),
             ),

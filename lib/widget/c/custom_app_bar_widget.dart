@@ -98,11 +98,7 @@ class _CustomAppBarWidgetState extends State<CustomAppBarWidget> {
                   showSearch(
                     context: context,
                     delegate: BarangSearchDelegate(
-                        widget.barangModels,
-                        listBarangController,
-                        barangApiController,
-                        setState,
-                        context),
+                        widget.barangModels, setState, context),
                   );
                 },
                 icon: const Icon(Icons.search, size: 36),

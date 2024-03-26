@@ -75,6 +75,7 @@ class UserAccountApiController {
     required String email,
     required String username,
     required String password,
+    required String birthday,
     required BuildContext context,
   }) async {
     final url = Uri.parse("http://localhost:8127/api/v1/user-account/create");
@@ -82,7 +83,8 @@ class UserAccountApiController {
     final body = json.encode({
       "email": email,
       "password": password,
-      "username": username,
+      "username": username, 
+      "birthday": birthday,
     });
 
     final response = await http.post(url,
@@ -93,6 +95,7 @@ class UserAccountApiController {
         key: 'user-account-id', value: userAccountId.toString());
 
     try {
+      print(responseData);
       if (response.statusCode == 400) {
         // ignore: use_build_context_synchronously
         _appsController.loginFailedAlertDialog(context);

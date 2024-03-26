@@ -1,15 +1,13 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:toserba/controller/api%20controller/jwt_api_controller.dart';
 import 'package:toserba/controller/api%20controller/user_account_api_controller.dart';
 import 'package:toserba/controller/apps%20controller/apps_controller.dart';
 import 'package:toserba/controller/apps%20controller/validator_controller.dart';
 import 'package:toserba/view/user/home_user_view.dart';
-import 'package:toserba/widget/i/image_picker_widget.dart';
 import 'package:toserba/widget/s/sign_up_text_widget.dart';
 import 'package:toserba/widget/s/size_config.dart';
 import 'package:email_validator/email_validator.dart';
@@ -34,10 +32,11 @@ class _UserAuthViewState extends State<UserAuthView> {
   var _enteredPassword = '';
   var _enteredUsername = '';
   bool _isValidEmail = false;
-  File? _entereImage;
+  String? birthday;
   bool _obscureText = true;
   final ValidatorController _validatorController = ValidatorController();
   final AppsController _appsController = AppsController();
+  final birthdayController = TextEditingController();
 
   var titleStyle = GoogleFonts.poppins(
     color: Colors.black,
@@ -62,22 +61,43 @@ class _UserAuthViewState extends State<UserAuthView> {
     );
   }
 
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+
+    if (picked != null) {
+      setState(() {
+        birthday = DateFormat('d-MM-yyyy').format(picked);
+        birthdayController.text = DateFormat('d-MM-yyyy').format(picked);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    birthdayController.dispose();
+  }
+
   Future _isSubmit() async {
     final isValid = _formKey.currentState!.validate();
-
-    if (!isValid || _isLogin && _entereImage == null) {
-      return;
-    }
 
     try {
       if (_isLogin && isValid) {
         _formKey.currentState!.save();
 
         final signUp = await widget.userAccountApiController.signUp(
+            birthday: birthdayController.text,
             email: _enteredEmail,
             username: _enteredUsername,
             password: _enteredPassword,
             context: context);
+
+        print(_isLogin);
 
         if (signUp.statusCode == 200) {
           if (!context.mounted) return;
@@ -136,25 +156,8 @@ class _UserAuthViewState extends State<UserAuthView> {
                         color: const Color.fromRGBO(46, 24, 180, 1),
                         fontWeight: FontWeight.w600),
                   ),
-                if (_isLogin)
-                  Center(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: SizeConfig.blockSizeVertical! * 2,
-                        ),
-                        ImagePickerWidget(
-                            isUser: true,
-                            pickedImage: (image) {
-                              _entereImage = image;
-                            },
-                            initialImage: null),
-                      ],
-                    ),
-                  ),
-                SizedBox(
-                  height: Get.width * 0.02,
-                ),
+                if(_isLogin)
+                SizedBox(height: Get.width * 0.1,),
                 TextFormField(
                   onChanged: (value) {
                     setState(() {
@@ -215,8 +218,26 @@ class _UserAuthViewState extends State<UserAuthView> {
                     label: const Text("Password"),
                   ),
                 ),
+                if (_isLogin)
+                  TextFormField(
+                    controller: birthdayController,
+                    validator: (value) =>
+                        _validatorController.authValidator('Birthday', value),
+                    onSaved: (newValue) {
+                      birthdayController.text = newValue!;
+                    },
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.cake),
+                      suffixIcon: IconButton(
+                          onPressed: () {
+                            _selectDate(context);
+                          },
+                          icon: Icon(Icons.date_range_outlined)),
+                      label: Text("Birthday"),
+                    ),
+                  ),
                 SizedBox(
-                  height: Get.width * 0.1,
+                  height: Get.width * 0.02,
                 ),
                 Center(
                   child: SizedBox(

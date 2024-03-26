@@ -9,6 +9,7 @@ import 'package:toserba/controller/apps%20controller/apps_controller.dart';
 import 'package:toserba/models/user_account_model.dart';
 import 'package:toserba/view/admin/auth_view.dart';
 import 'package:toserba/view/user/detail_profile_view.dart';
+import 'package:toserba/view/user/order_view.dart';
 import 'package:toserba/view/user/user_auth_view.dart';
 import 'package:toserba/widget/c/custom%20drawer%20widget/user_drawer_action_widget.dart';
 import 'package:toserba/widget/s/size_config.dart';
@@ -130,7 +131,9 @@ class _UserDrawerWidgetState extends State<UserDrawerWidget> {
                           builder: (context) => DetailProfileView(
                               userAccountModel: widget.userAccountModel),
                         )),
-                    onPesanan: () {})
+                    onOrders: () {
+                      Get.to(() => const OrderView());
+                    })
               ],
             ),
           ),
