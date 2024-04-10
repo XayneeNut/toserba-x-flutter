@@ -33,9 +33,6 @@ class _SearchBarOrderWidgetState extends State<SearchBarOrderWidget> {
                 context: context,
                 delegate: DetailOrderDelegate(widget.user, setState, context));
           },
-          onChanged: (_) {
-            controller.openView();
-          },
           hintText: 'Cari pesanan anda',
           leading: const Icon(Icons.search),
         );

@@ -29,6 +29,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   cached_network_image: ^3.3.1
+  carousel_slider: ^4.2.1
   cupertino_icons: ^1.0.2
   email_validator: ^2.1.17
   flutter:
@@ -74,6 +75,12 @@ flutter:
     - assets/empty_list.png
     - assets/logo.png
     - assets/UserLoginAccountImage.png
+    - assets/auth.svg
+    - assets/signup.svg
+    - assets/grand.svg
+    - assets/true.svg
+    - assets/image.svg
+    - assets/image1.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see

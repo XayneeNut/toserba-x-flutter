@@ -212,13 +212,17 @@ class _UserBarangDetailViewState extends State<UserBarangDetailView> {
                 height: Get.width * 0.07,
               ),
               ActionButtonRowWidget(
+                  isAdmin: widget.isAdmin,
                   defaultButtonColor: defaultButtonColor,
                   elevatedButtonStyle: elevatedButtonStyle,
-                  onFirstButtonPressed: () {},
-                  onSecondButtonPressed: toCheckoutBarang,
-                  firstButtonTitle: widget.isAdmin == true ? 'delete' : 'cart',
-                  secondButtonTitle:
-                      widget.isAdmin == true ? 'update' : 'checkout'),
+                  onFirstButtonPressed: () {
+                    Get.back();
+                  },
+                  onSecondButtonPressed:
+                      widget.isAdmin == true ? () {} : toCheckoutBarang,
+                  firstButtonTitle:
+                      widget.isAdmin == true ? 'cancel' : 'cancel',
+                  secondButtonTitle: 'checkout'),
             ],
           ),
         ),

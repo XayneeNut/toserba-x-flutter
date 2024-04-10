@@ -74,21 +74,7 @@ class UserDrawerActionWidgets extends StatelessWidget {
             ),
           ),
           SizedBox(height: SizeConfig.blockSizeVertical! * 1),
-          TextButton.icon(
-            onPressed: onOrders,
-            icon: Icon(
-              CupertinoIcons.settings,
-              color: const Color.fromARGB(255, 63, 63, 63),
-              size: SizeConfig.blockSizeVertical! * 4,
-            ),
-            label: Text(
-              'Settings',
-              style: GoogleFonts.rubik(
-                color: Colors.black,
-                fontSize: SizeConfig.blockSizeVertical! * 2.7,
-              ),
-            ),
-          ),
+          
         ],
       ),
     );

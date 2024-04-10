@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:toserba/models/pembelian_model.dart';
 import 'package:toserba/models/user_account_model.dart';
-import 'package:toserba/widget/order_summary_widget.dart';
+import 'package:toserba/widget/s/search_order_widget.dart';
 
 class DetailOrderDelegate extends SearchDelegate<String> {
   final UserAccountModel userAccountModel;
@@ -19,11 +19,13 @@ class DetailOrderDelegate extends SearchDelegate<String> {
     // TODO: implement appBarTheme
     return super.appBarTheme(context).copyWith(
           appBarTheme: super.appBarTheme(context).appBarTheme.copyWith(
-              elevation: 3,
-              shadowColor: const Color.fromARGB(255, 231, 231, 231),
-              shape: ContinuousRectangleBorder(
-                borderRadius: BorderRadius.circular(60),
-              )),
+            
+                elevation: 3,
+                shadowColor: const Color.fromARGB(255, 231, 231, 231),
+                shape: ContinuousRectangleBorder(
+                  borderRadius: BorderRadius.circular(60),
+                ),
+              ),
         );
   }
 
@@ -73,12 +75,11 @@ class DetailOrderDelegate extends SearchDelegate<String> {
     }).toList();
 
     return ListView.builder(
-      itemCount: searchResults.length,
+      itemCount: 1,
       itemBuilder: (context, index) {
-        PembelianModel pembelianModel = searchResults[index];
-
-        return ListTile(
-          title: Text(pembelianModel.barangEntity!.namaBarang!),
+        return SizedBox(
+          height: Get.width * 2,
+          child: SearchOrderWidget(pembelianModel: searchResults),
         );
       },
     );
@@ -86,22 +87,19 @@ class DetailOrderDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    List<UserAccountModel> suggestionList = query.isEmpty
-        ? []
-        : [userAccountModel].where((user) {
-            return user.pembelianModel!.any((pembelian) {
-              return pembelian.barangEntity!.namaBarang!
-                  .toLowerCase()
-                  .contains(query.toLowerCase());
-            });
-          }).toList();
+    List<PembelianModel> searchResults =
+        userAccountModel.pembelianModel!.where((pembelian) {
+      return pembelian.barangEntity!.namaBarang!
+          .toLowerCase()
+          .contains(query.toLowerCase());
+    }).toList();
 
     return ListView.builder(
-      itemCount: suggestionList.length,
+      itemCount: 1,
       itemBuilder: (context, index) {
         return SizedBox(
           height: Get.width * 1,
-          child: OrderSummaryWidget(userAccountModel: userAccountModel),
+          child: SearchOrderWidget(pembelianModel: searchResults),
         );
       },
     );

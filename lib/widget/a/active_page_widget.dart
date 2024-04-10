@@ -60,6 +60,8 @@ class _ActivePageWidgetState extends State<ActivePageWidget>
   void initState() {
     super.initState();
     _loadDataIfNeeded();
+    loadAdminAccount();
+    print(username + "dari init State");
   }
 
   Future<void> _loadDataIfNeeded() async {
@@ -72,6 +74,7 @@ class _ActivePageWidgetState extends State<ActivePageWidget>
 
   Future<void> loadAdminAccount() async {
     final adminAccount = await adminApiController.loadAdminAccount();
+    print(adminAccount.username!);
     setState(() {
       email = adminAccount.email!;
       username = adminAccount.username!;
@@ -114,7 +117,7 @@ class _ActivePageWidgetState extends State<ActivePageWidget>
     super.build(context);
     return SingleChildScrollView(
       child: SizedBox(
-        height: Get.height * 3,
+        height: Get.height * 0.8,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

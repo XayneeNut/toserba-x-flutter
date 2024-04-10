@@ -90,28 +90,6 @@ class _DetailProfileViewState extends State<DetailProfileView> {
                     SizedBox(
                       height: Get.width * 0.07,
                     ),
-                    Center(
-                        child: SizedBox(
-                      width: Get.width * 0.7,
-                      height: Get.width * 0.15,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          elevation: 4,
-                          shadowColor: const Color.fromARGB(255, 57, 91, 241),
-                          backgroundColor:
-                              const Color.fromARGB(255, 57, 91, 241),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        child: Text(
-                          'Save',
-                          style: userNameTextStyle.copyWith(
-                              fontSize: Get.width * 0.05),
-                        ),
-                      ),
-                    ))
                   ],
                 ),
               ),

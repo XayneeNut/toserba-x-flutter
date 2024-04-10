@@ -23,8 +23,9 @@ class _AdminItemWidgetState extends State<AdminItemWidget> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: Get.width * 1.4,
+      height: Get.width * 1,
       child: GridView.builder(
+        itemCount: widget.barangModels.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             childAspectRatio: 2 / 3,
@@ -113,9 +114,8 @@ class _AdminItemWidgetState extends State<AdminItemWidget> {
                 ),
               ),
             );
-          } else {
-            return Container();
           }
+          return null;
         },
       ),
     );

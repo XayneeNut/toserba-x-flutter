@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:toserba/controller/api%20controller/admin_api_controller.dart';
 import 'package:toserba/controller/api%20controller/jwt_api_controller.dart';
+import 'package:toserba/controller/apps%20controller/apps_controller.dart';
 import 'package:toserba/view/admin/home_view.dart';
 import 'package:toserba/widget/a/auth_form_widget.dart';
 import 'package:toserba/widget/s/size_config.dart';
@@ -30,7 +31,9 @@ class _AuthViewState extends ConsumerState<AuthView> {
 
   bool _isLogin = true;
   var _enteredEmail = '';
+  var _enteredUsername = '';
   var _enteredPassword = '';
+  final _appsController = AppsController();
   var titleStyle2 = GoogleFonts.poppins(
     color: Colors.grey,
     fontWeight: FontWeight.w400,
@@ -61,7 +64,6 @@ class _AuthViewState extends ConsumerState<AuthView> {
 
     try {
       if (_isLogin == true && isValid) {
-        await widget.jwtApiController.getTokenJwt();
         _formKey.currentState!.save();
 
         // ignore: use_build_context_synchronously
@@ -72,12 +74,24 @@ class _AuthViewState extends ConsumerState<AuthView> {
         );
 
         if (login.statusCode == 200) {
+          await widget.jwtApiController.getTokenJwt();
+          _toHomeView();
+        }
+      } else if (_isLogin == false && isValid) {
+        _formKey.currentState!.save();
+        if (!context.mounted) return;
+        final signUp = await widget.adminApiController.createAdmin(
+            email: _enteredEmail,
+            password: _enteredPassword,
+            username: _enteredUsername,
+            context: context);
+
+        if (signUp.statusCode == 200) {
+          await widget.jwtApiController.getTokenJwt();
           _toHomeView();
         }
       }
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   @override
@@ -87,6 +101,7 @@ class _AuthViewState extends ConsumerState<AuthView> {
       color: Colors.white,
       fontWeight: FontWeight.w500,
     );
+
     SizeConfig().init(context);
     return Scaffold(
       body: Container(
@@ -139,10 +154,21 @@ class _AuthViewState extends ConsumerState<AuthView> {
                     onEmailSaved: (value) {
                       _enteredEmail = value!;
                     },
+                    onUsernameSaved: (value) {
+                      _enteredUsername = value!;
+                    },
                     onPasswordSaved: (value) {
                       _enteredPassword = value!;
                     },
-                    onPressed: _isSubmit,
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        _isSubmit();
+                        _appsController.loginAllertDialog(context);
+                        await Future.delayed(const Duration(seconds: 2));
+                        if (!context.mounted) return;
+                        Navigator.pop(context);
+                      }
+                    },
                   ),
                   SizedBox(
                     height: Get.width * 0.03,
@@ -151,7 +177,9 @@ class _AuthViewState extends ConsumerState<AuthView> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        _isLogin ? "already have account?" : "New in OurShop?",
+                        _isLogin == false
+                            ? "already have account?"
+                            : "New in OurShop?",
                         style: GoogleFonts.poppins(
                           fontSize: 15,
                         ),
@@ -163,7 +191,7 @@ class _AuthViewState extends ConsumerState<AuthView> {
                           });
                         },
                         child: Text(
-                          _isLogin ? "Login" : "Register",
+                          _isLogin == false ? "Login" : "Register",
                           style: GoogleFonts.poppins(
                             fontSize: 15,
                           ),

@@ -95,14 +95,11 @@ class UserAccountApiController {
         key: 'user-account-id', value: userAccountId.toString());
 
     try {
-      print(responseData);
       if (response.statusCode == 400) {
         // ignore: use_build_context_synchronously
         _appsController.loginFailedAlertDialog(context);
-        print(response.body);
         throw Exception("failed to save item");
       } else {
-        print(response.body);
         throw Exception("failed to save item");
       }
     } catch (e) {}

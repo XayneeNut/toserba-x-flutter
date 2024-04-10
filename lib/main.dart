@@ -77,24 +77,23 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return GetMaterialApp(
-      theme: ThemeData.light(),
-      debugShowCheckedModeBanner: false,
-      routes: {
-        '/user-auth-view': (context) => UserAuthView(
+        theme: ThemeData.light(),
+        debugShowCheckedModeBanner: false,
+        routes: {
+          '/user-auth-view': (context) => UserAuthView(
+              jwtApiController: jwtApiController,
+              userAccountApiController: userAccountApiController),
+          '/user-home-view': (context) => const HomeUserView(),
+          '/authview': (context) => AuthView(
+              jwtApiController: jwtApiController,
+              adminApiController: adminApiController),
+          '/homeview': (context) => const HomeView(),
+        },
+        home: StreamBuilderWidget(
+            isAdmin: isAdmin,
+            token: _token,
             jwtApiController: jwtApiController,
-            userAccountApiController: userAccountApiController),
-        '/user-home-view': (context) => const HomeUserView(),
-        '/authview': (context) => AuthView(
-            jwtApiController: jwtApiController,
-            adminApiController: adminApiController),
-        '/homeview': (context) => const HomeView(),
-      },
-      home: StreamBuilderWidget(
-          isAdmin: isAdmin,
-          token: _token,
-          jwtApiController: jwtApiController,
-          adminApiController: adminApiController,
-          userAccountApiController: userAccountApiController),
-    );
+            adminApiController: adminApiController,
+            userAccountApiController: userAccountApiController));
   }
 }

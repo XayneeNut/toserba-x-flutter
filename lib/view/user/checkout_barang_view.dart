@@ -232,6 +232,7 @@ class _CheckoutBarangViewState extends State<CheckoutBarangView> {
             Container(
               margin: EdgeInsets.only(left: Get.width * 0.03),
               child: ActionButtonRowWidget(
+                isAdmin: true,
                   defaultButtonColor: defaultButtonColor,
                   elevatedButtonStyle: elevatedButtonStyle,
                   onFirstButtonPressed: () {

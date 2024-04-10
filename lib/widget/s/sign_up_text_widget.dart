@@ -22,7 +22,7 @@ class _SignupTextWidgetState extends State<SignupTextWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          margin: EdgeInsets.only(top: Get.height * 0.07),
+          margin: EdgeInsets.only(top: Get.height * 0.04),
           child: Text(
             "Sign Up",
             style: GoogleFonts.poppins(

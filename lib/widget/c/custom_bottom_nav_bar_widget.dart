@@ -71,11 +71,9 @@ class _CustomBottomNavBarWidgetState extends State<CustomBottomNavBarWidget> {
                   ),
           ),
           IconButton(
-            onPressed: () {
-              widget.onPageSelected(3);
-            },
+            onPressed: () {},
             icon: Icon(
-              Icons.star,
+              Icons.circle,
               color: widget.bottomIconColor,
             ),
           ),

@@ -96,10 +96,6 @@ class _AppBarAdminWidgetState extends State<AppBarAdminWidget> {
           ),
           Row(
             children: [
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(CupertinoIcons.shopping_cart),
-              ),
               PopUpMenuWidget(
                 onLogoutTap: widget.onLogout,
                 onloginAsUserTap: widget.onLoginAsUser,

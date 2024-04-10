@@ -177,6 +177,29 @@ class AppsController {
     );
   }
 
+  Future<void> loginSuccess(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          title: const Text('Login Success'),
+          content: Row(
+            children: [
+              const CircularProgressIndicator(),
+              SizedBox(
+                width: Get.width * 0.03,
+              ),
+              const Text('Setting up the home page')
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> loginAllertDialog(BuildContext context) {
     return showDialog(
       context: context,

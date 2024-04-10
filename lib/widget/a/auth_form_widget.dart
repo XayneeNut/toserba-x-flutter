@@ -11,12 +11,14 @@ class AuthForm extends StatefulWidget {
     required this.isLogin,
     required this.onEmailSaved,
     required this.onPasswordSaved,
+    required this.onUsernameSaved,
     required this.onPressed,
   });
 
   final GlobalKey<FormState> formKey;
   final bool isLogin;
   final void Function(String?) onEmailSaved;
+  final void Function(String?) onUsernameSaved;
   final void Function(String?) onPasswordSaved;
   final Function() onPressed;
 
@@ -62,6 +64,21 @@ class _AuthFormState extends State<AuthForm> {
                 onSaved: widget.onEmailSaved,
                 decoration: inputDecoration.copyWith(labelText: "email"),
               ),
+              margin,
+              if (widget.isLogin == false)
+                TextFormField(
+                  minLines: 1,
+                  maxLength: 200,
+                  autocorrect: false,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'not valid username';
+                    }
+                    return null;
+                  },
+                  onSaved: widget.onUsernameSaved,
+                  decoration: inputDecoration.copyWith(labelText: "username"),
+                ),
               margin,
               TextFormField(
                 minLines: 1,
